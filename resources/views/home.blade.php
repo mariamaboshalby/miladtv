@@ -1,4 +1,4 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 @section('title', 'MJK - الوجهة الاولى للطابعات والاكسسوارات التقنية')
 @section('content')
 
@@ -378,12 +378,7 @@
         .slide-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(
-                to left,
-                rgba(30, 20, 10, 0.72) 0%,
-                rgba(30, 20, 10, 0.55) 50%,
-                rgba(30, 20, 10, 0.15) 100%
-            );
+            background: transparent;
         }
 
         .slide-inner {

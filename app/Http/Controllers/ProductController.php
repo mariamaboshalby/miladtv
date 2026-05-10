@@ -2,12 +2,114 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    private function getAllProducts()
+    public function index(Request $request)
     {
+        $query = Product::active();
+
+        $category = $request->get('category', 'all');
+        $sort     = $request->get('sort', 'default');
+
+        if ($category !== 'all') {
+            $query->where('category', $category);
+        }
+
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
+                  ->orWhere('brand', 'like', '%' . $request->search . '%')
+                  ->orWhere('description', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        match ($sort) {
+            'price_asc'  => $query->orderBy('price', 'asc'),
+            'price_desc' => $query->orderBy('price', 'desc'),
+            'rating'     => $query->orderBy('rating', 'desc'),
+            default      => $query->latest(),
+        };
+
+        $products = $query->get()->map(fn($p) => [
+            'id'          => $p->id,
+            'name'        => $p->name,
+            'brand'       => $p->brand,
+            'category'    => $p->category,
+            'price'       => $p->price,
+            'old_price'   => $p->old_price,
+            'badge'       => $p->badge,
+            'badge_color' => $p->badge_color,
+            'image'       => $p->image ?? 'product-1',
+            'rating'      => $p->rating,
+            'reviews'     => $p->reviews,
+            'description' => $p->description,
+            'specs'       => $p->specs ?? [],
+        ])->toArray();
+
+        $categories = [
+            'all'        => 'جميع المنتجات',
+            'printers'   => 'الطابعات',
+            'mice'       => 'الماوسات',
+            'headphones' => 'السماعات',
+            'flash'      => 'الفلاشات',
+        ];
+
+        return view('products.index', compact('products', 'category', 'sort', 'categories'));
+    }
+
+    public function category($category)
+    {
+        return redirect()->route('products.index', ['category' => $category]);
+    }
+
+    public function show($id)
+    {
+        $product = Product::active()->findOrFail($id);
+
+        $related = Product::active()
+            ->where('category', $product->category)
+            ->where('id', '!=', $product->id)
+            ->take(4)
+            ->get()
+            ->map(fn($p) => [
+                'id'          => $p->id,
+                'name'        => $p->name,
+                'brand'       => $p->brand,
+                'category'    => $p->category,
+                'price'       => $p->price,
+                'old_price'   => $p->old_price,
+                'badge'       => $p->badge,
+                'badge_color' => $p->badge_color,
+                'image'       => $p->image ?? 'product-1',
+                'rating'      => $p->rating,
+                'reviews'     => $p->reviews,
+                'description' => $p->description,
+                'specs'       => $p->specs ?? [],
+            ])->toArray();
+
+        $productArr = [
+            'id'          => $product->id,
+            'name'        => $product->name,
+            'brand'       => $product->brand,
+            'category'    => $product->category,
+            'price'       => $product->price,
+            'old_price'   => $product->old_price,
+            'badge'       => $product->badge,
+            'badge_color' => $product->badge_color,
+            'image'       => $product->image ?? 'product-1',
+            'rating'      => $product->rating,
+            'reviews'     => $product->reviews,
+            'description' => $product->description,
+            'specs'       => $product->specs ?? [],
+        ];
+
+        return view('products.show', ['product' => $productArr, 'related' => $related]);
+    }
+}
+
         return [
             // Printers
             ['id' => 1, 'name' => 'طابعة HP LaserJet Pro M404n', 'category' => 'printers', 'price' => 2499, 'old_price' => 2999, 'badge' => 'الأكثر مبيعاً', 'badge_color' => 'blue', 'image' => 'printer1', 'rating' => 5, 'reviews' => 128, 'description' => 'طابعة ليزر أحادية اللون بسرعة 40 صفحة/دقيقة، مثالية للمكاتب الصغيرة والمتوسطة. تدعم الطباعة عبر الشبكة وتتميز بجودة طباعة عالية.', 'brand' => 'HP', 'specs' => ['السرعة: 40 صفحة/دقيقة', 'الدقة: 1200 dpi', 'الاتصال: USB + Ethernet', 'الذاكرة: 256MB']],

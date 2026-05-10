@@ -6,8 +6,8 @@
 (function () {
     'use strict';
 
-    // Minimum display time in ms (so it doesn't flash too quickly)
-    const MIN_DISPLAY_TIME = 2200;
+    // Minimum display time in ms
+    const MIN_DISPLAY_TIME = 1200;
 
     const startTime = Date.now();
 
@@ -34,13 +34,13 @@
         window.addEventListener('load', hideLoader);
     }
 
-    // Fallback: force hide after 5 seconds no matter what
+    // Fallback: force hide after 3 seconds
     setTimeout(function () {
         const overlay = document.getElementById('printerLoaderOverlay');
         if (overlay && !overlay.classList.contains('hidden')) {
             overlay.classList.add('hidden');
             setTimeout(function () { overlay.remove(); }, 600);
         }
-    }, 5000);
+    }, 3000);
 
 })();

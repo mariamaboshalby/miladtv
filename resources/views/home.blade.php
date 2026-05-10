@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', 'MJK - الوجهة الاولى للطابعات والاكسسوارات التقنية')
 @section('content')
 
@@ -6,7 +6,7 @@
   <div class="hero-slider" id="heroSlider">
 
     <div class="slide active">
-      <div class="slide-bg" style="background:linear-gradient(#00000044,#00000044), url('/images/slide-1.jpg'); background-repeat: no-repeat;background-attachment: fixed; background-position: center;background-size: cover;"></div>
+      <div class="slide-bg" style="background-image:url('/images/slide-1.jpg')"></div>
       <div class="slide-overlay"></div>
       <div class="slide-inner container">
         <div class="slide-text">
@@ -29,7 +29,7 @@
     </div>
 
     <div class="slide">
-      <div class="slide-bg" style="background:linear-gradient(#00000044,#00000044),url('/images/slide-2.jpg');background-repeat: no-repeat;background-attachment: fixed; background-position: center;background-size: cover;"></div>
+      <div class="slide-bg" style="background-image:url('/images/slide-2.jpg')"></div>
       <div class="slide-overlay"></div>
       <div class="slide-inner container">
         <div class="slide-text">
@@ -52,7 +52,7 @@
     </div>
 
     <div class="slide">
-      <div class="slide-bg" style="background:linear-gradient(#00000044,#00000044),url('/images/slide-3.jpg');background-repeat: no-repeat;background-attachment: fixed; background-position: center;background-size: cover;"></div>
+      <div class="slide-bg" style="background-image:url('/images/slide-3.jpg')"></div>
       <div class="slide-overlay"></div>
       <div class="slide-inner container">
         <div class="slide-text">
@@ -75,7 +75,7 @@
     </div>
 
     <div class="slide">
-      <div class="slide-bg" style="background:linear-gradient(#00000044,#00000044),url('/images/slide-4.jpg');background-repeat: no-repeat;background-attachment: fixed; background-position: center;background-size: cover;"></div>
+      <div class="slide-bg" style="background-image:url('/images/slide-4.jpg')"></div>
       <div class="slide-overlay"></div>
       <div class="slide-inner container">
         <div class="slide-text">
@@ -98,7 +98,7 @@
     </div>
 
     <div class="slide">
-      <div class="slide-bg" style="background:linear-gradient(#00000044,#00000044), url('/images/slide-5.jpg')background-repeat: no-repeat;background-attachment: fixed; background-position: center;background-size: cover;"></div>
+      <div class="slide-bg" style="background-image:url('/images/slide-5.jpg')"></div>
       <div class="slide-overlay"></div>
       <div class="slide-inner container">
         <div class="slide-text">
@@ -367,6 +367,7 @@
             inset: 0;
             background-size: cover;
             background-position: center;
+            background-repeat: no-repeat;
             transform: scale(1.05);
             transition: transform 6s ease;
         }

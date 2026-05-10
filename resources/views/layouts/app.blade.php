@@ -29,48 +29,10 @@
 </head>
 <body>
 
-    <!-- 3D Printer Loading Animation -->
+    <!-- GIF Loading Animation -->
     <div class="printer-loader-overlay" id="printerLoaderOverlay">
         <div class="printer-loader-container">
-            <div class="printer-3d">
-                <div class="printer-body">
-                    <div class="printer-top">
-                        <div class="led-indicators">
-                            <div class="led green active"></div>
-                            <div class="led blue active"></div>
-                            <div class="led orange active"></div>
-                        </div>
-                    </div>
-                    <div class="printer-main">
-                        <div class="print-head"></div>
-                        <div class="control-panel">
-                            <div class="control-button"></div>
-                            <div class="control-button"></div>
-                            <div class="control-button"></div>
-                        </div>
-                        <div class="ink-cartridges">
-                            <div class="ink-cartridge cyan"></div>
-                            <div class="ink-cartridge magenta"></div>
-                            <div class="ink-cartridge yellow"></div>
-                            <div class="ink-cartridge black"></div>
-                        </div>
-                    </div>
-                    <div class="paper-tray">
-                        <div class="paper-stack">
-                            <div class="paper-sheet"></div>
-                            <div class="paper-sheet"></div>
-                            <div class="paper-sheet"></div>
-                        </div>
-                        <div class="paper"></div>
-                    </div>
-                </div>
-                <div class="printer-shadow"></div>
-            </div>
-            <div class="loader-text">MJK<span class="loading-dots"></span></div>
-            <div class="loader-subtext">جاري تحميل الموقع</div>
-            <div class="loader-progress">
-                <div class="loader-progress-bar"></div>
-            </div>
+            <img src="{{ asset('images/mjk.gif') }}" alt="MJK Loading" class="loader-gif">
         </div>
     </div>
 
@@ -190,13 +152,11 @@
         <div class="footer-top">
             <div class="container">
                 <div class="footer-grid">
+
                     <!-- Brand -->
                     <div class="footer-col footer-brand">
-                        <div class="footer-logo">
-                            <img src="{{ asset('images/mjk_logo.png') }}" alt="MJK" style="height:40px;width:auto;object-fit:contain;filter:brightness(0) invert(1);margin-bottom:.5rem">
-                            <span class="logo-sub" style="color:var(--gray-400);font-size:.75rem">للطابعات والتقنية</span>
-                        </div>
-                        </div>
+                        <img src="{{ asset('images/mjk_logo.png') }}" alt="MJK"
+                             style="height:48px;width:auto;object-fit:contain;filter:brightness(0) invert(1);margin-bottom:1rem">
                         <p>الوجهة الأولى للطابعات وأكسسوارات الكمبيوتر في مصر. نقدم أفضل المنتجات بأفضل الأسعار مع ضمان الجودة والدعم الفني.</p>
                         <div class="footer-social">
                             <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
@@ -235,15 +195,25 @@
                     <div class="footer-col">
                         <h4>تواصل معنا</h4>
                         <ul class="contact-list">
-                            <li><i class="fas fa-map-marker-alt"></i> القاهرة، مصر - شارع التحرير</li>
+                            <li><i class="fas fa-map-marker-alt"></i> القاهرة، مصر</li>
                             <li><i class="fas fa-phone-alt"></i> +20 123 456 7890</li>
                             <li><i class="fas fa-envelope"></i> info@mjk.com</li>
                             <li><i class="fas fa-clock"></i> السبت - الخميس: 9ص - 9م</li>
                         </ul>
+                        <!-- Newsletter -->
+                        <div class="footer-newsletter">
+                            <p style="color:#94A3B8;font-size:.875rem;margin-bottom:.75rem">اشترك في نشرتنا البريدية</p>
+                            <form class="newsletter-form" onsubmit="return false">
+                                <input type="email" placeholder="بريدك الإلكتروني">
+                                <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                            </form>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>
+
         <div class="footer-bottom">
             <div class="container">
                 <p>&copy; {{ date('Y') }} شركة MJK للطابعات والتقنية. جميع الحقوق محفوظة.</p>

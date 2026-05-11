@@ -227,13 +227,17 @@
                                 class="product-badge badge badge-{{ $product['badge_color'] }}">{{ $product['badge'] }}</span>
                         @endif
                         <div class="product-image">
-                            @php $imgNum = ($index % 10) + 1; @endphp
-                            <img src="/images/product-{{ $imgNum }}.jpg" alt="{{ $product['name'] }}"
-                                onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                            <div class="placeholder-image" style="display:none">
-                                <i
-                                    class="fas fa-{{ $product['category'] === 'printers' ? 'print' : ($product['category'] === 'mice' ? 'mouse' : ($product['category'] === 'headphones' ? 'headphones' : 'usb')) }}"></i>
-                            </div>
+                            @if($product['image_url'])
+                                <img src="{{ $product['image_url'] }}" alt="{{ $product['name'] }}"
+                                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                                <div class="placeholder-image" style="display:none">
+                                    <i class="fas fa-{{ $product['category'] === 'printers' ? 'print' : ($product['category'] === 'mice' ? 'mouse' : ($product['category'] === 'headphones' ? 'headphones' : 'usb')) }}"></i>
+                                </div>
+                            @else
+                                <div class="placeholder-image">
+                                    <i class="fas fa-{{ $product['category'] === 'printers' ? 'print' : ($product['category'] === 'mice' ? 'mouse' : ($product['category'] === 'headphones' ? 'headphones' : 'usb')) }}"></i>
+                                </div>
+                            @endif
                         </div>
                         <div class="product-info">
                             <h3>{{ $product['name'] }}</h3>

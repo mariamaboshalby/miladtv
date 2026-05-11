@@ -8,24 +8,27 @@ class HomeController extends Controller
 {
     public function index()
     {
+        $mapProduct = fn($p) => [
+            'id'          => $p->id,
+            'name'        => $p->name,
+            'category'    => $p->category,
+            'price'       => $p->price,
+            'old_price'   => $p->old_price,
+            'badge'       => $p->badge,
+            'badge_color' => $p->badge_color,
+            'image_url'   => $p->getFirstMediaUrl('product-images', 'card'),
+            'image'       => $p->getFirstMediaUrl('product-images', 'card'),
+            'rating'      => $p->rating,
+            'reviews'     => $p->reviews ?? 0,
+            'description' => $p->description,
+        ];
+
         $featuredProducts = Product::active()
             ->featured()
             ->latest()
             ->take(6)
             ->get()
-            ->map(fn($p) => [
-                'id'          => $p->id,
-                'name'        => $p->name,
-                'category'    => $p->category,
-                'price'       => $p->price,
-                'old_price'   => $p->old_price,
-                'badge'       => $p->badge,
-                'badge_color' => $p->badge_color,
-                'image'       => $p->image ?? 'product-1',
-                'rating'      => $p->rating,
-                'reviews'     => $p->reviews,
-                'description' => $p->description,
-            ])
+            ->map($mapProduct)
             ->toArray();
 
         if (empty($featuredProducts)) {
@@ -33,19 +36,7 @@ class HomeController extends Controller
                 ->latest()
                 ->take(6)
                 ->get()
-                ->map(fn($p) => [
-                    'id'          => $p->id,
-                    'name'        => $p->name,
-                    'category'    => $p->category,
-                    'price'       => $p->price,
-                    'old_price'   => $p->old_price,
-                    'badge'       => $p->badge,
-                    'badge_color' => $p->badge_color,
-                    'image'       => $p->image ?? 'product-1',
-                    'rating'      => $p->rating,
-                    'reviews'     => $p->reviews,
-                    'description' => $p->description,
-                ])
+                ->map($mapProduct)
                 ->toArray();
         }
 

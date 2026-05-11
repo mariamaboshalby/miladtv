@@ -19,95 +19,164 @@
 
 <section class="section">
     <div class="container">
-        <div class="product-detail-layout">
 
-            <!-- Image -->
-            <div class="product-detail-image">
-                <div class="main-image">
-                    <div class="placeholder-image-lg">
-                        <i class="fas fa-{{ $product['category'] === 'printers' ? 'print' : ($product['category'] === 'mice' ? 'mouse' : ($product['category'] === 'headphones' ? 'headphones' : 'usb')) }}"></i>
-                    </div>
+        {{-- ═══ TOP: Image + Info ═══ --}}
+        <div class="pd-layout">
+
+            {{-- ── Gallery (thumbnails right, main image center) ── --}}
+            @php
+                $product_model = \App\Models\Product::find($product['id']);
+                $media = $product_model ? $product_model->getMedia('product-images') : collect();
+                $catIcon = $product['category'] === 'printers' ? 'print'
+                         : ($product['category'] === 'mice' ? 'mouse'
+                         : ($product['category'] === 'headphones' ? 'headphones' : 'usb'));
+            @endphp
+
+            <div class="pd-gallery">
+                {{-- Thumbnails column --}}
+                @if($media->count() > 1)
+                <div class="pd-thumbs">
+                    @foreach($media as $img)
+                    <button class="pd-thumb {{ $loop->first ? 'active' : '' }}"
+                            onclick="switchImg('{{ $img->getUrl('card') }}', this)">
+                        <img src="{{ $img->getUrl('thumb') }}" alt="">
+                    </button>
+                    @endforeach
+                </div>
+                @endif
+
+                {{-- Main image --}}
+                <div class="pd-main-img-wrap">
+                    @if($media->count() > 0)
+                        <img src="{{ $media->first()->getUrl('card') }}"
+                             id="mainImg"
+                             class="pd-main-img"
+                             alt="{{ $product['name'] }}">
+                    @else
+                        <div class="pd-no-img">
+                            <i class="fas fa-{{ $catIcon }}"></i>
+                        </div>
+                    @endif
                 </div>
             </div>
 
-            <!-- Info -->
-            <div class="product-detail-info">
-                <span class="product-brand-tag">{{ $product['brand'] }}</span>
-                @if($product['badge'])
-                <span class="badge badge-{{ $product['badge_color'] }}" style="margin-right:.5rem">{{ $product['badge'] }}</span>
-                @endif
+            {{-- ── Info column ── --}}
+            <div class="pd-info">
 
-                <h1>{{ $product['name'] }}</h1>
-
-                <div class="product-rating" style="margin-bottom:1.5rem">
-                    @for($i = 0; $i < 5; $i++)
-                        <i class="fas fa-star {{ $i < $product['rating'] ? 'active' : '' }}"></i>
-                    @endfor
-                    <span>({{ $product['reviews'] }} تقييم)</span>
-                </div>
-
-                <div class="detail-price">
-                    <span class="price-current">{{ number_format($product['price']) }} جنيه</span>
-                    @if($product['old_price'])
-                    <span class="price-old">{{ number_format($product['old_price']) }} جنيه</span>
-                    <span class="price-save">وفر {{ number_format($product['old_price'] - $product['price']) }} جنيه</span>
+                {{-- Brand + badge --}}
+                <div class="pd-brand-row">
+                    <span class="pd-brand">{{ $product['brand'] }}</span>
+                    @if($product['badge'])
+                    <span class="badge badge-{{ $product['badge_color'] }}">{{ $product['badge'] }}</span>
                     @endif
                 </div>
 
-                <p class="detail-description">{{ $product['description'] }}</p>
+                <h1 class="pd-title">{{ $product['name'] }}</h1>
 
+                {{-- Rating --}}
+                <div class="pd-rating">
+                    @for($i = 0; $i < 5; $i++)
+                        <i class="fas fa-star {{ $i < $product['rating'] ? 'active' : '' }}"></i>
+                    @endfor
+                    <span>({{ $product['reviews'] ?? 0 }} تقييم)</span>
+                </div>
+
+                {{-- Price --}}
+                <div class="pd-price-box">
+                    <span class="pd-price">{{ number_format($product['price']) }} جنيه</span>
+                    @if($product['old_price'])
+                    <span class="pd-old-price">{{ number_format($product['old_price']) }} جنيه</span>
+                    <span class="pd-save">وفر {{ number_format($product['old_price'] - $product['price']) }} جنيه</span>
+                    @endif
+                </div>
+
+                <p class="pd-desc">{{ $product['description'] }}</p>
+
+                {{-- Specs table --}}
                 @if(!empty($product['specs']))
-                <div class="product-specs">
-                    <h3>المواصفات الرئيسية</h3>
-                    <ul>
+                <div class="pd-specs">
+                    <div class="pd-specs-title">
+                        <i class="fas fa-list-ul"></i> المواصفات
+                    </div>
+                    <table class="pd-specs-table">
                         @foreach($product['specs'] as $spec)
-                        <li><i class="fas fa-check-circle"></i> {{ $spec }}</li>
+                        @php
+                            $parts = explode(':', $spec, 2);
+                            $key   = trim($parts[0]);
+                            $val   = isset($parts[1]) ? trim($parts[1]) : '';
+                        @endphp
+                        <tr>
+                            <td class="spec-key">{{ $key }}</td>
+                            <td class="spec-val">{{ $val ?: $key }}</td>
+                        </tr>
                         @endforeach
-                    </ul>
+                    </table>
                 </div>
                 @endif
 
-                <div class="detail-actions">
-                    <div class="quantity-selector">
-                        <button onclick="changeQty(-1)">-</button>
+                {{-- Actions --}}
+                <div class="pd-actions">
+                    <div class="qty-box">
+                        <button onclick="changeQty(-1)">−</button>
                         <input type="number" id="qty" value="1" min="1" max="99">
                         <button onclick="changeQty(1)">+</button>
                     </div>
-                    <button class="btn btn-primary btn-lg" onclick="addToCart({{ $product['id'] }}, '{{ $product['name'] }}', {{ $product['price'] }}, '{{ $product['image'] }}')">
+                    <button class="btn btn-primary btn-lg pd-cart-btn"
+                            onclick="addToCart({{ $product['id'] }}, '{{ addslashes($product['name']) }}', {{ $product['price'] }}, '{{ $product['image_url'] ?? '' }}')">
                         <i class="fas fa-shopping-cart"></i> أضف للسلة
                     </button>
                 </div>
 
-                <div class="product-guarantees">
-                    <div class="guarantee-item"><i class="fas fa-shield-alt"></i><span>ضمان أصلي</span></div>
-                    <div class="guarantee-item"><i class="fas fa-truck"></i><span>شحن سريع</span></div>
-                    <div class="guarantee-item"><i class="fas fa-undo"></i><span>إرجاع 14 يوم</span></div>
+                {{-- Guarantees --}}
+                <div class="pd-guarantees">
+                    <div class="guar-item"><i class="fas fa-shield-alt"></i><span>ضمان أصلي</span></div>
+                    <div class="guar-item"><i class="fas fa-truck"></i><span>شحن سريع</span></div>
+                    <div class="guar-item"><i class="fas fa-undo"></i><span>إرجاع 14 يوم</span></div>
+                    <div class="guar-item"><i class="fas fa-headset"></i><span>دعم فني</span></div>
                 </div>
             </div>
         </div>
 
+        {{-- ═══ Related Products ═══ --}}
         @if(count($related) > 0)
-        <div class="related-products">
-            <h2>منتجات مشابهة</h2>
+        <div class="pd-related">
+            <h2 class="pd-related-title"><i class="fas fa-th-large"></i> منتجات مشابهة</h2>
             <div class="related-grid">
                 @foreach($related as $item)
+                @php
+                    $rIcon = $item['category'] === 'printers' ? 'print'
+                           : ($item['category'] === 'mice' ? 'mouse'
+                           : ($item['category'] === 'headphones' ? 'headphones' : 'usb'));
+                @endphp
                 <div class="product-card">
                     @if($item['badge'])
                     <span class="product-badge badge badge-{{ $item['badge_color'] }}">{{ $item['badge'] }}</span>
                     @endif
                     <div class="product-image">
-                        <div class="placeholder-image">
-                            <i class="fas fa-{{ $item['category'] === 'printers' ? 'print' : ($item['category'] === 'mice' ? 'mouse' : ($item['category'] === 'headphones' ? 'headphones' : 'usb')) }}"></i>
-                        </div>
+                        @if(!empty($item['image_url']))
+                            <img src="{{ $item['image_url'] }}" alt="{{ $item['name'] }}"
+                                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                            <div class="placeholder-image" style="display:none">
+                                <i class="fas fa-{{ $rIcon }}"></i>
+                            </div>
+                        @else
+                            <div class="placeholder-image">
+                                <i class="fas fa-{{ $rIcon }}"></i>
+                            </div>
+                        @endif
                     </div>
                     <div class="product-info">
                         <span class="product-brand">{{ $item['brand'] }}</span>
                         <h3>{{ $item['name'] }}</h3>
                         <div class="product-price">
                             <span class="price-current">{{ number_format($item['price']) }} جنيه</span>
+                            @if($item['old_price'])
+                            <span class="price-old">{{ number_format($item['old_price']) }} جنيه</span>
+                            @endif
                         </div>
                         <div class="product-actions">
-                            <button class="btn btn-primary" onclick="addToCart({{ $item['id'] }}, '{{ $item['name'] }}', {{ $item['price'] }}, '{{ $item['image'] }}')">
+                            <button class="btn btn-primary"
+                                    onclick="addToCart({{ $item['id'] }}, '{{ addslashes($item['name']) }}', {{ $item['price'] }}, '{{ $item['image_url'] ?? '' }}')">
                                 <i class="fas fa-shopping-cart"></i> أضف للسلة
                             </button>
                             <a href="{{ route('products.show', $item['id']) }}" class="btn btn-outline">
@@ -120,6 +189,7 @@
             </div>
         </div>
         @endif
+
     </div>
 </section>
 
@@ -127,160 +197,301 @@
 
 @push('styles')
 <style>
-.product-detail-layout {
+/* ═══════════════════════════════════════
+   PRODUCT DETAIL PAGE
+═══════════════════════════════════════ */
+
+/* ── Top layout ── */
+.pd-layout {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
+    grid-template-columns: 520px 1fr;
+    gap: 3.5rem;
     align-items: start;
-    margin-bottom: 5rem;
+    margin-bottom: 4rem;
 }
 
-.main-image {
-    background: #fff;
-    border-radius: 20px;
+/* ── Gallery ── */
+.pd-gallery {
+    display: flex;
+    gap: .875rem;
+    align-items: flex-start;
+}
+
+/* Thumbnails column (right side like the reference) */
+.pd-thumbs {
+    display: flex;
+    flex-direction: column;
+    gap: .625rem;
+    flex-shrink: 0;
+}
+
+.pd-thumb {
+    width: 72px;
+    height: 72px;
+    border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,0,0,.08);
-    height: 440px;
+    border: 2px solid #E2E8F0;
+    cursor: pointer;
+    transition: all .2s ease;
+    padding: 0;
+    background: #fff;
+    flex-shrink: 0;
+}
+
+.pd-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.pd-thumb:hover,
+.pd-thumb.active {
+    border-color: #2563EB;
+    box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+}
+
+/* Main image */
+.pd-main-img-wrap {
+    flex: 1;
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid #E2E8F0;
+    overflow: hidden;
+    height: 420px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #F1F5F9;
+    box-shadow: 0 2px 16px rgba(0,0,0,.07);
 }
 
-.placeholder-image-lg { font-size: 9rem; color: #CBD5E1; }
+.pd-main-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform .4s ease;
+    padding: 1rem;
+}
 
-.product-brand-tag {
+.pd-main-img-wrap:hover .pd-main-img { transform: scale(1.04); }
+
+.pd-no-img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: 7rem;
+    color: #CBD5E1;
+}
+
+/* ── Info column ── */
+.pd-brand-row {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-bottom: .875rem;
+}
+
+.pd-brand {
     display: inline-block;
     background: #EFF6FF;
     color: #2563EB;
-    padding: .375rem 1rem;
+    padding: .35rem 1rem;
     border-radius: 50px;
-    font-size: .875rem;
-    font-weight: 700;
+    font-size: .8125rem;
+    font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 1rem;
 }
 
-.product-detail-info h1 { font-size: 1.875rem; margin-bottom: 1rem; }
+.pd-title {
+    font-size: 1.625rem;
+    font-weight: 800;
+    color: #0F172A;
+    margin-bottom: .75rem;
+    line-height: 1.3;
+}
 
-.product-rating { display: flex; align-items: center; gap: .375rem; }
-.product-rating i { color: #CBD5E1; }
-.product-rating i.active { color: #F59E0B; }
-.product-rating span { color: #64748B; font-size: .9375rem; margin-right: .25rem; }
-
-.detail-price {
+.pd-rating {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
+    gap: .25rem;
+    margin-bottom: 1.25rem;
 }
 
-.detail-price .price-current { font-size: 2.25rem; font-weight: 900; color: #2563EB; }
-.detail-price .price-old { font-size: 1.375rem; color: #94A3B8; text-decoration: line-through; }
+.pd-rating i { color: #D1D5DB; font-size: .875rem; }
+.pd-rating i.active { color: #F59E0B; }
+.pd-rating span { color: #64748B; font-size: .875rem; margin-right: .375rem; }
 
-.price-save {
+/* Price */
+.pd-price-box {
+    display: flex;
+    align-items: center;
+    gap: .875rem;
+    flex-wrap: wrap;
+    padding: 1rem 1.25rem;
+    background: #F8FAFC;
+    border-radius: 12px;
+    border: 1px solid #E2E8F0;
+    margin-bottom: 1.25rem;
+}
+
+.pd-price {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #2563EB;
+}
+
+.pd-old-price {
+    font-size: 1.125rem;
+    color: #94A3B8;
+    text-decoration: line-through;
+}
+
+.pd-save {
     background: #FEE2E2;
     color: #DC2626;
-    padding: .375rem .75rem;
+    padding: .3rem .75rem;
     border-radius: 50px;
-    font-size: .875rem;
+    font-size: .8125rem;
     font-weight: 700;
 }
 
-.detail-description {
-    font-size: 1.0625rem;
+.pd-desc {
+    font-size: .9375rem;
     color: #475569;
     line-height: 1.8;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #F1F5F9;
 }
 
-.product-specs {
-    background: #F8FAFC;
-    border-radius: 14px;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-    border: 1px solid #F1F5F9;
+/* ── Specs table (like the reference image) ── */
+.pd-specs {
+    margin-bottom: 1.75rem;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    overflow: hidden;
 }
 
-.product-specs h3 { font-size: 1rem; margin-bottom: 1rem; color: #0F172A; }
-
-.product-specs ul {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: .625rem;
-}
-
-.product-specs li {
+.pd-specs-title {
+    background: #1E3A8A;
+    color: #fff;
+    padding: .625rem 1rem;
+    font-size: .875rem;
+    font-weight: 700;
     display: flex;
     align-items: center;
-    gap: .625rem;
-    color: #334155;
-    font-size: .9375rem;
+    gap: .5rem;
 }
 
-.product-specs li i { color: #10B981; flex-shrink: 0; }
+.pd-specs-table {
+    width: 100%;
+    border-collapse: collapse;
+}
 
-.detail-actions {
+.pd-specs-table tr:nth-child(even) { background: #F8FAFC; }
+.pd-specs-table tr:nth-child(odd)  { background: #fff; }
+
+.pd-specs-table tr:hover { background: #EFF6FF; }
+
+.spec-key {
+    padding: .6rem 1rem;
+    font-size: .875rem;
+    font-weight: 700;
+    color: #334155;
+    width: 40%;
+    border-left: 1px solid #E2E8F0;
+    border-bottom: 1px solid #F1F5F9;
+}
+
+.spec-val {
+    padding: .6rem 1rem;
+    font-size: .875rem;
+    color: #475569;
+    border-bottom: 1px solid #F1F5F9;
+}
+
+/* ── Actions ── */
+.pd-actions {
     display: flex;
     gap: 1rem;
     align-items: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
 }
 
-.quantity-selector {
+.qty-box {
     display: flex;
     align-items: center;
     border: 2px solid #E2E8F0;
     border-radius: 50px;
     overflow: hidden;
+    flex-shrink: 0;
 }
 
-.quantity-selector button {
-    width: 44px;
-    height: 48px;
+.qty-box button {
+    width: 42px;
+    height: 46px;
     background: #F1F5F9;
     color: #334155;
     font-size: 1.25rem;
     font-weight: 700;
-    transition: all .25s ease;
+    transition: all .2s ease;
 }
 
-.quantity-selector button:hover { background: #2563EB; color: #fff; }
+.qty-box button:hover { background: #2563EB; color: #fff; }
 
-.quantity-selector input {
-    width: 56px;
-    height: 48px;
+.qty-box input {
+    width: 52px;
+    height: 46px;
     text-align: center;
     border: none;
-    font-size: 1.125rem;
+    font-size: 1.0625rem;
     font-weight: 700;
     color: #0F172A;
 }
 
-.quantity-selector input:focus { outline: none; }
+.qty-box input:focus { outline: none; }
 
-.product-guarantees {
-    display: flex;
-    gap: 1.75rem;
-    padding: 1.25rem 1.5rem;
-    background: #EFF6FF;
-    border-radius: 14px;
+.pd-cart-btn { flex: 1; justify-content: center; }
+
+/* ── Guarantees ── */
+.pd-guarantees {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: .75rem;
 }
 
-.guarantee-item {
+.guar-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .375rem;
+    padding: .875rem .5rem;
+    background: #EFF6FF;
+    border-radius: 12px;
+    color: #2563EB;
+    font-size: .8125rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.guar-item i { font-size: 1.375rem; }
+
+/* ═══ Related ═══ */
+.pd-related { border-top: 2px solid #F1F5F9; padding-top: 3rem; }
+
+.pd-related-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 1.75rem;
     display: flex;
     align-items: center;
     gap: .625rem;
-    color: #2563EB;
-    font-weight: 600;
-    font-size: .9375rem;
+    color: #0F172A;
 }
 
-.guarantee-item i { font-size: 1.375rem; }
-
-.related-products h2 { font-size: 1.875rem; margin-bottom: 2rem; }
+.pd-related-title i { color: #2563EB; }
 
 .related-grid {
     display: grid;
@@ -288,6 +499,7 @@
     gap: 1.25rem;
 }
 
+/* ── Shared product card ── */
 .product-card {
     position: relative;
     background: #fff;
@@ -300,36 +512,78 @@
 
 .product-card:hover { box-shadow: 0 12px 36px rgba(0,0,0,.12); transform: translateY(-5px); }
 .product-badge { position: absolute; top: .75rem; right: .75rem; z-index: 2; }
-.product-image { height: 180px; background: #F8FAFC; display: flex; align-items: center; justify-content: center; }
-.placeholder-image { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; color: #CBD5E1; }
+
+.product-image {
+    height: 180px;
+    background: #F8FAFC;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .4s ease;
+}
+
+.product-card:hover .product-image img { transform: scale(1.06); }
+
+.placeholder-image {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    color: #CBD5E1;
+}
+
 .product-info { padding: 1.125rem; }
 .product-brand { font-size: .75rem; font-weight: 700; color: #2563EB; text-transform: uppercase; letter-spacing: 1px; margin-bottom: .375rem; display: block; }
-.product-info h3 { font-size: .9375rem; margin-bottom: .75rem; }
+.product-info h3 { font-size: .9375rem; margin-bottom: .75rem; color: #0F172A; }
 .product-price { display: flex; align-items: center; gap: .5rem; margin-bottom: .875rem; }
-.price-current { font-size: 1.25rem; font-weight: 800; color: #2563EB; }
-.price-old { font-size: .875rem; color: #94A3B8; text-decoration: line-through; }
+.price-current { font-size: 1.125rem; font-weight: 800; color: #2563EB; }
+.price-old { font-size: .8125rem; color: #94A3B8; text-decoration: line-through; }
 .product-actions { display: grid; grid-template-columns: 1fr auto; gap: .5rem; }
 .product-actions .btn { font-size: .8125rem; padding: .5rem .875rem; }
 
-@media (max-width: 1024px) {
-    .product-detail-layout { grid-template-columns: 1fr; gap: 2rem; }
-    .product-specs ul { grid-template-columns: 1fr; }
-    .detail-actions { flex-direction: column; }
-    .product-guarantees { flex-direction: column; gap: 1rem; }
+/* ── Responsive ── */
+@media (max-width: 1100px) {
+    .pd-layout { grid-template-columns: 1fr; gap: 2rem; }
+    .pd-gallery { max-width: 520px; }
+    .pd-guarantees { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+    .pd-main-img-wrap { height: 300px; }
+    .pd-thumb { width: 58px; height: 58px; }
+    .pd-actions { flex-direction: column; }
+    .pd-cart-btn { width: 100%; }
     .related-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 480px) {
     .related-grid { grid-template-columns: 1fr; }
+    .pd-guarantees { grid-template-columns: repeat(2, 1fr); }
 }
 </style>
 @endpush
 
 @push('scripts')
 <script>
+function switchImg(url, btn) {
+    const img = document.getElementById('mainImg');
+    if (img) img.src = url;
+    document.querySelectorAll('.pd-thumb').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+}
+
 function changeQty(delta) {
     const input = document.getElementById('qty');
-    input.value = Math.max(1, parseInt(input.value) + delta);
+    input.value = Math.max(1, parseInt(input.value || 1) + delta);
 }
 </script>
 @endpush

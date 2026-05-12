@@ -419,3 +419,26 @@ const observer = new IntersectionObserver((entries) => {
 document.querySelectorAll('.animate-on-scroll').forEach(el => {
     observer.observe(el);
 });
+
+
+// ============================================================
+// MJK Premium Navbar — mobile menu wiring (new layout)
+// ============================================================
+(function () {
+    const hamburger  = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    if (hamburger && mobileMenu) {
+        hamburger.addEventListener('click', function () {
+            mobileMenu.classList.toggle('open');
+            hamburger.classList.toggle('active');
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) {
+                mobileMenu.classList.remove('open');
+                hamburger.classList.remove('active');
+            }
+        });
+    }
+}());

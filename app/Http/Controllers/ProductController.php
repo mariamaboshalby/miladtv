@@ -55,11 +55,11 @@ class ProductController extends Controller
         $products = $query->get()->map(fn($p) => $this->toArray($p))->toArray();
 
         $categories = [
-            'all'        => 'جميع المنتجات',
-            'printers'   => 'الطابعات',
-            'mice'       => 'الماوسات',
-            'headphones' => 'السماعات',
-            'flash'      => 'الفلاشات',
+            'all'        => 'All Products',
+            'printers'   => 'Printers',
+            'mice'       => 'Mice',
+            'headphones' => 'Headphones',
+            'flash'      => 'Flash Drives',
         ];
 
         return view('products.index', compact('products', 'category', 'sort', 'categories'));

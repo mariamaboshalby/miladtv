@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\NewsController;
@@ -12,6 +14,22 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+
+// ── Auth ──────────────────────────────────────────────────────────────────
+Route::middleware('guest')->group(function () {
+    Route::get('/login',     [AuthController::class, 'loginForm'])->name('login');
+    Route::post('/login',    [AuthController::class, 'login']);
+    Route::get('/register',  [AuthController::class, 'registerForm'])->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
+});
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+
+// ── Checkout (auth required) ──────────────────────────────────────────────
+Route::middleware('auth')->group(function () {
+    Route::get('/checkout',                          [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout',                         [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::get('/checkout/success/{orderNumber}',    [CheckoutController::class, 'success'])->name('checkout.success');
+});
 
 // Home
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -37,6 +55,7 @@ Route::get('/about', [AboutController::class, 'index'])->name('about.index');
 
 // Cart
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::get('/cart/items', [CartController::class, 'items'])->name('cart.items');
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
 Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
 Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');

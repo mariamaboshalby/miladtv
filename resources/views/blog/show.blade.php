@@ -4,63 +4,86 @@
 
 @section('content')
 
-<div class="page-header">
+{{-- Page Header --}}
+<div style="background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%);padding:2.5rem 0;">
     <div class="container">
-        <h1>{{ $post['title'] }}</h1>
-        <nav class="breadcrumb">
-            <a href="{{ route('home') }}">Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ©</a>
-            <i class="fas fa-chevron-left"></i>
-            <a href="{{ route('blog.index') }}">Ø§Ù„Ù…Ø¯ÙˆÙ†Ø©</a>
-            <i class="fas fa-chevron-left"></i>
-            <span>{{ Str::limit($post['title'], 40) }}</span>
+        <h1 class="text-white fw-bold mb-1">{{ Str::limit($post['title'], 60) }}</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-white-50 text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('blog.index') }}" class="text-white-50 text-decoration-none">Blog</a></li>
+                <li class="breadcrumb-item active text-white-50">Article</li>
+            </ol>
         </nav>
     </div>
 </div>
 
-<section class="section">
+{{-- Article Layout --}}
+<section class="py-5 bg-light">
     <div class="container">
-        <div class="article-layout">
-            <article class="article-main">
-                <div class="article-image">
-                    <div class="placeholder-image-xl">
-                        <i class="fas fa-blog"></i>
+        <div class="row g-4">
+
+            {{-- Main Article --}}
+            <div class="col-lg-8">
+                <article class="card border-0 shadow-sm" style="border-radius:16px;">
+                    {{-- Image --}}
+                    <div class="article-img-area">
+                        <div class="d-flex align-items-center justify-content-center h-100">
+                            <i class="fas fa-pen-nib text-secondary opacity-25" style="font-size:6rem;"></i>
+                        </div>
                     </div>
-                </div>
-                <div class="article-body">
-                    <div class="article-meta">
-                        <span class="article-category">{{ $post['category'] }}</span>
-                        <span><i class="fas fa-calendar-alt"></i> {{ \Carbon\Carbon::parse($post['date'])->format('d M Y') }}</span>
-                        <span><i class="fas fa-user"></i> {{ $post['author'] }}</span>
-                        <span><i class="fas fa-briefcase"></i> {{ $post['author_role'] }}</span>
-                        <span><i class="fas fa-clock"></i> {{ $post['read_time'] }} Ø¯Ù‚Ø§Ø¦Ù‚ Ù‚Ø±Ø§Ø¡Ø©</span>
-                        <span><i class="fas fa-eye"></i> {{ number_format($post['views']) }}</span>
+
+                    <div class="card-body p-4 p-lg-5">
+                        {{-- Meta --}}
+                        <div class="d-flex flex-wrap gap-3 mb-3" style="font-size:.9375rem;">
+                            <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2" style="border-radius:50px;">{{ $post['category'] }}</span>
+                            <span class="text-muted"><i class="fas fa-calendar-alt text-primary me-1"></i>{{ \Carbon\Carbon::parse($post['date'])->format('d M Y') }}</span>
+                            <span class="text-muted"><i class="fas fa-user text-primary me-1"></i>{{ $post['author'] }}</span>
+                            <span class="text-muted"><i class="fas fa-briefcase text-primary me-1"></i>{{ $post['author_role'] }}</span>
+                            <span class="text-muted"><i class="fas fa-clock text-primary me-1"></i>{{ $post['read_time'] }} min read</span>
+                            <span class="text-muted"><i class="fas fa-eye text-primary me-1"></i>{{ number_format($post['views']) }}</span>
+                        </div>
+
+                        {{-- Title --}}
+                        <h1 class="fw-bold mb-4" style="font-size:1.875rem;color:#0f172a;">{{ $post['title'] }}</h1>
+
+                        {{-- Content --}}
+                        <div class="article-content text-secondary mb-4" style="font-size:1.0625rem;line-height:2;">
+                            <p>{{ $post['content'] }}</p>
+                        </div>
+
+                        {{-- Tags --}}
+                        <div class="pt-4 border-top">
+                            <span class="text-muted fw-semibold me-2"><i class="fas fa-tags text-primary me-1"></i>Tags:</span>
+                            @foreach($post['tags'] as $tag)
+                            <span class="badge bg-light text-secondary border me-1 mb-1" style="border-radius:50px;font-size:.8125rem;font-weight:600;padding:.4rem .9rem;">{{ $tag }}</span>
+                            @endforeach
+                        </div>
                     </div>
-                    <h1>{{ $post['title'] }}</h1>
-                    <div class="article-content">
-                        <p>{{ $post['content'] }}</p>
-                    </div>
-                    <div class="article-tags">
-                        @foreach($post['tags'] as $tag)
-                        <span class="tag">{{ $tag }}</span>
+                </article>
+            </div>
+
+            {{-- Sidebar --}}
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm sticky-top" style="border-radius:16px;top:90px;">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold text-primary mb-3 pb-3 border-bottom">More Articles</h5>
+
+                        @foreach($related as $rel)
+                        <a href="{{ route('blog.show', $rel['id']) }}" class="d-flex gap-3 text-decoration-none mb-3 pb-3 border-bottom sidebar-item">
+                            <div class="sidebar-icon flex-shrink-0">
+                                <i class="fas fa-pen-nib"></i>
+                            </div>
+                            <div class="flex-grow-1 min-w-0">
+                                <h6 class="fw-semibold text-dark mb-1 sidebar-title">{{ Str::limit($rel['title'], 50) }}</h6>
+                                <small class="text-muted">{{ $rel['read_time'] }} min &middot; {{ \Carbon\Carbon::parse($rel['date'])->format('d M Y') }}</small>
+                            </div>
+                        </a>
                         @endforeach
                     </div>
                 </div>
-            </article>
+            </div>
 
-            <aside class="article-sidebar">
-                <div class="sidebar-card">
-                    <h3>Ù…Ù‚Ø§Ù„Ø§Øª Ø£Ø®Ø±Ù‰</h3>
-                    @foreach($related as $rel)
-                    <a href="{{ route('blog.show', $rel['id']) }}" class="sidebar-item">
-                        <div class="sidebar-item-icon"><i class="fas fa-blog"></i></div>
-                        <div>
-                            <h4>{{ Str::limit($rel['title'], 50) }}</h4>
-                            <span>{{ $rel['read_time'] }} Ø¯Ù‚Ø§Ø¦Ù‚ Â· {{ \Carbon\Carbon::parse($rel['date'])->format('d M Y') }}</span>
-                        </div>
-                    </a>
-                    @endforeach
-                </div>
-            </aside>
         </div>
     </div>
 </section>
@@ -69,135 +92,43 @@
 
 @push('styles')
 <style>
-
-
-.article-layout {
-    display: grid;
-    grid-template-columns: 1fr 350px;
-    gap: 3rem;
-    align-items: start;
+.article-img-area {
+    height: 380px;
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
 }
 
-.article-main {
-    background: var(--white);
-    border-radius: var(--radius-xl);
-    overflow: hidden;
-    box-shadow: var(--shadow);
-}
-
-.article-image {
-    height: 400px;
-    background: var(--gray-100);
+.sidebar-icon {
+    width: 44px;
+    height: 44px;
+    background: #eff6ff;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.placeholder-image-xl { font-size: 8rem; color: var(--gray-300); }
-
-.article-body { padding: 2.5rem; }
-
-.article-meta {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
-    color: var(--gray-500);
-    font-size: 0.9375rem;
-}
-
-.article-meta span {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.article-meta i { color: var(--primary-blue); }
-
-.article-category {
-    background: var(--secondary-blue);
-    color: var(--primary-blue);
-    padding: 0.375rem 1rem;
-    border-radius: var(--radius-full);
-    font-weight: 700;
-    font-size: 0.875rem;
-}
-
-.article-body h1 { font-size: 2rem; margin-bottom: 2rem; color: var(--gray-900); }
-
-.article-content p {
-    font-size: 1.0625rem;
-    line-height: 2;
-    color: var(--gray-700);
-}
-
-.article-tags {
-    display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-    margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--gray-200);
-}
-
-.tag {
-    padding: 0.375rem 1rem;
-    background: var(--gray-100);
-    color: var(--gray-600);
-    border-radius: var(--radius-full);
-    font-size: 0.875rem;
-    font-weight: 600;
-}
-
-.sidebar-card {
-    background: var(--white);
-    border-radius: var(--radius-xl);
-    padding: 2rem;
-    box-shadow: var(--shadow);
-    position: sticky;
-    top: 100px;
-}
-
-.sidebar-card h3 {
-    font-size: 1.25rem;
-    margin-bottom: 1.5rem;
-    color: var(--primary-blue);
-    padding-bottom: 0.75rem;
-    border-bottom: 2px solid var(--secondary-blue);
+    color: #2563eb;
+    font-size: 1.125rem;
 }
 
 .sidebar-item {
-    display: flex;
-    gap: 1rem;
-    padding: 1rem 0;
-    border-bottom: 1px solid var(--gray-100);
-    transition: var(--transition);
+    transition: all .25s ease;
 }
 
-.sidebar-item:last-child { border-bottom: none; }
-.sidebar-item:hover { color: var(--primary-blue); }
-
-.sidebar-item-icon {
-    width: 50px;
-    height: 50px;
-    background: var(--secondary-blue);
-    border-radius: var(--radius-md);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--primary-blue);
-    font-size: 1.25rem;
-    flex-shrink: 0;
+.sidebar-item:hover .sidebar-title {
+    color: #2563eb !important;
 }
 
-.sidebar-item h4 { font-size: 0.9375rem; margin-bottom: 0.25rem; color: var(--gray-900); }
-.sidebar-item span { font-size: 0.8125rem; color: var(--gray-500); }
+.sidebar-item:last-child {
+    border-bottom: none !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
 
-@media (max-width: 1024px) {
-    .article-layout { grid-template-columns: 1fr; }
-    .sidebar-card { position: static; }
+.sidebar-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.4;
 }
 </style>
 @endpush
-

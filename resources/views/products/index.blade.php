@@ -1,117 +1,169 @@
 ﻿@extends('layouts.app')
 
-@section('title', 'المنتجات - MJK')
+@section('title', 'Products - MJK')
 
 @section('content')
 
-<div class="page-header">
+{{-- Page Header --}}
+<div style="background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%);padding:2.5rem 0;">
     <div class="container">
-        <h1>المنتجات</h1>
-        <nav class="breadcrumb">
-            <a href="{{ route('home') }}">الرئيسية</a>
-            <i class="fas fa-chevron-left"></i>
-            <span>المنتجات</span>
+        <h1 class="text-white fw-bold mb-1">Products</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-white-50 text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item active text-white-50">Products</li>
+            </ol>
         </nav>
     </div>
 </div>
 
-<section class="section">
+<section class="py-5 bg-light">
     <div class="container">
-        <div class="products-layout">
+        <div class="row g-4">
 
-            <!-- Sidebar Filters -->
-            <aside class="products-sidebar">
-                <div class="filter-card">
-                    <h3><i class="fas fa-filter"></i> تصفية المنتجات</h3>
+            {{-- Sidebar --}}
+            <div class="col-lg-3">
 
-                    <div class="filter-group">
-                        <h4>الفئة</h4>
-                        @foreach($categories as $key => $label)
-                        <a href="{{ route('products.index', ['category' => $key, 'sort' => $sort]) }}"
-                           class="filter-option {{ $category === $key ? 'active' : '' }}">
-                            <i class="fas fa-{{ $key === 'printers' ? 'print' : ($key === 'mice' ? 'mouse' : ($key === 'headphones' ? 'headphones' : ($key === 'flash' ? 'usb' : 'th-large'))) }}"></i>
-                            {{ $label }}
-                        </a>
-                        @endforeach
-                    </div>
+                {{-- Mobile: Filter toggle button --}}
+                <button class="btn btn-primary w-100 d-lg-none mb-3 d-flex align-items-center justify-content-between px-4 py-2 rounded-3"
+                        id="filterToggleBtn"
+                        type="button"
+                        aria-expanded="false"
+                        aria-controls="filterCollapse">
+                    <span class="d-flex align-items-center gap-2 fw-semibold">
+                        <i class="fas fa-filter"></i> Filter Products
+                        @if($category !== 'all' || $sort !== 'default')
+                        <span class="badge bg-white text-primary ms-1" style="font-size:.7rem;">Active</span>
+                        @endif
+                    </span>
+                    <i class="fas fa-chevron-down" id="filterChevron" style="transition:transform .25s ease;"></i>
+                </button>
 
-                    <div class="filter-group">
-                        <h4>الترتيب</h4>
-                        <a href="{{ route('products.index', ['category' => $category, 'sort' => 'default']) }}"
-                           class="filter-option {{ $sort === 'default' ? 'active' : '' }}">الافتراضي</a>
-                        <a href="{{ route('products.index', ['category' => $category, 'sort' => 'price_asc']) }}"
-                           class="filter-option {{ $sort === 'price_asc' ? 'active' : '' }}">السعر: الأقل أولاً</a>
-                        <a href="{{ route('products.index', ['category' => $category, 'sort' => 'price_desc']) }}"
-                           class="filter-option {{ $sort === 'price_desc' ? 'active' : '' }}">السعر: الأعلى أولاً</a>
-                        <a href="{{ route('products.index', ['category' => $category, 'sort' => 'rating']) }}"
-                           class="filter-option {{ $sort === 'rating' ? 'active' : '' }}">الأعلى تقييماً</a>
+                {{-- Filter card — hidden on mobile by default, always visible on desktop --}}
+                <div id="filterCollapse" class="d-none d-lg-block">
+                    <div class="card border-0 shadow-sm sticky-top" style="border-radius:16px;top:90px;">
+                        <div class="card-body p-4">
+                            <h6 class="fw-bold text-primary mb-3 d-flex align-items-center gap-2 d-none d-lg-flex">
+                                <i class="fas fa-filter"></i> Filter Products
+                            </h6>
+
+                            {{-- Category --}}
+                            <div class="mb-4">
+                                <p class="text-uppercase text-muted fw-semibold mb-2" style="font-size:.75rem;letter-spacing:.5px;">Category</p>
+                                @foreach($categories as $key => $label)
+                                <a href="{{ route('products.index', ['category' => $key, 'sort' => $sort]) }}"
+                                   class="filter-option d-flex align-items-center gap-2 px-3 py-2 rounded-3 mb-1 text-decoration-none {{ $category === $key ? 'active' : '' }}">
+                                    <i class="fas fa-{{ $key === 'printers' ? 'print' : ($key === 'mice' ? 'mouse' : ($key === 'headphones' ? 'headphones' : ($key === 'flash' ? 'usb' : 'th-large'))) }}"></i>
+                                    {{ $label }}
+                                </a>
+                                @endforeach
+                            </div>
+
+                            {{-- Sort By --}}
+                            <div>
+                                <p class="text-uppercase text-muted fw-semibold mb-2" style="font-size:.75rem;letter-spacing:.5px;">Sort By</p>
+                                <a href="{{ route('products.index', ['category' => $category, 'sort' => 'default']) }}"
+                                   class="filter-option d-flex align-items-center gap-2 px-3 py-2 rounded-3 mb-1 text-decoration-none {{ $sort === 'default' ? 'active' : '' }}">
+                                    <i class="fas fa-list"></i> Default
+                                </a>
+                                <a href="{{ route('products.index', ['category' => $category, 'sort' => 'price_asc']) }}"
+                                   class="filter-option d-flex align-items-center gap-2 px-3 py-2 rounded-3 mb-1 text-decoration-none {{ $sort === 'price_asc' ? 'active' : '' }}">
+                                    <i class="fas fa-arrow-up"></i> Price: Low to High
+                                </a>
+                                <a href="{{ route('products.index', ['category' => $category, 'sort' => 'price_desc']) }}"
+                                   class="filter-option d-flex align-items-center gap-2 px-3 py-2 rounded-3 mb-1 text-decoration-none {{ $sort === 'price_desc' ? 'active' : '' }}">
+                                    <i class="fas fa-arrow-down"></i> Price: High to Low
+                                </a>
+                                <a href="{{ route('products.index', ['category' => $category, 'sort' => 'rating']) }}"
+                                   class="filter-option d-flex align-items-center gap-2 px-3 py-2 rounded-3 mb-1 text-decoration-none {{ $sort === 'rating' ? 'active' : '' }}">
+                                    <i class="fas fa-star"></i> Top Rated
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </aside>
+            </div>
 
-            <!-- Products Grid -->
-            <div class="products-main">
-                <div class="products-toolbar">
-                    <p>{{ count($products) }} منتج</p>
+            {{-- Products Main --}}
+            <div class="col-lg-9">
+                {{-- Toolbar --}}
+                <div class="d-flex justify-content-between align-items-center mb-4 px-3 py-2 bg-white rounded-3 shadow-sm border">
+                    <span class="text-secondary fw-semibold">{{ count($products) }} products found</span>
                 </div>
 
                 @if(count($products) > 0)
-                <div class="products-grid-main">
+                <div class="row g-3">
                     @foreach($products as $product)
-                    <div class="product-card">
-                        @if($product['badge'])
-                        <span class="product-badge badge badge-{{ $product['badge_color'] }}">{{ $product['badge'] }}</span>
-                        @endif
-                        <div class="product-image">
-                            @if(!empty($product['image_url']))
-                                <img src="{{ $product['image_url'] }}" alt="{{ $product['name'] }}"
-                                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                                <div class="placeholder-image" style="display:none">
-                                    <i class="fas fa-{{ $product['category'] === 'printers' ? 'print' : ($product['category'] === 'mice' ? 'mouse' : ($product['category'] === 'headphones' ? 'headphones' : 'usb')) }}"></i>
-                                </div>
-                            @else
-                                <div class="placeholder-image">
-                                    <i class="fas fa-{{ $product['category'] === 'printers' ? 'print' : ($product['category'] === 'mice' ? 'mouse' : ($product['category'] === 'headphones' ? 'headphones' : 'usb')) }}"></i>
-                                </div>
+                    <div class="col-md-6 col-xl-4">
+                        <div class="product-card card border-0 shadow-sm h-100">
+                            @if($product['badge'])
+                            <span class="badge bg-danger position-absolute top-0 end-0 m-2 px-2 py-1" style="z-index:2;border-radius:8px;">{{ $product['badge'] }}</span>
                             @endif
-                        </div>
-                        <div class="product-info">
-                            <span class="product-brand">{{ $product['brand'] }}</span>
-                            <h3>{{ $product['name'] }}</h3>
-                            <p class="product-description">{{ $product['description'] }}</p>
-                            <div class="product-rating">
-                                @for($i = 0; $i < 5; $i++)
-                                    <i class="fas fa-star {{ $i < $product['rating'] ? 'active' : '' }}"></i>
-                                @endfor
-                                <span>({{ $product['reviews'] }})</span>
-                            </div>
-                            <div class="product-price">
-                                <span class="price-current">{{ number_format($product['price']) }} جنيه</span>
-                                @if($product['old_price'])
-                                <span class="price-old">{{ number_format($product['old_price']) }} جنيه</span>
+
+                            {{-- Image --}}
+                            <div class="product-img-area">
+                                @if(!empty($product['image_url']))
+                                    <img src="{{ $product['image_url'] }}" alt="{{ $product['name'] }}"
+                                         class="w-100 h-100" style="object-fit:cover;"
+                                         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                                    <div class="product-placeholder" style="display:none;">
+                                        <i class="fas fa-{{ $product['category'] === 'printers' ? 'print' : ($product['category'] === 'mice' ? 'mouse' : ($product['category'] === 'headphones' ? 'headphones' : 'usb')) }}"></i>
+                                    </div>
+                                @else
+                                    <div class="product-placeholder">
+                                        <i class="fas fa-{{ $product['category'] === 'printers' ? 'print' : ($product['category'] === 'mice' ? 'mouse' : ($product['category'] === 'headphones' ? 'headphones' : 'usb')) }}"></i>
+                                    </div>
                                 @endif
                             </div>
-                            <div class="product-actions">
-                                <button class="btn btn-primary" onclick="addToCart({{ $product['id'] }}, '{{ $product['name'] }}', {{ $product['price'] }}, '{{ $product['image'] }}')">
-                                    <i class="fas fa-shopping-cart"></i> أضف للسلة
-                                </button>
-                                <a href="{{ route('products.show', $product['id']) }}" class="btn btn-outline">
-                                    <i class="fas fa-eye"></i>
-                                </a>
+
+                            <div class="card-body d-flex flex-column p-3">
+                                <span class="text-primary fw-bold mb-1" style="font-size:.75rem;text-transform:uppercase;letter-spacing:1px;">{{ $product['brand'] }}</span>
+                                <h6 class="fw-bold text-dark product-name mb-1">{{ $product['name'] }}</h6>
+                                <p class="text-secondary product-desc mb-2" style="font-size:.8125rem;">{{ $product['description'] }}</p>
+
+                                {{-- Stars --}}
+                                <div class="d-flex align-items-center gap-1 mb-2">
+                                    @for($i = 0; $i < 5; $i++)
+                                    <i class="fas fa-star" style="font-size:.7rem;color:{{ $i < $product['rating'] ? '#f59e0b' : '#d1d5db' }};"></i>
+                                    @endfor
+                                    <span class="text-muted ms-1" style="font-size:.75rem;">({{ $product['reviews'] }})</span>
+                                </div>
+
+                                {{-- Price --}}
+                                <div class="d-flex align-items-center gap-2 mb-3 mt-auto">
+                                    <span class="fw-bold text-primary" style="font-size:1.25rem;">{{ number_format($product['price']) }} EGP</span>
+                                    @if($product['old_price'])
+                                    <span class="text-muted text-decoration-line-through" style="font-size:.875rem;">{{ number_format($product['old_price']) }} EGP</span>
+                                    @endif
+                                </div>
+
+                                {{-- Actions --}}
+                                <div class="d-grid gap-2" style="grid-template-columns:1fr auto;">
+                                    <button class="btn btn-primary btn-sm fw-semibold"
+                                            onclick="addToCart({{ $product['id'] }}, '{{ addslashes($product['name']) }}', {{ $product['price'] }}, '{{ $product['image'] }}')">
+                                        <i class="fas fa-shopping-cart me-1"></i>Add to Cart
+                                    </button>
+                                    <a href="{{ route('products.show', $product['id']) }}" class="btn btn-outline-secondary btn-sm">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
                     @endforeach
                 </div>
+
                 @else
-                <div class="empty-state">
-                    <i class="fas fa-box-open"></i>
-                    <h3>لا توجد منتجات</h3>
-                    <p>لا توجد منتجات في هذه الفئة حالياً</p>
-                    <a href="{{ route('products.index') }}" class="btn btn-primary">عرض جميع المنتجات</a>
+                {{-- Empty State --}}
+                <div class="text-center py-5">
+                    <i class="fas fa-box-open text-muted mb-3 d-block" style="font-size:3.5rem;opacity:.3;"></i>
+                    <h5 class="fw-bold text-dark mb-2">No Products Found</h5>
+                    <p class="text-secondary mb-4">No products available in this category.</p>
+                    <a href="{{ route('products.index') }}" class="btn btn-primary px-5">View All Products</a>
                 </div>
                 @endif
             </div>
+
         </div>
     </div>
 </section>
@@ -120,215 +172,91 @@
 
 @push('styles')
 <style>
-.products-layout {
-    display: grid;
-    grid-template-columns: 260px 1fr;
-    gap: 2rem;
-    align-items: start;
-}
-
-.filter-card {
-    background: var(--white, #fff);
-    border-radius: 16px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,.06);
-    position: sticky;
-    top: 90px;
-    border: 1px solid #F1F5F9;
-}
-
-.filter-card h3 {
-    font-size: 1rem;
-    margin-bottom: 1.25rem;
-    display: flex;
-    align-items: center;
-    gap: .625rem;
-    color: #2563EB;
-}
-
-.filter-group {
-    margin-bottom: 1.5rem;
-}
-
-.filter-group h4 {
-    font-size: .875rem;
-    color: #64748B;
-    margin-bottom: .75rem;
-    padding-bottom: .5rem;
-    border-bottom: 1px solid #F1F5F9;
-    text-transform: uppercase;
-    letter-spacing: .5px;
-}
-
+/* ... existing styles ... */
 .filter-option {
-    display: flex;
-    align-items: center;
-    gap: .625rem;
-    padding: .625rem .875rem;
-    border-radius: 8px;
     color: #475569;
     font-size: .9rem;
     transition: all .2s ease;
-    margin-bottom: .25rem;
 }
 
 .filter-option:hover,
 .filter-option.active {
-    background: #EFF6FF;
-    color: #2563EB;
+    background: #eff6ff;
+    color: #2563eb;
     font-weight: 600;
-}
-
-.products-toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.25rem;
-    padding: .875rem 1.25rem;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 1px 4px rgba(0,0,0,.05);
-    border: 1px solid #F1F5F9;
-}
-
-.products-toolbar p {
-    margin: 0;
-    color: #64748B;
-    font-weight: 600;
-    font-size: .9375rem;
-}
-
-.products-grid-main {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.25rem;
 }
 
 .product-card {
-    position: relative;
-    background: #fff;
-    border-radius: 16px;
+    border-radius: 14px !important;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,.06);
     transition: all .3s ease;
-    border: 1px solid #F1F5F9;
+    position: relative;
 }
 
 .product-card:hover {
-    box-shadow: 0 12px 36px rgba(0,0,0,.12);
     transform: translateY(-5px);
+    box-shadow: 0 12px 36px rgba(0,0,0,.12) !important;
 }
 
-.product-badge {
-    position: absolute;
-    top: .75rem;
-    right: .75rem;
-    z-index: 2;
-}
-
-.product-image {
+.product-img-area {
     height: 180px;
-    background: #F8FAFC;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: #f8fafc;
+    overflow: hidden;
+    position: relative;
 }
 
-.placeholder-image {
+.product-placeholder {
     width: 100%;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 3.5rem;
-    color: #CBD5E1;
+    color: #cbd5e1;
 }
 
-.product-info { padding: 1.125rem; }
-
-.product-brand {
-    font-size: .75rem;
-    font-weight: 700;
-    color: #2563EB;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: .375rem;
-    display: block;
-}
-
-.product-info h3 {
-    font-size: .9375rem;
-    margin-bottom: .5rem;
-    color: #0F172A;
+.product-name {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    line-height: 1.4;
 }
 
-.product-description {
-    font-size: .8125rem;
-    color: #64748B;
-    margin-bottom: .625rem;
+.product-desc {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    line-height: 1.6;
 }
 
-.product-rating {
-    display: flex;
-    align-items: center;
-    gap: .2rem;
-    margin-bottom: .625rem;
-}
-
-.product-rating i { color: #CBD5E1; font-size: .75rem; }
-.product-rating i.active { color: #F59E0B; }
-.product-rating span { color: #94A3B8; font-size: .75rem; margin-right: .25rem; }
-
-.product-price {
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-    margin-bottom: .875rem;
-}
-
-.price-current { font-size: 1.25rem; font-weight: 800; color: #2563EB; }
-.price-old { font-size: .875rem; color: #94A3B8; text-decoration: line-through; }
-
-.product-actions {
+.d-grid {
     display: grid;
-    grid-template-columns: 1fr auto;
-    gap: .5rem;
-}
-
-.product-actions .btn {
-    font-size: .8125rem;
-    padding: .5rem .875rem;
-}
-
-.empty-state {
-    text-align: center;
-    padding: 4rem 2rem;
-    color: #94A3B8;
-}
-
-.empty-state i {
-    font-size: 3.5rem;
-    margin-bottom: 1rem;
-    display: block;
-    opacity: .3;
-}
-
-@media (max-width: 1024px) {
-    .products-layout { grid-template-columns: 1fr; }
-    .filter-card { position: static; }
-    .products-grid-main { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (max-width: 640px) {
-    .products-grid-main { grid-template-columns: 1fr; }
 }
 </style>
+@endpush
+
+@push('scripts')
+<script>
+(function () {
+    const btn      = document.getElementById('filterToggleBtn');
+    const collapse = document.getElementById('filterCollapse');
+    const chevron  = document.getElementById('filterChevron');
+    if (!btn) return;
+
+    btn.addEventListener('click', function () {
+        const isOpen = !collapse.classList.contains('d-none');
+        if (isOpen) {
+            collapse.classList.add('d-none');
+            chevron.style.transform = 'rotate(0deg)';
+            btn.setAttribute('aria-expanded', 'false');
+        } else {
+            collapse.classList.remove('d-none');
+            chevron.style.transform = 'rotate(180deg)';
+            btn.setAttribute('aria-expanded', 'true');
+        }
+    });
+}());
+</script>
 @endpush

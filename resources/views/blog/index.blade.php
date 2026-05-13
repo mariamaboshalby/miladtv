@@ -1,51 +1,67 @@
 ﻿﻿@extends('layouts.app')
 
-@section('title', 'المدونة - MJK')
+@section('title', 'Blog - MJK')
 
 @section('content')
 
-<div class="page-header">
+{{-- Page Header --}}
+<div style="background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%);padding:2.5rem 0;">
     <div class="container">
-        <h1>المدونة</h1>
-        <nav class="breadcrumb">
-            <a href="{{ route('home') }}">الرئيسية</a>
-            <i class="fas fa-chevron-left"></i>
-            <span>المدونة</span>
+        <h1 class="text-white fw-bold mb-1">Blog</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-white-50 text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item active text-white-50">Blog</li>
+            </ol>
         </nav>
     </div>
 </div>
 
-<section class="section">
+{{-- Blog Grid --}}
+<section class="py-5 bg-light">
     <div class="container">
-        <div class="blog-grid">
+        <div class="row g-4">
             @foreach($posts as $post)
-            <article class="blog-card animate-on-scroll">
-                <div class="blog-image">
-                    <div class="placeholder-image">
-                        <i class="fas fa-blog"></i>
-                    </div>
-                    <span class="blog-category">{{ $post['category'] }}</span>
-                </div>
-                <div class="blog-content">
-                    <div class="blog-meta">
-                        <span><i class="fas fa-calendar-alt"></i> {{ \Carbon\Carbon::parse($post['date'])->format('d M Y') }}</span>
-                        <span><i class="fas fa-user"></i> {{ $post['author'] }}</span>
-                        <span><i class="fas fa-clock"></i> {{ $post['read_time'] }} دقائق</span>
-                    </div>
-                    <h2>{{ $post['title'] }}</h2>
-                    <p>{{ $post['excerpt'] }}</p>
-                    <div class="blog-footer">
-                        <div class="blog-tags">
-                            @foreach($post['tags'] as $tag)
-                            <span class="tag">{{ $tag }}</span>
-                            @endforeach
+            <div class="col-lg-6">
+                <article class="blog-card card h-100 border-0 shadow-sm">
+                    {{-- Gradient header area --}}
+                    <div class="blog-header-area position-relative">
+                        <div class="blog-gradient-bg d-flex align-items-center justify-content-center">
+                            <i class="fas fa-pen-nib text-white opacity-25" style="font-size:4rem;"></i>
                         </div>
-                        <a href="{{ route('blog.show', $post['id']) }}" class="read-more">
-                            اقرأ المزيد <i class="fas fa-arrow-left"></i>
-                        </a>
+                        <span class="badge bg-white text-primary position-absolute top-0 start-0 m-3 px-3 py-2 fw-bold" style="border-radius:50px;font-size:.8rem;">
+                            {{ $post['category'] }}
+                        </span>
                     </div>
-                </div>
-            </article>
+
+                    <div class="card-body d-flex flex-column p-4">
+                        {{-- Meta --}}
+                        <div class="d-flex flex-wrap gap-3 text-muted mb-3" style="font-size:.8125rem;">
+                            <span><i class="fas fa-calendar-alt text-primary me-1"></i>{{ \Carbon\Carbon::parse($post['date'])->format('d M Y') }}</span>
+                            <span><i class="fas fa-user text-primary me-1"></i>{{ $post['author'] }}</span>
+                            <span><i class="fas fa-clock text-primary me-1"></i>{{ $post['read_time'] }} min read</span>
+                        </div>
+
+                        {{-- Title --}}
+                        <h5 class="fw-bold text-dark blog-title mb-2">{{ $post['title'] }}</h5>
+
+                        {{-- Excerpt --}}
+                        <p class="text-secondary blog-excerpt flex-grow-1 mb-3" style="font-size:.9375rem;">{{ $post['excerpt'] }}</p>
+
+                        {{-- Tags + Read More --}}
+                        <div class="d-flex align-items-center justify-content-between gap-2 pt-3 border-top flex-wrap">
+                            <div class="d-flex gap-2 flex-wrap">
+                                @foreach($post['tags'] as $tag)
+                                <span class="badge bg-light text-secondary border" style="border-radius:50px;font-size:.75rem;font-weight:600;">{{ $tag }}</span>
+                                @endforeach
+                            </div>
+                            <a href="{{ route('blog.show', $post['id']) }}" class="text-primary fw-bold text-decoration-none blog-read-more" style="font-size:.9375rem;white-space:nowrap;">
+                                Read More <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            </div>
             @endforeach
         </div>
     </div>
@@ -55,130 +71,53 @@
 
 @push('styles')
 <style>
-.blog-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
-}
-
 .blog-card {
-    background: #fff;
-    border-radius: 20px;
+    border-radius: 16px !important;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,.06);
     transition: all .3s ease;
-    border: 1px solid #F1F5F9;
 }
 
 .blog-card:hover {
-    box-shadow: 0 16px 48px rgba(0,0,0,.12);
     transform: translateY(-6px);
+    box-shadow: 0 16px 48px rgba(0,0,0,.12) !important;
 }
 
-.blog-image {
-    position: relative;
-    height: 240px;
-    background: #F1F5F9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.blog-header-area {
+    height: 220px;
 }
 
-.blog-image .placeholder-image {
+.blog-gradient-bg {
     width: 100%;
     height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 5rem;
-    color: #CBD5E1;
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
 }
 
-.blog-category {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: #2563EB;
-    color: #fff;
-    padding: .375rem .875rem;
-    border-radius: 50px;
-    font-size: .8125rem;
-    font-weight: 700;
-}
-
-.blog-content { padding: 1.75rem; }
-
-.blog-meta {
-    display: flex;
-    gap: 1.25rem;
-    margin-bottom: .875rem;
-    color: #64748B;
-    font-size: .875rem;
-    flex-wrap: wrap;
-}
-
-.blog-meta span { display: flex; align-items: center; gap: .4rem; }
-.blog-meta i { color: #2563EB; }
-
-.blog-content h2 {
-    font-size: 1.25rem;
-    margin-bottom: .625rem;
-    color: #0F172A;
+.blog-title {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    transition: all .25s ease;
+    line-height: 1.4;
 }
 
-.blog-card:hover .blog-content h2 { color: #2563EB; }
-
-.blog-content > p {
-    color: #475569;
-    font-size: .9375rem;
-    margin-bottom: 1.25rem;
+.blog-excerpt {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    line-height: 1.7;
 }
 
-.blog-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid #F1F5F9;
+.blog-card:hover .blog-title {
+    color: #2563eb !important;
 }
 
-.blog-tags { display: flex; gap: .5rem; flex-wrap: wrap; }
-
-.tag {
-    padding: .25rem .75rem;
-    background: #F1F5F9;
-    color: #475569;
-    border-radius: 50px;
-    font-size: .8125rem;
-    font-weight: 600;
+.blog-read-more {
+    transition: gap .25s ease;
 }
 
-.read-more {
-    display: inline-flex;
-    align-items: center;
-    gap: .5rem;
-    color: #2563EB;
-    font-weight: 700;
-    font-size: .9375rem;
-    transition: all .25s ease;
-    white-space: nowrap;
+.blog-read-more:hover {
+    gap: .875rem;
 }
-
-.read-more:hover { gap: .875rem; }
-
-.animate-on-scroll { opacity: 0; transform: translateY(24px); transition: all .6s ease; }
-.animate-on-scroll.animate-in { opacity: 1; transform: translateY(0); }
-
-@media (max-width: 1024px) { .blog-grid { grid-template-columns: 1fr; } }
 </style>
 @endpush

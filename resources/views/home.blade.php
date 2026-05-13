@@ -389,6 +389,72 @@
         </div>
     </section>
 
+    {{-- ===== Latest from the Blog ===== --}}
+    <section class="py-5" style="background:#f8fafc;">
+        <div class="container py-3">
+
+            <div class="d-flex align-items-end justify-content-between mb-4">
+                <div>
+                    <span class="badge text-bg-primary rounded-pill px-3 py-2 mb-2 fs-6">Blog</span>
+                    <h2 class="fw-bold mb-0">Latest Articles</h2>
+                </div>
+                <a href="{{ route('blog.index') }}" class="btn btn-outline-primary rounded-pill px-4 d-none d-md-inline-flex align-items-center gap-2">
+                    View All <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="row g-4">
+
+                @php
+                $blogPosts = [
+                    ['id'=>6,'title'=>'Sony WH-1000XM5 Review — Is It Worth the Price?','excerpt'=>'A full review of the Sony WH-1000XM5 covering sound quality, comfort, and noise cancellation.','category'=>'Reviews','date'=>'2026-03-25','read_time'=>8,'views'=>4230],
+                    ['id'=>5,'title'=>'How to Maintain Your Printer and Extend Its Life','excerpt'=>'Simple maintenance steps that keep your printer running longer and save you repair costs.','category'=>'Maintenance','date'=>'2026-03-30','read_time'=>9,'views'=>2780],
+                    ['id'=>1,'title'=>'How to Choose the Right Printer for Your Office','excerpt'=>'A complete guide to picking the perfect printer based on your needs and budget.','category'=>'Buying Guides','date'=>'2026-04-20','read_time'=>8,'views'=>2340],
+                ];
+                @endphp
+
+                @foreach($blogPosts as $post)
+                <div class="col-md-4">
+                    <article class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden" style="transition:transform .25s,box-shadow .25s;">
+                        {{-- Placeholder image with category colour --}}
+                        <div class="d-flex align-items-center justify-content-center position-relative" style="height:180px;background:linear-gradient(135deg,#1e3a8a,#2563eb);">
+                            <i class="fas fa-newspaper text-white opacity-25" style="font-size:4rem;"></i>
+                            <span class="position-absolute top-0 start-0 m-3 badge rounded-pill" style="background:rgba(255,255,255,.2);color:#fff;font-size:.75rem;">
+                                {{ $post['category'] }}
+                            </span>
+                        </div>
+
+                        <div class="card-body p-4 d-flex flex-column">
+                            <div class="d-flex align-items-center gap-3 mb-2 text-secondary" style="font-size:.8rem;">
+                                <span><i class="fas fa-calendar-alt me-1 text-primary"></i>{{ \Carbon\Carbon::parse($post['date'])->format('d M Y') }}</span>
+                                <span><i class="fas fa-clock me-1 text-primary"></i>{{ $post['read_time'] }} min read</span>
+                                <span><i class="fas fa-eye me-1 text-primary"></i>{{ number_format($post['views']) }}</span>
+                            </div>
+                            <h6 class="fw-bold mb-2 lh-base" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
+                                {{ $post['title'] }}
+                            </h6>
+                            <p class="text-secondary small mb-3 flex-grow-1" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">
+                                {{ $post['excerpt'] }}
+                            </p>
+                            <a href="{{ route('blog.show', $post['id']) }}" class="btn btn-sm btn-outline-primary rounded-pill align-self-start">
+                                Read More <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </article>
+                </div>
+                @endforeach
+
+            </div>
+
+            <div class="text-center mt-4 d-md-none">
+                <a href="{{ route('blog.index') }}" class="btn btn-outline-primary rounded-pill px-4">
+                    View All Articles <i class="fas fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+
+        </div>
+    </section>
+
     {{-- ===== Contact & Map Section ===== --}}
     <section class="py-5 bg-white">
         <div class="container py-4">

@@ -27,7 +27,7 @@
 </head>
 <body>
     <!-- ===== MAIN NAVBAR ===== -->
-    <nav class="mjk-navbar sticky-top" id="mjkNavbar">
+    <nav class="mjk-navbar sticky-top " id="mjkNavbar" style="z-index: 10000;">
         <div class="container">
             <div class="d-flex align-items-center justify-content-between gap-3 py-2">
                 <!-- Logo -->
@@ -96,6 +96,31 @@
                         <span class="mjk-cart-badge" id="cartBadge">{{ count(session()->get('cart', [])) }}</span>
                         @endif
                     </a>
+
+                    {{-- Auth --}}
+                    @auth
+                    <div class="dropdown d-none d-lg-block">
+                        <button class="mjk-icon-btn dropdown-toggle" data-bs-toggle="dropdown" aria-label="Account" style="gap:0;">
+                            <i class="fas fa-user"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 mt-2" style="min-width:180px;">
+                            <li><span class="dropdown-item-text small text-muted fw-semibold">{{ Auth::user()->name }}</span></li>
+                            <li><hr class="dropdown-divider my-1"></li>
+                            <li>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item text-danger">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Sign Out
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                    @else
+                    <a href="{{ route('login') }}" class="mjk-icon-btn d-none d-lg-flex" aria-label="Sign in" title="Sign In">
+                        <i class="fas fa-sign-in-alt"></i>
+                    </a>
+                    @endauth
                     <button class="mjk-hamburger d-lg-none" id="mobileMenuBtn" aria-label="Menu">
                         <span></span><span></span><span></span>
                     </button>
@@ -111,6 +136,21 @@
                 <a href="{{ route('blog.index') }}"   class="mjk-mobile-link {{ request()->routeIs('blog.*')      ? 'active' : '' }}">Blog</a>
                 <a href="{{ route('downloads.index') }}" class="mjk-mobile-link {{ request()->routeIs('downloads.*') ? 'active' : '' }}">Downloads</a>
                 <a href="{{ route('about.index') }}"  class="mjk-mobile-link {{ request()->routeIs('about.*')     ? 'active' : '' }}">About Us</a>
+                <hr class="my-2 opacity-25">
+                @auth
+                <div class="px-3 py-2">
+                    <p class="small text-muted mb-1 fw-semibold">{{ Auth::user()->name }}</p>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="btn btn-sm btn-outline-danger w-100">
+                            <i class="fas fa-sign-out-alt me-1"></i>Sign Out
+                        </button>
+                    </form>
+                </div>
+                @else
+                <a href="{{ route('login') }}"    class="mjk-mobile-link"><i class="fas fa-sign-in-alt me-2"></i>Sign In</a>
+                <a href="{{ route('register') }}" class="mjk-mobile-link"><i class="fas fa-user-plus me-2"></i>Create Account</a>
+                @endauth
             </div>
         </div>
     </nav>
@@ -220,9 +260,44 @@
         <i class="fas fa-chevron-up"></i>
     </button>
 
+    <!-- ===== BOTTOM NAV (mobile only) ===== -->
+    <nav class="mjk-bottom-nav d-lg-none" aria-label="Mobile navigation">
+        <a href="{{ route('home') }}"
+           class="mjk-bn-item {{ request()->routeIs('home') ? 'active' : '' }}">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="{{ route('products.index') }}"
+           class="mjk-bn-item {{ request()->routeIs('products.*') ? 'active' : '' }}">
+            <i class="fas fa-th-large"></i>
+            <span>Products</span>
+        </a>
+        <a href="{{ route('cart.index') }}"
+           class="mjk-bn-item mjk-bn-cart {{ request()->routeIs('cart.*') ? 'active' : '' }}"
+           id="cartBtnMobile" aria-label="Cart">
+            <div class="mjk-bn-cart-bubble">
+                <i class="fas fa-shopping-bag"></i>
+                @if(count(session()->get('cart', [])) > 0)
+                <span class="mjk-bn-badge" id="cartBadgeMobile">{{ count(session()->get('cart', [])) }}</span>
+                @endif
+            </div>
+        </a>
+        <a href="{{ route('news.index') }}"
+           class="mjk-bn-item {{ request()->routeIs('news.*') ? 'active' : '' }}">
+            <i class="fas fa-newspaper"></i>
+            <span>News</span>
+        </a>
+        <a href="{{ route('about.index') }}"
+           class="mjk-bn-item {{ request()->routeIs('about.*') ? 'active' : '' }}">
+            <i class="fas fa-info-circle"></i>
+            <span>About</span>
+        </a>
+    </nav>
+
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     @stack('scripts')
 </body>

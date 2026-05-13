@@ -106,72 +106,71 @@
     }
 
     // ========================================================================
-    // Load Cart Items
+    // Load Cart Items — fetch real data from server
     // ========================================================================
-    function loadCartItems() {
-        // This would typically fetch from server/session
-        // For now, we'll use a placeholder
+    function fetchCartItems() {
+        return fetch('/cart/items', { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+            .then(r => r.json())
+            .then(data => renderCartSidebar(data.items, data.total))
+            .catch(() => {});
+    }
+
+    function renderCartSidebar(items, total) {
         const cartBody = document.getElementById('cartSidebarBody');
         if (!cartBody) return;
 
-        // Placeholder - replace with actual cart data
-        const cartItems = getCartFromSession();
-        
-        if (cartItems.length === 0) {
+        if (!items || items.length === 0) {
             cartBody.innerHTML = `
-                <div style="text-align: center; padding: 3rem 1rem; color: var(--gray-500);">
-                    <i class="fas fa-shopping-cart" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>
-                    <p>السلة فارغة</p>
-                </div>
-            `;
+                <div class="text-center py-5 text-muted">
+                    <i class="fas fa-shopping-bag mb-3 d-block" style="font-size:2.5rem;opacity:.3;"></i>
+                    <p class="mb-0">Your cart is empty</p>
+                </div>`;
             updateCartTotal(0);
             return;
         }
 
         let html = '';
-        let total = 0;
-
-        cartItems.forEach(item => {
-            const itemTotal = item.price * item.quantity;
-            total += itemTotal;
-            
+        items.forEach(item => {
             html += `
-                <div class="cart-item" data-id="${item.id}">
-                    <div class="cart-item-image">
-                        <div class="placeholder-image">
-                            <i class="fas fa-image"></i>
-                        </div>
+                <div class="d-flex align-items-center gap-3 py-3 border-bottom" data-id="${item.id}">
+                    <div class="flex-shrink-0 bg-light rounded-3 d-flex align-items-center justify-content-center" style="width:52px;height:52px;font-size:1.25rem;color:#2563eb;">
+                        <i class="fas fa-box"></i>
                     </div>
-                    <div class="cart-item-details">
-                        <h4>${item.name}</h4>
-                        <p class="cart-item-price">${item.price} جنيه</p>
-                        <div class="cart-item-quantity">
-                            <button class="qty-btn" onclick="updateQuantity(${item.id}, ${item.quantity - 1})">-</button>
-                            <span>${item.quantity}</span>
-                            <button class="qty-btn" onclick="updateQuantity(${item.id}, ${item.quantity + 1})">+</button>
-                        </div>
+                    <div class="flex-grow-1 min-w-0">
+                        <p class="fw-semibold mb-0 small text-dark" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.name}</p>
+                        <p class="text-primary fw-bold mb-0 small">${Number(item.price).toLocaleString()} EGP</p>
                     </div>
-                    <button class="remove-item" onclick="removeFromCart(${item.id})">
+                    <div class="d-flex align-items-center gap-0 flex-shrink-0">
+                        <button onclick="updateQuantity(${item.id}, ${item.quantity - 1})"
+                                class="btn btn-sm btn-light border" style="width:28px;height:28px;padding:0;border-radius:6px 0 0 6px;font-size:.75rem;">−</button>
+                        <input
+                            type="number"
+                            value="${item.quantity}"
+                            min="1" max="99"
+                            onchange="updateQuantity(${item.id}, Math.max(1, parseInt(this.value)||1))"
+                            onkeydown="if(event.key==='Enter')this.blur()"
+                            class="border-top border-bottom text-center fw-bold"
+                            style="width:40px;height:28px;font-size:.8rem;border-left:none;border-right:none;outline:none;-moz-appearance:textfield;">
+                        <button onclick="updateQuantity(${item.id}, ${item.quantity + 1})"
+                                class="btn btn-sm btn-light border" style="width:28px;height:28px;padding:0;border-radius:0 6px 6px 0;font-size:.75rem;">+</button>
+                    </div>
+                    <button onclick="removeFromCart(${item.id})" class="btn btn-sm text-danger flex-shrink-0" style="padding:4px 6px;">
                         <i class="fas fa-times"></i>
                     </button>
-                </div>
-            `;
+                </div>`;
         });
 
         cartBody.innerHTML = html;
         updateCartTotal(total);
     }
 
-    function getCartFromSession() {
-        // This would fetch from server session
-        // Placeholder implementation
-        return [];
-    }
+    // Keep old name as alias so openCart() still works
+    function loadCartItems() { fetchCartItems(); }
 
     function updateCartTotal(total) {
         const totalElement = document.getElementById('sidebarTotal');
         if (totalElement) {
-            totalElement.textContent = `${total.toLocaleString()} جنيه`;
+            totalElement.textContent = `${Number(total).toLocaleString()} EGP`;
         }
     }
 
@@ -180,33 +179,32 @@
     // ========================================================================
     window.addToCart = function(productId, productName, productPrice, productImage) {
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
-        
+
+        // Use FormData so Laravel $request->input() works correctly
+        const params = new URLSearchParams({
+            _token:        csrfToken,
+            product_id:    productId,
+            product_name:  productName,
+            product_price: productPrice,
+            product_image: productImage,
+            quantity:      1,
+        });
+
         fetch('/cart/add', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-            },
-            body: JSON.stringify({
-                product_id: productId,
-                product_name: productName,
-                product_price: productPrice,
-                product_image: productImage,
-                quantity: 1,
-            }),
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params.toString(),
         })
-        .then(response => response.json())
+        .then(r => r.json())
         .then(data => {
             if (data.success) {
-                showToast('success', data.message);
+                showToast('success', 'Product added to cart!');
                 updateCartBadge(data.cart_count);
-                openCart();
+                // Reload sidebar items then open
+                fetchCartItems().then(() => openCart());
             }
         })
-        .catch(error => {
-            console.error('Error:', error);
-            showToast('error', 'حدث خطأ أثناء إضافة المنتج');
-        });
+        .catch(() => showToast('error', 'Something went wrong. Please try again.'));
     };
 
     // ========================================================================
@@ -214,29 +212,23 @@
     // ========================================================================
     window.removeFromCart = function(productId) {
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
-        
+
+        const params = new URLSearchParams({ _token: csrfToken, product_id: productId });
+
         fetch('/cart/remove', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-            },
-            body: JSON.stringify({
-                product_id: productId,
-            }),
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params.toString(),
         })
-        .then(response => response.json())
+        .then(r => r.json())
         .then(data => {
             if (data.success) {
-                showToast('success', data.message);
+                showToast('success', 'Item removed.');
                 updateCartBadge(data.cart_count);
-                loadCartItems();
+                fetchCartItems();
             }
         })
-        .catch(error => {
-            console.error('Error:', error);
-            showToast('error', 'حدث خطأ أثناء حذف المنتج');
-        });
+        .catch(() => showToast('error', 'Something went wrong.'));
     };
 
     // ========================================================================
@@ -249,27 +241,16 @@
         }
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
-        
+        const params = new URLSearchParams({ _token: csrfToken, product_id: productId, quantity: newQuantity });
+
         fetch('/cart/update', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken,
-            },
-            body: JSON.stringify({
-                product_id: productId,
-                quantity: newQuantity,
-            }),
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params.toString(),
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                loadCartItems();
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+        .then(r => r.json())
+        .then(data => { if (data.success) fetchCartItems(); })
+        .catch(() => {});
     };
 
     // ========================================================================

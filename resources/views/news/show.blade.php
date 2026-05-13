@@ -4,56 +4,76 @@
 
 @section('content')
 
-<div class="page-header">
+{{-- Page Header --}}
+<div style="background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%);padding:2.5rem 0;">
     <div class="container">
-        <h1>{{ $item['title'] }}</h1>
-        <nav class="breadcrumb">
-            <a href="{{ route('home') }}">الرئيسية</a>
-            <i class="fas fa-chevron-left"></i>
-            <a href="{{ route('news.index') }}">الأخبار</a>
-            <i class="fas fa-chevron-left"></i>
-            <span>{{ Str::limit($item['title'], 40) }}</span>
+        <h1 class="text-white fw-bold mb-1">{{ Str::limit($item['title'], 60) }}</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-white-50 text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('news.index') }}" class="text-white-50 text-decoration-none">News</a></li>
+                <li class="breadcrumb-item active text-white-50">Article</li>
+            </ol>
         </nav>
     </div>
 </div>
 
-<section class="section">
+{{-- Article Layout --}}
+<section class="py-5 bg-light">
     <div class="container">
-        <div class="article-layout">
-            <article class="article-main">
-                <div class="article-image">
-                    <div class="placeholder-image-xl">
-                        <i class="fas fa-newspaper"></i>
-                    </div>
-                </div>
-                <div class="article-body">
-                    <div class="article-meta">
-                        <span class="article-category">{{ $item['category'] }}</span>
-                        <span><i class="fas fa-calendar-alt"></i> {{ \Carbon\Carbon::parse($item['date'])->format('d M Y') }}</span>
-                        <span><i class="fas fa-user"></i> {{ $item['author'] }}</span>
-                        <span><i class="fas fa-eye"></i> {{ number_format($item['views']) }}</span>
-                    </div>
-                    <h1>{{ $item['title'] }}</h1>
-                    <div class="article-content">
-                        <p>{{ $item['content'] }}</p>
-                    </div>
-                </div>
-            </article>
+        <div class="row g-4">
 
-            <aside class="article-sidebar">
-                <div class="sidebar-card">
-                    <h3>أخبار أخرى</h3>
-                    @foreach($related as $rel)
-                    <a href="{{ route('news.show', $rel['id']) }}" class="sidebar-item">
-                        <div class="sidebar-item-icon"><i class="fas fa-newspaper"></i></div>
-                        <div>
-                            <h4>{{ Str::limit($rel['title'], 50) }}</h4>
-                            <span>{{ \Carbon\Carbon::parse($rel['date'])->format('d M Y') }}</span>
+            {{-- Main Article --}}
+            <div class="col-lg-8">
+                <article class="card border-0 shadow-sm" style="border-radius:16px;">
+                    {{-- Image --}}
+                    <div class="article-img-area">
+                        <div class="d-flex align-items-center justify-content-center h-100">
+                            <i class="fas fa-newspaper text-secondary opacity-25" style="font-size:6rem;"></i>
                         </div>
-                    </a>
-                    @endforeach
+                    </div>
+
+                    <div class="card-body p-4 p-lg-5">
+                        {{-- Meta --}}
+                        <div class="d-flex flex-wrap gap-3 mb-3" style="font-size:.9375rem;">
+                            <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2" style="border-radius:50px;">{{ $item['category'] }}</span>
+                            <span class="text-muted"><i class="fas fa-calendar-alt text-primary me-1"></i>{{ \Carbon\Carbon::parse($item['date'])->format('d M Y') }}</span>
+                            <span class="text-muted"><i class="fas fa-user text-primary me-1"></i>{{ $item['author'] }}</span>
+                            <span class="text-muted"><i class="fas fa-eye text-primary me-1"></i>{{ number_format($item['views']) }}</span>
+                        </div>
+
+                        {{-- Title --}}
+                        <h1 class="fw-bold mb-4" style="font-size:1.875rem;color:#0f172a;">{{ $item['title'] }}</h1>
+
+                        {{-- Content --}}
+                        <div class="article-content text-secondary" style="font-size:1.0625rem;line-height:2;">
+                            <p>{{ $item['content'] }}</p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            {{-- Sidebar --}}
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm sticky-top" style="border-radius:16px;top:90px;">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold text-primary mb-3 pb-3 border-bottom">More News</h5>
+
+                        @foreach($related as $rel)
+                        <a href="{{ route('news.show', $rel['id']) }}" class="d-flex gap-3 text-decoration-none mb-3 pb-3 border-bottom sidebar-item">
+                            <div class="sidebar-icon flex-shrink-0">
+                                <i class="fas fa-newspaper"></i>
+                            </div>
+                            <div class="flex-grow-1 min-w-0">
+                                <h6 class="fw-semibold text-dark mb-1 sidebar-title">{{ Str::limit($rel['title'], 50) }}</h6>
+                                <small class="text-muted">{{ \Carbon\Carbon::parse($rel['date'])->format('d M Y') }}</small>
+                            </div>
+                        </a>
+                        @endforeach
+                    </div>
                 </div>
-            </aside>
+            </div>
+
         </div>
     </div>
 </section>
@@ -62,111 +82,43 @@
 
 @push('styles')
 <style>
-.article-layout {
-    display: grid;
-    grid-template-columns: 1fr 340px;
-    gap: 2.5rem;
-    align-items: start;
-}
-
-.article-main {
-    background: #fff;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,.06);
-    border: 1px solid #F1F5F9;
-}
-
-.article-image {
+.article-img-area {
     height: 380px;
-    background: #F1F5F9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: #f1f5f9;
 }
 
-.placeholder-image-xl { font-size: 7rem; color: #CBD5E1; }
-
-.article-body { padding: 2.5rem; }
-
-.article-meta {
-    display: flex;
-    align-items: center;
-    gap: 1.25rem;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
-    color: #64748B;
-    font-size: .9375rem;
-}
-
-.article-meta span { display: flex; align-items: center; gap: .4rem; }
-.article-meta i { color: #2563EB; }
-
-.article-category {
-    background: #EFF6FF;
-    color: #2563EB;
-    padding: .375rem 1rem;
-    border-radius: 50px;
-    font-weight: 700;
-    font-size: .875rem;
-}
-
-.article-body h1 { font-size: 1.875rem; margin-bottom: 1.75rem; color: #0F172A; }
-
-.article-content p {
-    font-size: 1.0625rem;
-    line-height: 2;
-    color: #334155;
-}
-
-.sidebar-card {
-    background: #fff;
-    border-radius: 20px;
-    padding: 1.75rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,.06);
-    position: sticky;
-    top: 90px;
-    border: 1px solid #F1F5F9;
-}
-
-.sidebar-card h3 {
-    font-size: 1.125rem;
-    margin-bottom: 1.25rem;
-    color: #2563EB;
-    padding-bottom: .75rem;
-    border-bottom: 2px solid #EFF6FF;
-}
-
-.sidebar-item {
-    display: flex;
-    gap: .875rem;
-    padding: .875rem 0;
-    border-bottom: 1px solid #F1F5F9;
-    transition: all .25s ease;
-}
-
-.sidebar-item:last-child { border-bottom: none; }
-.sidebar-item:hover { color: #2563EB; }
-
-.sidebar-item-icon {
+.sidebar-icon {
     width: 44px;
     height: 44px;
-    background: #EFF6FF;
+    background: #eff6ff;
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #2563EB;
+    color: #2563eb;
     font-size: 1.125rem;
-    flex-shrink: 0;
 }
 
-.sidebar-item h4 { font-size: .9rem; margin-bottom: .25rem; color: #0F172A; }
-.sidebar-item span { font-size: .8125rem; color: #64748B; }
+.sidebar-item {
+    transition: all .25s ease;
+}
 
-@media (max-width: 1024px) {
-    .article-layout { grid-template-columns: 1fr; }
-    .sidebar-card { position: static; }
+.sidebar-item:hover .sidebar-title {
+    color: #2563eb !important;
+}
+
+.sidebar-item:last-child {
+    border-bottom: none !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.sidebar-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.4;
 }
 </style>
 @endpush

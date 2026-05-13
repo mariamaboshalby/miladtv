@@ -4,15 +4,15 @@
 
 @section('content')
 
-<div class="page-header">
+<div style="background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%);padding:2.5rem 0;">
     <div class="container">
-        <h1>{{ $product['name'] }}</h1>
-        <nav class="breadcrumb">
-            <a href="{{ route('home') }}">الرئيسية</a>
-            <i class="fas fa-chevron-left"></i>
-            <a href="{{ route('products.index') }}">المنتجات</a>
-            <i class="fas fa-chevron-left"></i>
-            <span>{{ Str::limit($product['name'], 40) }}</span>
+        <h1 class="text-white fw-bold mb-1">{{ Str::limit($product['name'], 60) }}</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-white-50 text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('products.index') }}" class="text-white-50 text-decoration-none">Products</a></li>
+                <li class="breadcrumb-item active text-white-50">{{ Str::limit($product['name'], 40) }}</li>
+            </ol>
         </nav>
     </div>
 </div>
@@ -78,15 +78,15 @@
                     @for($i = 0; $i < 5; $i++)
                         <i class="fas fa-star {{ $i < $product['rating'] ? 'active' : '' }}"></i>
                     @endfor
-                    <span>({{ $product['reviews'] ?? 0 }} تقييم)</span>
+                    <span>({{ $product['reviews'] ?? 0 }} reviews)</span>
                 </div>
 
                 {{-- Price --}}
                 <div class="pd-price-box">
-                    <span class="pd-price">{{ number_format($product['price']) }} جنيه</span>
+                    <span class="pd-price">{{ number_format($product['price']) }} EGP</span>
                     @if($product['old_price'])
-                    <span class="pd-old-price">{{ number_format($product['old_price']) }} جنيه</span>
-                    <span class="pd-save">وفر {{ number_format($product['old_price'] - $product['price']) }} جنيه</span>
+                    <span class="pd-old-price">{{ number_format($product['old_price']) }} EGP</span>
+                    <span class="pd-save">Save {{ number_format($product['old_price'] - $product['price']) }} EGP</span>
                     @endif
                 </div>
 
@@ -96,7 +96,7 @@
                 @if(!empty($product['specs']))
                 <div class="pd-specs">
                     <div class="pd-specs-title">
-                        <i class="fas fa-list-ul"></i> المواصفات
+                        <i class="fas fa-list-ul"></i> Specifications
                     </div>
                     <table class="pd-specs-table">
                         @foreach($product['specs'] as $spec)
@@ -123,16 +123,16 @@
                     </div>
                     <button class="btn btn-primary btn-lg pd-cart-btn"
                             onclick="addToCart({{ $product['id'] }}, '{{ addslashes($product['name']) }}', {{ $product['price'] }}, '{{ $product['image_url'] ?? '' }}')">
-                        <i class="fas fa-shopping-cart"></i> أضف للسلة
+                        <i class="fas fa-shopping-cart"></i> Add to Cart
                     </button>
                 </div>
 
                 {{-- Guarantees --}}
                 <div class="pd-guarantees">
-                    <div class="guar-item"><i class="fas fa-shield-alt"></i><span>ضمان أصلي</span></div>
-                    <div class="guar-item"><i class="fas fa-truck"></i><span>شحن سريع</span></div>
-                    <div class="guar-item"><i class="fas fa-undo"></i><span>إرجاع 14 يوم</span></div>
-                    <div class="guar-item"><i class="fas fa-headset"></i><span>دعم فني</span></div>
+                    <div class="guar-item"><i class="fas fa-shield-alt"></i><span>Original Warranty</span></div>
+                    <div class="guar-item"><i class="fas fa-truck"></i><span>Fast Delivery</span></div>
+                    <div class="guar-item"><i class="fas fa-undo"></i><span>14-Day Returns</span></div>
+                    <div class="guar-item"><i class="fas fa-headset"></i><span>Tech Support</span></div>
                 </div>
             </div>
         </div>
@@ -140,7 +140,7 @@
         {{-- ═══ Related Products ═══ --}}
         @if(count($related) > 0)
         <div class="pd-related">
-            <h2 class="pd-related-title"><i class="fas fa-th-large"></i> منتجات مشابهة</h2>
+            <h2 class="pd-related-title"><i class="fas fa-th-large"></i> Related Products</h2>
             <div class="related-grid">
                 @foreach($related as $item)
                 @php
@@ -169,15 +169,15 @@
                         <span class="product-brand">{{ $item['brand'] }}</span>
                         <h3>{{ $item['name'] }}</h3>
                         <div class="product-price">
-                            <span class="price-current">{{ number_format($item['price']) }} جنيه</span>
+                            <span class="price-current">{{ number_format($item['price']) }} EGP</span>
                             @if($item['old_price'])
-                            <span class="price-old">{{ number_format($item['old_price']) }} جنيه</span>
+                            <span class="price-old">{{ number_format($item['old_price']) }} EGP</span>
                             @endif
                         </div>
                         <div class="product-actions">
                             <button class="btn btn-primary"
                                     onclick="addToCart({{ $item['id'] }}, '{{ addslashes($item['name']) }}', {{ $item['price'] }}, '{{ $item['image_url'] ?? '' }}')">
-                                <i class="fas fa-shopping-cart"></i> أضف للسلة
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
                             </button>
                             <a href="{{ route('products.show', $item['id']) }}" class="btn btn-outline">
                                 <i class="fas fa-eye"></i>

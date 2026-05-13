@@ -7,58 +7,58 @@ class AboutController extends Controller
     public function index()
     {
         $stats = [
-            ['number' => '500+', 'label' => 'منتج متاح', 'icon' => 'fa-box'],
-            ['number' => '15K+', 'label' => 'عميل سعيد', 'icon' => 'fa-users'],
-            ['number' => '10+', 'label' => 'سنوات خبرة', 'icon' => 'fa-award'],
-            ['number' => '24/7', 'label' => 'دعم فني', 'icon' => 'fa-headset'],
+            ['number' => '500+', 'label' => 'Products Available', 'icon' => 'fa-box'],
+            ['number' => '15K+', 'label' => 'Happy Customers', 'icon' => 'fa-users'],
+            ['number' => '10+', 'label' => 'Years of Experience', 'icon' => 'fa-award'],
+            ['number' => '24/7', 'label' => 'Tech Support', 'icon' => 'fa-headset'],
         ];
 
         $team = [
             [
                 'name' => 'محمد أحمد',
-                'role' => 'المدير التنفيذي',
+                'role' => 'CEO',
                 'image' => 'team1',
-                'bio' => 'خبرة 15 عاماً في مجال التقنية والطابعات',
+                'bio' => '15 years of experience in tech and printers',
             ],
             [
                 'name' => 'سارة علي',
-                'role' => 'مديرة المبيعات',
+                'role' => 'Sales Manager',
                 'image' => 'team2',
-                'bio' => 'متخصصة في حلول الطباعة للشركات',
+                'bio' => 'Specialist in corporate printing solutions',
             ],
             [
                 'name' => 'أحمد حسن',
-                'role' => 'مدير الدعم الفني',
+                'role' => 'Technical Support Manager',
                 'image' => 'team3',
-                'bio' => 'مهندس صيانة معتمد من HP وCanon',
+                'bio' => 'HP and Canon certified maintenance engineer',
             ],
             [
                 'name' => 'فاطمة محمود',
-                'role' => 'مديرة التسويق',
+                'role' => 'Marketing Manager',
                 'image' => 'team4',
-                'bio' => 'خبيرة في التسويق الرقمي والعلاقات العامة',
+                'bio' => 'Expert in digital marketing and public relations',
             ],
         ];
 
         $values = [
             [
-                'title' => 'الجودة',
-                'description' => 'نقدم فقط المنتجات الأصلية من أفضل العلامات التجارية العالمية',
+                'title' => 'Quality',
+                'description' => 'We only offer genuine products from the world\'s top brands.',
                 'icon' => 'fa-star',
             ],
             [
-                'title' => 'الثقة',
-                'description' => 'نبني علاقات طويلة الأمد مع عملائنا على أساس الشفافية والمصداقية',
+                'title' => 'Trust',
+                'description' => 'We build long-term relationships grounded in transparency and integrity.',
                 'icon' => 'fa-handshake',
             ],
             [
-                'title' => 'الابتكار',
-                'description' => 'نواكب أحدث التقنيات ونقدم حلولاً مبتكرة لاحتياجات عملائنا',
+                'title' => 'Innovation',
+                'description' => 'We stay ahead of the curve and bring cutting-edge solutions to our customers.',
                 'icon' => 'fa-lightbulb',
             ],
             [
-                'title' => 'الدعم',
-                'description' => 'فريق دعم فني متاح على مدار الساعة لمساعدتك في أي وقت',
+                'title' => 'Support',
+                'description' => 'Our technical team is available around the clock to help you whenever you need.',
                 'icon' => 'fa-headset',
             ],
         ];

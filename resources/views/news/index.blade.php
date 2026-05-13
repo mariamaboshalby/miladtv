@@ -1,43 +1,59 @@
 ﻿﻿@extends('layouts.app')
 
-@section('title', 'الأخبار - MJK')
+@section('title', 'Latest News - MJK')
 
 @section('content')
 
-<div class="page-header">
+{{-- Page Header --}}
+<div style="background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%);padding:2.5rem 0;">
     <div class="container">
-        <h1>آخر الأخبار</h1>
-        <nav class="breadcrumb">
-            <a href="{{ route('home') }}">الرئيسية</a>
-            <i class="fas fa-chevron-left"></i>
-            <span>الأخبار</span>
+        <h1 class="text-white fw-bold mb-1">Latest News</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-white-50 text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item active text-white-50">News</li>
+            </ol>
         </nav>
     </div>
 </div>
 
-<section class="section">
+{{-- News Grid --}}
+<section class="py-5 bg-light">
     <div class="container">
-        <div class="news-grid">
+        <div class="row g-4">
             @foreach($news as $item)
-            <article class="news-card animate-on-scroll">
-                <div class="news-image">
-                    <div class="placeholder-image">
-                        <i class="fas fa-newspaper"></i>
+            <div class="col-lg-4 col-md-6">
+                <article class="news-card card h-100 border-0 shadow-sm">
+                    {{-- Image area --}}
+                    <div class="news-img-area position-relative">
+                        <div class="news-placeholder d-flex align-items-center justify-content-center">
+                            <i class="fas fa-newspaper text-secondary opacity-25" style="font-size:4rem;"></i>
+                        </div>
+                        <span class="badge bg-primary position-absolute top-0 end-0 m-3 px-3 py-2" style="border-radius:50px;font-size:.8rem;">
+                            {{ $item['category'] }}
+                        </span>
                     </div>
-                    <span class="news-category">{{ $item['category'] }}</span>
-                </div>
-                <div class="news-content">
-                    <div class="news-meta">
-                        <span><i class="fas fa-calendar-alt"></i> {{ \Carbon\Carbon::parse($item['date'])->format('d M Y') }}</span>
-                        <span><i class="fas fa-eye"></i> {{ number_format($item['views']) }} مشاهدة</span>
+
+                    <div class="card-body d-flex flex-column p-4">
+                        {{-- Meta --}}
+                        <div class="d-flex gap-3 text-muted mb-3" style="font-size:.8125rem;">
+                            <span><i class="fas fa-calendar-alt text-primary me-1"></i>{{ \Carbon\Carbon::parse($item['date'])->format('d M Y') }}</span>
+                            <span><i class="fas fa-eye text-primary me-1"></i>{{ number_format($item['views']) }}</span>
+                        </div>
+
+                        {{-- Title --}}
+                        <h5 class="fw-bold text-dark news-title mb-2">{{ $item['title'] }}</h5>
+
+                        {{-- Excerpt --}}
+                        <p class="text-secondary news-excerpt flex-grow-1 mb-3" style="font-size:.9375rem;">{{ $item['excerpt'] }}</p>
+
+                        {{-- Read More --}}
+                        <a href="{{ route('news.show', $item['id']) }}" class="btn btn-outline-primary btn-sm align-self-start px-4">
+                            Read More <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
                     </div>
-                    <h2>{{ $item['title'] }}</h2>
-                    <p>{{ $item['excerpt'] }}</p>
-                    <a href="{{ route('news.show', $item['id']) }}" class="read-more">
-                        اقرأ المزيد <i class="fas fa-arrow-left"></i>
-                    </a>
-                </div>
-            </article>
+                </article>
+            </div>
             @endforeach
         </div>
     </div>
@@ -47,122 +63,46 @@
 
 @push('styles')
 <style>
-.news-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-}
-
 .news-card {
-    background: #fff;
-    border-radius: 20px;
+    border-radius: 16px !important;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,.06);
     transition: all .3s ease;
-    border: 1px solid #F1F5F9;
+    border-top: 3px solid #2563eb !important;
 }
 
 .news-card:hover {
-    box-shadow: 0 16px 48px rgba(0,0,0,.12);
     transform: translateY(-6px);
+    box-shadow: 0 16px 48px rgba(0,0,0,.12) !important;
 }
 
-.news-image {
-    position: relative;
-    height: 220px;
-    background: #F1F5F9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.news-img-area {
+    height: 200px;
+    background: #f1f5f9;
 }
 
-.news-image .placeholder-image {
+.news-placeholder {
     width: 100%;
     height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 5rem;
-    color: #CBD5E1;
 }
 
-.news-category {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: #2563EB;
-    color: #fff;
-    padding: .375rem .875rem;
-    border-radius: 50px;
-    font-size: .8125rem;
-    font-weight: 700;
-}
-
-.news-content { padding: 1.5rem; }
-
-.news-meta {
-    display: flex;
-    gap: 1.25rem;
-    margin-bottom: .875rem;
-    color: #64748B;
-    font-size: .875rem;
-}
-
-.news-meta span {
-    display: flex;
-    align-items: center;
-    gap: .4rem;
-}
-
-.news-meta i { color: #2563EB; }
-
-.news-content h2 {
-    font-size: 1.125rem;
-    margin-bottom: .625rem;
-    color: #0F172A;
+.news-title {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    transition: all .25s ease;
+    line-height: 1.4;
 }
 
-.news-card:hover .news-content h2 { color: #2563EB; }
-
-.news-content p {
-    color: #475569;
-    font-size: .9375rem;
-    margin-bottom: 1.25rem;
+.news-excerpt {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    line-height: 1.7;
 }
 
-.read-more {
-    display: inline-flex;
-    align-items: center;
-    gap: .5rem;
-    color: #2563EB;
-    font-weight: 700;
-    font-size: .9375rem;
-    transition: all .25s ease;
+.news-card:hover .news-title {
+    color: #2563eb !important;
 }
-
-.read-more:hover { gap: .875rem; }
-
-.animate-on-scroll {
-    opacity: 0;
-    transform: translateY(24px);
-    transition: all .6s ease;
-}
-
-.animate-on-scroll.animate-in {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-@media (max-width: 1024px) { .news-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 640px)  { .news-grid { grid-template-columns: 1fr; } }
 </style>
 @endpush

@@ -14,7 +14,10 @@ class AuthController extends Controller
     public function loginForm()
     {
         if (Auth::check()) {
-            return redirect()->intended(route('checkout.index'));
+            $redirect = Auth::user()->role === 'admin'
+                ? route('admin.dashboard')
+                : route('home');
+            return redirect($redirect);
         }
         return view('auth.login');
     }
@@ -32,7 +35,12 @@ class AuthController extends Controller
             // Restore cart from cookie if session cart is empty
             $this->restoreCartFromCookie($request);
 
-            return redirect()->intended(route('checkout.index'));
+            // Redirect admin to dashboard, regular users to intended or home
+            if (Auth::user()->role === 'admin') {
+                return redirect()->intended(route('admin.dashboard'));
+            }
+
+            return redirect()->intended(route('home'));
         }
 
         return back()->withErrors(['email' => 'Invalid email or password.'])->withInput();
@@ -42,7 +50,10 @@ class AuthController extends Controller
     public function registerForm()
     {
         if (Auth::check()) {
-            return redirect()->intended(route('checkout.index'));
+            $redirect = Auth::user()->role === 'admin'
+                ? route('admin.dashboard')
+                : route('home');
+            return redirect($redirect);
         }
         return view('auth.register');
     }

@@ -10,10 +10,16 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\AboutController;
+use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\BlogController as AdminBlogController;
+use App\Http\Controllers\Admin\AboutController as AdminAboutController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\DownloadController as AdminDownloadController;
+
 
 // ── Auth ──────────────────────────────────────────────────────────────────
 Route::middleware('guest')->group(function () {
@@ -33,6 +39,9 @@ Route::middleware('auth')->group(function () {
 
 // Home
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Language Switch
+Route::get('/lang/{locale}', [LanguageController::class, 'switch'])->name('lang.switch');
 
 // Products
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
@@ -64,13 +73,14 @@ Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear')
 // ============================================================
 // Admin Dashboard (no auth for now — add middleware later)
 // ============================================================
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
 
     // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     // Products
     Route::resource('products', AdminProductController::class);
+    Route::resource('categories', AdminCategoryController::class);
 
     // Orders
     Route::get('orders', [AdminOrderController::class, 'index'])->name('orders.index');
@@ -82,4 +92,22 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Users
     Route::resource('users', AdminUserController::class);
     Route::patch('users/{user}/toggle', [AdminUserController::class, 'toggleStatus'])->name('users.toggle');
+
+    // Blog
+    Route::resource('blog', AdminBlogController::class);
+
+    // Downloads
+    Route::resource('downloads', AdminDownloadController::class);
+
+    // About
+    Route::get('about', [AdminAboutController::class, 'index'])->name('about.index');
+    Route::post('about/stats',              [AdminAboutController::class, 'storeStat'])->name('about.stats.store');
+    Route::put('about/stats/{stat}',        [AdminAboutController::class, 'updateStat'])->name('about.stats.update');
+    Route::delete('about/stats/{stat}',     [AdminAboutController::class, 'destroyStat'])->name('about.stats.destroy');
+    Route::post('about/team',               [AdminAboutController::class, 'storeTeam'])->name('about.team.store');
+    Route::put('about/team/{team}',         [AdminAboutController::class, 'updateTeam'])->name('about.team.update');
+    Route::delete('about/team/{team}',      [AdminAboutController::class, 'destroyTeam'])->name('about.team.destroy');
+    Route::post('about/values',             [AdminAboutController::class, 'storeValue'])->name('about.values.store');
+    Route::put('about/values/{value}',      [AdminAboutController::class, 'updateValue'])->name('about.values.update');
+    Route::delete('about/values/{value}',   [AdminAboutController::class, 'destroyValue'])->name('about.values.destroy');
 });

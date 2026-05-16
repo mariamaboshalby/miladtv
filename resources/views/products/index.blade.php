@@ -1,17 +1,19 @@
 ﻿@extends('layouts.app')
 
-@section('title', 'Products - MJK')
+@section('title', __('app.prod_page_title'))
 
 @section('content')
 
 {{-- Page Header --}}
 <div style="background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%);padding:2.5rem 0;">
     <div class="container">
-        <h1 class="text-white fw-bold mb-1">Products</h1>
+        <h1 class="text-white fw-bold mb-1">{{ __('app.prod_header_title') }}</h1>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-white-50 text-decoration-none">Home</a></li>
-                <li class="breadcrumb-item active text-white-50">Products</li>
+                <li class="breadcrumb-item">
+                    <a href="{{ route('home') }}" class="text-white-50 text-decoration-none">{{ __('app.prod_breadcrumb_home') }}</a>
+                </li>
+                <li class="breadcrumb-item active text-white-50">{{ __('app.prod_header_title') }}</li>
             </ol>
         </nav>
     </div>
@@ -31,25 +33,25 @@
                         aria-expanded="false"
                         aria-controls="filterCollapse">
                     <span class="d-flex align-items-center gap-2 fw-semibold">
-                        <i class="fas fa-filter"></i> Filter Products
+                        <i class="fas fa-filter"></i> {{ __('app.prod_filter_btn') }}
                         @if($category !== 'all' || $sort !== 'default')
-                        <span class="badge bg-white text-primary ms-1" style="font-size:.7rem;">Active</span>
+                        <span class="badge bg-white text-primary ms-1" style="font-size:.7rem;">{{ __('app.prod_filter_active') }}</span>
                         @endif
                     </span>
                     <i class="fas fa-chevron-down" id="filterChevron" style="transition:transform .25s ease;"></i>
                 </button>
 
-                {{-- Filter card — hidden on mobile by default, always visible on desktop --}}
+                {{-- Filter card --}}
                 <div id="filterCollapse" class="d-none d-lg-block">
                     <div class="card border-0 shadow-sm sticky-top" style="border-radius:16px;top:90px;">
                         <div class="card-body p-4">
                             <h6 class="fw-bold text-primary mb-3 d-flex align-items-center gap-2 d-none d-lg-flex">
-                                <i class="fas fa-filter"></i> Filter Products
+                                <i class="fas fa-filter"></i> {{ __('app.prod_filter_title') }}
                             </h6>
 
                             {{-- Category --}}
                             <div class="mb-4">
-                                <p class="text-uppercase text-muted fw-semibold mb-2" style="font-size:.75rem;letter-spacing:.5px;">Category</p>
+                                <p class="text-uppercase text-muted fw-semibold mb-2" style="font-size:.75rem;letter-spacing:.5px;">{{ __('app.prod_cat_label') }}</p>
                                 @foreach($categories as $key => $label)
                                 <a href="{{ route('products.index', ['category' => $key, 'sort' => $sort]) }}"
                                    class="filter-option d-flex align-items-center gap-2 px-3 py-2 rounded-3 mb-1 text-decoration-none {{ $category === $key ? 'active' : '' }}">
@@ -61,22 +63,22 @@
 
                             {{-- Sort By --}}
                             <div>
-                                <p class="text-uppercase text-muted fw-semibold mb-2" style="font-size:.75rem;letter-spacing:.5px;">Sort By</p>
+                                <p class="text-uppercase text-muted fw-semibold mb-2" style="font-size:.75rem;letter-spacing:.5px;">{{ __('app.prod_sort_label') }}</p>
                                 <a href="{{ route('products.index', ['category' => $category, 'sort' => 'default']) }}"
                                    class="filter-option d-flex align-items-center gap-2 px-3 py-2 rounded-3 mb-1 text-decoration-none {{ $sort === 'default' ? 'active' : '' }}">
-                                    <i class="fas fa-list"></i> Default
+                                    <i class="fas fa-list"></i> {{ __('app.prod_sort_default') }}
                                 </a>
                                 <a href="{{ route('products.index', ['category' => $category, 'sort' => 'price_asc']) }}"
                                    class="filter-option d-flex align-items-center gap-2 px-3 py-2 rounded-3 mb-1 text-decoration-none {{ $sort === 'price_asc' ? 'active' : '' }}">
-                                    <i class="fas fa-arrow-up"></i> Price: Low to High
+                                    <i class="fas fa-arrow-up"></i> {{ __('app.prod_sort_price_asc') }}
                                 </a>
                                 <a href="{{ route('products.index', ['category' => $category, 'sort' => 'price_desc']) }}"
                                    class="filter-option d-flex align-items-center gap-2 px-3 py-2 rounded-3 mb-1 text-decoration-none {{ $sort === 'price_desc' ? 'active' : '' }}">
-                                    <i class="fas fa-arrow-down"></i> Price: High to Low
+                                    <i class="fas fa-arrow-down"></i> {{ __('app.prod_sort_price_desc') }}
                                 </a>
                                 <a href="{{ route('products.index', ['category' => $category, 'sort' => 'rating']) }}"
                                    class="filter-option d-flex align-items-center gap-2 px-3 py-2 rounded-3 mb-1 text-decoration-none {{ $sort === 'rating' ? 'active' : '' }}">
-                                    <i class="fas fa-star"></i> Top Rated
+                                    <i class="fas fa-star"></i> {{ __('app.prod_sort_rating') }}
                                 </a>
                             </div>
                         </div>
@@ -88,7 +90,7 @@
             <div class="col-lg-9">
                 {{-- Toolbar --}}
                 <div class="d-flex justify-content-between align-items-center mb-4 px-3 py-2 bg-white rounded-3 shadow-sm border">
-                    <span class="text-secondary fw-semibold">{{ count($products) }} products found</span>
+                    <span class="text-secondary fw-semibold">{{ __('app.prod_found', ['count' => count($products)]) }}</span>
                 </div>
 
                 @if(count($products) > 0)
@@ -141,7 +143,7 @@
                                 <div class="d-grid gap-2" style="grid-template-columns:1fr auto;">
                                     <button class="btn btn-primary btn-sm fw-semibold"
                                             onclick="addToCart({{ $product['id'] }}, '{{ addslashes($product['name']) }}', {{ $product['price'] }}, '{{ $product['image'] }}')">
-                                        <i class="fas fa-shopping-cart me-1"></i>Add to Cart
+                                        <i class="fas fa-shopping-cart me-1"></i>{{ __('app.prod_add_cart') }}
                                     </button>
                                     <a href="{{ route('products.show', $product['id']) }}" class="btn btn-outline-secondary btn-sm">
                                         <i class="fas fa-eye"></i>
@@ -157,9 +159,9 @@
                 {{-- Empty State --}}
                 <div class="text-center py-5">
                     <i class="fas fa-box-open text-muted mb-3 d-block" style="font-size:3.5rem;opacity:.3;"></i>
-                    <h5 class="fw-bold text-dark mb-2">No Products Found</h5>
-                    <p class="text-secondary mb-4">No products available in this category.</p>
-                    <a href="{{ route('products.index') }}" class="btn btn-primary px-5">View All Products</a>
+                    <h5 class="fw-bold text-dark mb-2">{{ __('app.prod_empty_title') }}</h5>
+                    <p class="text-secondary mb-4">{{ __('app.prod_empty_sub') }}</p>
+                    <a href="{{ route('products.index') }}" class="btn btn-primary px-5">{{ __('app.prod_empty_btn') }}</a>
                 </div>
                 @endif
             </div>
@@ -172,39 +174,33 @@
 
 @push('styles')
 <style>
-/* ... existing styles ... */
 .filter-option {
     color: #475569;
     font-size: .9rem;
     transition: all .2s ease;
 }
-
 .filter-option:hover,
 .filter-option.active {
     background: #eff6ff;
     color: #2563eb;
     font-weight: 600;
 }
-
 .product-card {
     border-radius: 14px !important;
     overflow: hidden;
     transition: all .3s ease;
     position: relative;
 }
-
 .product-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 12px 36px rgba(0,0,0,.12) !important;
 }
-
 .product-img-area {
     height: 180px;
     background: #f8fafc;
     overflow: hidden;
     position: relative;
 }
-
 .product-placeholder {
     width: 100%;
     height: 100%;
@@ -214,7 +210,6 @@
     font-size: 3.5rem;
     color: #cbd5e1;
 }
-
 .product-name {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -222,7 +217,6 @@
     overflow: hidden;
     line-height: 1.4;
 }
-
 .product-desc {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -230,10 +224,7 @@
     overflow: hidden;
     line-height: 1.6;
 }
-
-.d-grid {
-    display: grid;
-}
+.d-grid { display: grid; }
 </style>
 @endpush
 

@@ -1,12 +1,12 @@
 @extends('admin.layouts.app')
 
-@section('title', 'تعديل: ' . $user->name)
-@section('page-title', 'تعديل المستخدم')
+@section('title', __('app.edit') . ': ' . $user->name)
+@section('page-title', __('app.edit_user'))
 @section('breadcrumb')
     <i class="fas fa-chevron-left"></i>
-    <a href="{{ route('admin.users.index') }}">المستخدمون</a>
+    <a href="{{ route('admin.users.index') }}">{{ __('app.users') }}</a>
     <i class="fas fa-chevron-left"></i>
-    <span>تعديل</span>
+    <span>{{ __('app.edit') }}</span>
 @endsection
 
 @section('content')
@@ -28,13 +28,13 @@
         <div class="card-body">
             <div class="form-row">
                 <div class="form-group">
-                    <label class="form-label required">الاسم الكامل</label>
+                    <label class="form-label required">{{ __('app.full_name') }}</label>
                     <input type="text" name="name" class="form-control @error('name') is-error @enderror"
                         value="{{ old('name', $user->name) }}" required>
                     @error('name')<span class="form-error">{{ $message }}</span>@enderror
                 </div>
                 <div class="form-group">
-                    <label class="form-label required">البريد الإلكتروني</label>
+                    <label class="form-label required">{{ __('app.email') }}</label>
                     <input type="email" name="email" class="form-control @error('email') is-error @enderror"
                         value="{{ old('email', $user->email) }}" required>
                     @error('email')<span class="form-error">{{ $message }}</span>@enderror
@@ -42,26 +42,26 @@
             </div>
             <div class="form-row">
                 <div class="form-group">
-                    <label class="form-label">رقم الهاتف</label>
+                    <label class="form-label">{{ __('app.phone') }}</label>
                     <input type="text" name="phone" class="form-control"
                         value="{{ old('phone', $user->phone) }}" placeholder="01xxxxxxxxx">
                 </div>
                 <div class="form-group">
-                    <label class="form-label required">الدور</label>
+                    <label class="form-label required">{{ __('app.role') }}</label>
                     <select name="role" class="form-control" required>
-                        <option value="user"  {{ old('role',$user->role)=='user'  ? 'selected':'' }}>👤 مستخدم عادي</option>
-                        <option value="admin" {{ old('role',$user->role)=='admin' ? 'selected':'' }}>👑 مدير</option>
+                        <option value="user"  {{ old('role',$user->role)=='user'  ? 'selected':'' }}>👤 {{ __('app.role_regular_user') }}</option>
+                        <option value="admin" {{ old('role',$user->role)=='admin' ? 'selected':'' }}>👑 {{ __('app.role_admin') }}</option>
                     </select>
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group">
-                    <label class="form-label">كلمة المرور الجديدة</label>
+                    <label class="form-label">{{ __('app.new_password') }}</label>
                     <input type="password" name="password" class="form-control @error('password') is-error @enderror"
-                        placeholder="اتركه فارغاً إذا لم تريد التغيير">
+                        placeholder="{{ __('app.password_leave_empty') }}">
                     @error('password')<span class="form-error">{{ $message }}</span>@enderror
                     <span style="font-size:.8125rem;color:var(--gray-500);margin-top:.375rem;display:block">
-                        <i class="fas fa-info-circle"></i> اتركه فارغاً للإبقاء على كلمة المرور الحالية
+                        <i class="fas fa-info-circle"></i> {{ __('app.password_keep_hint') }}
                     </span>
                 </div>
                 <div class="form-group">
@@ -69,7 +69,7 @@
                     <div class="form-check" style="margin-top:.5rem">
                         <input type="checkbox" name="is_active" id="is_active" value="1"
                             {{ old('is_active', $user->is_active) ? 'checked':'' }}>
-                        <label for="is_active">حساب نشط</label>
+                        <label for="is_active">{{ __('app.active_account') }}</label>
                     </div>
                 </div>
             </div>
@@ -83,29 +83,29 @@
                 <div class="meta-item">
                     <i class="fas fa-calendar-alt"></i>
                     <div>
-                        <span class="meta-label">تاريخ التسجيل</span>
+                        <span class="meta-label">{{ __('app.registration_date') }}</span>
                         <span class="meta-value">{{ $user->created_at->format('d/m/Y H:i') }}</span>
                     </div>
                 </div>
                 <div class="meta-item">
                     <i class="fas fa-clock"></i>
                     <div>
-                        <span class="meta-label">آخر تحديث</span>
+                        <span class="meta-label">{{ __('app.last_updated') }}</span>
                         <span class="meta-value">{{ $user->updated_at->format('d/m/Y H:i') }}</span>
                     </div>
                 </div>
                 <div class="meta-item">
                     <i class="fas fa-shield-alt"></i>
                     <div>
-                        <span class="meta-label">الدور الحالي</span>
-                        <span class="meta-value">{{ $user->role === 'admin' ? '👑 مدير' : '👤 مستخدم' }}</span>
+                        <span class="meta-label">{{ __('app.current_role') }}</span>
+                        <span class="meta-value">{{ $user->role === 'admin' ? '👑 ' . __('app.role_admin') : '👤 ' . __('app.role_user') }}</span>
                     </div>
                 </div>
                 <div class="meta-item">
                     <i class="fas fa-circle" style="color:{{ $user->is_active ? 'var(--success)' : 'var(--error)' }}"></i>
                     <div>
-                        <span class="meta-label">الحالة</span>
-                        <span class="meta-value">{{ $user->is_active ? 'نشط' : 'معطل' }}</span>
+                        <span class="meta-label">{{ __('app.status') }}</span>
+                        <span class="meta-value">{{ $user->is_active ? __('app.active') : __('app.inactive') }}</span>
                     </div>
                 </div>
             </div>
@@ -114,10 +114,10 @@
 
     <div class="btn-group" style="margin-top:1.5rem">
         <button type="submit" class="btn btn-primary">
-            <i class="fas fa-save"></i> حفظ التعديلات
+            <i class="fas fa-save"></i> {{ __('app.save_changes') }}
         </button>
         <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">
-            <i class="fas fa-times"></i> إلغاء
+            <i class="fas fa-times"></i> {{ __('app.cancel') }}
         </a>
     </div>
 </form>

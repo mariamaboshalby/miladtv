@@ -1,9 +1,9 @@
 @extends('admin.layouts.app')
 
-@section('title', 'المنتجات')
-@section('page-title', 'إدارة المنتجات')
+@section('title', __('app.products'))
+@section('page-title', __('app.manage_products'))
 @section('breadcrumb')
-    <i class="fas fa-chevron-left"></i> <span>المنتجات</span>
+    <i class="fas fa-chevron-left"></i> <span>{{ __('app.products') }}</span>
 @endsection
 
 @section('content')
@@ -13,27 +13,28 @@
     <form class="toolbar-search" method="GET" action="{{ route('admin.products.index') }}">
         <div class="search-box">
             <i class="fas fa-search"></i>
-            <input type="text" name="search" placeholder="بحث بالاسم أو الماركة..." value="{{ request('search') }}">
+            <input type="text" name="search" placeholder="{{ __('app.search_placeholder') }}" value="{{ request('search') }}">
         </div>
         <select name="category" class="form-control" style="width:180px">
-            <option value="">كل الفئات</option>
-            <option value="printers"  {{ request('category')=='printers'  ? 'selected':'' }}>الطابعات</option>
-            <option value="mice"      {{ request('category')=='mice'      ? 'selected':'' }}>الماوسات</option>
-            <option value="headphones"{{ request('category')=='headphones'? 'selected':'' }}>السماعات</option>
-            <option value="flash"     {{ request('category')=='flash'     ? 'selected':'' }}>الفلاشات</option>
+            <option value="">{{ __('app.all_categories') }}</option>
+            @foreach($categories as $cat)
+            <option value="{{ $cat->slug }}" {{ request('category') == $cat->slug ? 'selected' : '' }}>
+                {{ $cat->name_ar }}
+            </option>
+            @endforeach
         </select>
         <select name="status" class="form-control" style="width:150px">
-            <option value="">كل الحالات</option>
-            <option value="active"   {{ request('status')=='active'   ? 'selected':'' }}>نشط</option>
-            <option value="inactive" {{ request('status')=='inactive' ? 'selected':'' }}>معطل</option>
+            <option value="">{{ __('app.all_statuses') }}</option>
+            <option value="active"   {{ request('status')=='active'   ? 'selected':'' }}>{{ __('app.active') }}</option>
+            <option value="inactive" {{ request('status')=='inactive' ? 'selected':'' }}>{{ __('app.inactive') }}</option>
         </select>
-        <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-search"></i> بحث</button>
+        <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-search"></i> {{ __('app.search') }}</button>
         @if(request()->hasAny(['search','category','status']))
-        <a href="{{ route('admin.products.index') }}" class="btn btn-secondary btn-sm"><i class="fas fa-times"></i> مسح</a>
+        <a href="{{ route('admin.products.index') }}" class="btn btn-secondary btn-sm"><i class="fas fa-times"></i> {{ __('app.clear') }}</a>
         @endif
     </form>
     <a href="{{ route('admin.products.create') }}" class="btn btn-primary">
-        <i class="fas fa-plus"></i> إضافة منتج
+        <i class="fas fa-plus"></i> {{ __('app.add_product') }}
     </a>
 </div>
 
@@ -44,13 +45,13 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>المنتج</th>
-                    <th>الفئة</th>
-                    <th>السعر</th>
-                    <th>المخزون</th>
-                    <th>الحالة</th>
-                    <th>مميز</th>
-                    <th>الإجراءات</th>
+                    <th>{{ __('app.product_name') }}</th>
+                    <th>{{ __('app.category') }}</th>
+                    <th>{{ __('app.price') }}</th>
+                    <th>{{ __('app.stock') }}</th>
+                    <th>{{ __('app.status') }}</th>
+                    <th>{{ __('app.featured') }}</th>
+                    <th>{{ __('app.actions') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -60,7 +61,8 @@
                     <td>
                         <div class="product-cell">
                             <div class="product-thumb">
-                                <i class="fas fa-{{ $product->category === 'printers' ? 'print' : ($product->category === 'mice' ? 'mouse' : ($product->category === 'headphones' ? 'headphones' : 'usb')) }}"></i>
+                                @php $catModel = $categories->where('slug', $product->category)->first(); @endphp
+                                <i class="fas fa-{{ $catModel ? $catModel->icon : 'box' }}"></i>
                             </div>
                             <div>
                                 <strong>{{ $product->name }}</strong>
@@ -69,8 +71,8 @@
                         </div>
                     </td>
                     <td>
-                        @php $cats = ['printers'=>'الطابعات','mice'=>'الماوسات','headphones'=>'السماعات','flash'=>'الفلاشات']; @endphp
-                        <span class="badge badge-blue">{{ $cats[$product->category] ?? $product->category }}</span>
+                        @php $catModel = $categories->where('slug', $product->category)->first(); @endphp
+                        <span class="badge badge-blue">{{ $catModel ? $catModel->name_ar : $product->category }}</span>
                     </td>
                     <td>
                         <strong style="color:var(--primary-blue)">{{ number_format($product->price) }} ج</strong>
@@ -80,12 +82,12 @@
                     </td>
                     <td>
                         <span class="badge {{ $product->stock == 0 ? 'badge-red' : ($product->stock < 10 ? 'badge-orange' : 'badge-green') }}">
-                            {{ $product->stock == 0 ? 'نفد' : $product->stock . ' قطعة' }}
+                            {{ $product->stock == 0 ? __('app.out') : $product->stock . ' ' . __('app.pieces') }}
                         </span>
                     </td>
                     <td>
                         <span class="badge {{ $product->is_active ? 'badge-green' : 'badge-red' }}">
-                            {{ $product->is_active ? 'نشط' : 'معطل' }}
+                            {{ $product->is_active ? __('app.active') : __('app.inactive') }}
                         </span>
                     </td>
                     <td>
@@ -97,13 +99,13 @@
                     </td>
                     <td>
                         <div class="btn-group">
-                            <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-secondary btn-sm" title="تعديل">
+                            <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-secondary btn-sm" title="{{ __('app.edit') }}">
                                 <i class="fas fa-edit"></i>
                             </a>
                             <form method="POST" action="{{ route('admin.products.destroy', $product) }}" style="display:inline">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" title="حذف"
-                                    data-confirm="هل أنت متأكد من حذف هذا المنتج؟">
+                                <button type="submit" class="btn btn-danger btn-sm" title="{{ __('app.delete') }}"
+                                    data-confirm="{{ __('app.delete_confirm') }}">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
@@ -115,8 +117,8 @@
                     <td colspan="8">
                         <div class="empty-state">
                             <i class="fas fa-box-open"></i>
-                            <p>لا توجد منتجات</p>
-                            <a href="{{ route('admin.products.create') }}" class="btn btn-primary btn-sm">إضافة منتج</a>
+                            <p>{{ __('app.no_products_found') }}</p>
+                            <a href="{{ route('admin.products.create') }}" class="btn btn-primary btn-sm">{{ __('app.add_product') }}</a>
                         </div>
                     </td>
                 </tr>

@@ -1,9 +1,9 @@
 @extends('admin.layouts.app')
 
-@section('title', 'المستخدمون')
-@section('page-title', 'إدارة المستخدمين')
+@section('title', __('app.users'))
+@section('page-title', __('app.manage_users'))
 @section('breadcrumb')
-    <i class="fas fa-chevron-left"></i> <span>المستخدمون</span>
+    <i class="fas fa-chevron-left"></i> <span>{{ __('app.users') }}</span>
 @endsection
 
 @section('content')
@@ -12,19 +12,19 @@
 <div class="stats-grid" style="margin-bottom:1.5rem">
     <div class="stat-card">
         <div class="stat-icon blue"><i class="fas fa-users"></i></div>
-        <div class="stat-content"><h3>{{ $stats['total'] }}</h3><p>إجمالي المستخدمين</p></div>
+        <div class="stat-content"><h3>{{ $stats['total'] }}</h3><p>{{ __('app.total_users') }}</p></div>
     </div>
     <div class="stat-card">
         <div class="stat-icon purple"><i class="fas fa-user-shield"></i></div>
-        <div class="stat-content"><h3>{{ $stats['admins'] }}</h3><p>المديرون</p></div>
+        <div class="stat-content"><h3>{{ $stats['admins'] }}</h3><p>{{ __('app.admins') }}</p></div>
     </div>
     <div class="stat-card">
         <div class="stat-icon green"><i class="fas fa-user-check"></i></div>
-        <div class="stat-content"><h3>{{ $stats['active'] }}</h3><p>مستخدمون نشطون</p></div>
+        <div class="stat-content"><h3>{{ $stats['active'] }}</h3><p>{{ __('app.active_users') }}</p></div>
     </div>
     <div class="stat-card">
         <div class="stat-icon orange"><i class="fas fa-user-plus"></i></div>
-        <div class="stat-content"><h3>{{ $stats['new_this_month'] }}</h3><p>جدد هذا الشهر</p></div>
+        <div class="stat-content"><h3>{{ $stats['new_this_month'] }}</h3><p>{{ __('app.new_this_month') }}</p></div>
     </div>
 </div>
 
@@ -33,25 +33,25 @@
     <form class="toolbar-search" method="GET" action="{{ route('admin.users.index') }}">
         <div class="search-box">
             <i class="fas fa-search"></i>
-            <input type="text" name="search" placeholder="بحث بالاسم أو البريد أو الهاتف..." value="{{ request('search') }}">
+            <input type="text" name="search" placeholder="{{ __('app.user_search_ph') }}" value="{{ request('search') }}">
         </div>
         <select name="role" class="form-control" style="width:160px">
-            <option value="">كل الأدوار</option>
-            <option value="admin" {{ request('role')=='admin' ? 'selected':'' }}>👑 مدير</option>
-            <option value="user"  {{ request('role')=='user'  ? 'selected':'' }}>👤 مستخدم</option>
+            <option value="">{{ __('app.all_roles') }}</option>
+            <option value="admin" {{ request('role')=='admin' ? 'selected':'' }}>👑 {{ __('app.role_admin') }}</option>
+            <option value="user"  {{ request('role')=='user'  ? 'selected':'' }}>👤 {{ __('app.role_user') }}</option>
         </select>
         <select name="status" class="form-control" style="width:150px">
-            <option value="">كل الحالات</option>
-            <option value="active"   {{ request('status')=='active'   ? 'selected':'' }}>✅ نشط</option>
-            <option value="inactive" {{ request('status')=='inactive' ? 'selected':'' }}>🚫 معطل</option>
+            <option value="">{{ __('app.all_statuses') }}</option>
+            <option value="active"   {{ request('status')=='active'   ? 'selected':'' }}>✅ {{ __('app.active') }}</option>
+            <option value="inactive" {{ request('status')=='inactive' ? 'selected':'' }}>🚫 {{ __('app.inactive') }}</option>
         </select>
-        <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-search"></i> بحث</button>
+        <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-search"></i> {{ __('app.search') }}</button>
         @if(request()->hasAny(['search','role','status']))
-        <a href="{{ route('admin.users.index') }}" class="btn btn-secondary btn-sm"><i class="fas fa-times"></i> مسح</a>
+        <a href="{{ route('admin.users.index') }}" class="btn btn-secondary btn-sm"><i class="fas fa-times"></i> {{ __('app.clear') }}</a>
         @endif
     </form>
     <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
-        <i class="fas fa-user-plus"></i> إضافة مستخدم
+        <i class="fas fa-user-plus"></i> {{ __('app.add_user') }}
     </a>
 </div>
 
@@ -62,12 +62,12 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>المستخدم</th>
-                    <th>الهاتف</th>
-                    <th>الدور</th>
-                    <th>الحالة</th>
-                    <th>تاريخ التسجيل</th>
-                    <th>الإجراءات</th>
+                    <th>{{ __('app.user') }}</th>
+                    <th>{{ __('app.phone') }}</th>
+                    <th>{{ __('app.role') }}</th>
+                    <th>{{ __('app.status') }}</th>
+                    <th>{{ __('app.registration_date') }}</th>
+                    <th>{{ __('app.actions') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -88,34 +88,34 @@
                     <td>{{ $user->phone ?? '—' }}</td>
                     <td>
                         <span class="badge {{ $user->role === 'admin' ? 'badge-purple' : 'badge-blue' }}">
-                            {{ $user->role === 'admin' ? '👑 مدير' : '👤 مستخدم' }}
+                            {{ $user->role === 'admin' ? '👑 ' . __('app.role_admin') : '👤 ' . __('app.role_user') }}
                         </span>
                     </td>
                     <td>
                         <span class="badge {{ $user->is_active ? 'badge-green' : 'badge-red' }}">
-                            {{ $user->is_active ? '✅ نشط' : '🚫 معطل' }}
+                            {{ $user->is_active ? '✅ ' . __('app.active') : '🚫 ' . __('app.inactive') }}
                         </span>
                     </td>
                     <td style="color:var(--gray-500);font-size:.875rem">{{ $user->created_at->format('d/m/Y') }}</td>
                     <td>
                         <div class="btn-group">
-                            <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-secondary btn-sm" title="تعديل">
+                            <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-secondary btn-sm" title="{{ __('app.edit') }}">
                                 <i class="fas fa-edit"></i>
                             </a>
                             <!-- Toggle Status -->
                             <form method="POST" action="{{ route('admin.users.toggle', $user) }}" style="display:inline">
                                 @csrf @method('PATCH')
                                 <button type="submit" class="btn btn-sm {{ $user->is_active ? 'btn-warning' : 'btn-success' }}"
-                                    title="{{ $user->is_active ? 'تعطيل' : 'تفعيل' }}"
-                                    data-confirm="{{ $user->is_active ? 'هل تريد تعطيل هذا المستخدم؟' : 'هل تريد تفعيل هذا المستخدم؟' }}">
+                                    title="{{ $user->is_active ? __('app.deactivate') : __('app.activate') }}"
+                                    data-confirm="{{ $user->is_active ? __('app.confirm_deactivate_user') : __('app.confirm_activate_user') }}">
                                     <i class="fas fa-{{ $user->is_active ? 'ban' : 'check' }}"></i>
                                 </button>
                             </form>
                             <!-- Delete -->
                             <form method="POST" action="{{ route('admin.users.destroy', $user) }}" style="display:inline">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" title="حذف"
-                                    data-confirm="هل أنت متأكد من حذف هذا المستخدم؟">
+                                <button type="submit" class="btn btn-danger btn-sm" title="{{ __('app.delete') }}"
+                                    data-confirm="{{ __('app.delete_user_confirm') }}">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
@@ -127,8 +127,8 @@
                     <td colspan="7">
                         <div class="empty-state">
                             <i class="fas fa-users"></i>
-                            <p>لا يوجد مستخدمون</p>
-                            <a href="{{ route('admin.users.create') }}" class="btn btn-primary btn-sm">إضافة مستخدم</a>
+                            <p>{{ __('app.no_users_found') }}</p>
+                            <a href="{{ route('admin.users.create') }}" class="btn btn-primary btn-sm">{{ __('app.add_user') }}</a>
                         </div>
                     </td>
                 </tr>

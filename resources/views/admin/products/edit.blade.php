@@ -1,12 +1,12 @@
-﻿@extends('admin.layouts.app')
+@extends('admin.layouts.app')
 
-@section('title', 'تعديل: ' . $product->name)
-@section('page-title', 'تعديل المنتج')
+@section('title', __('app.edit_product') . ': ' . $product->name)
+@section('page-title', __('app.edit_product'))
 @section('breadcrumb')
     <i class="fas fa-chevron-left"></i>
-    <a href="{{ route('admin.products.index') }}">المنتجات</a>
+    <a href="{{ route('admin.products.index') }}">{{ __('app.products') }}</a>
     <i class="fas fa-chevron-left"></i>
-    <span>تعديل</span>
+    <span>{{ __('app.edit') }}</span>
 @endsection
 
 @section('content')
@@ -19,25 +19,25 @@
 
             <div class="card" style="margin-bottom:1.5rem">
                 <div class="card-header">
-                    <h2><i class="fas fa-info-circle" style="color:var(--primary);margin-left:.5rem"></i> معلومات المنتج</h2>
+                    <h2><i class="fas fa-info-circle" style="color:var(--primary);margin-{{ app()->getLocale() === 'ar' ? 'left' : 'right' }}:.5rem"></i> {{ __('app.product_info') }}</h2>
                 </div>
                 <div class="card-body">
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label required">اسم المنتج</label>
+                            <label class="form-label required">{{ __('app.product_name') }}</label>
                             <input type="text" name="name" class="form-control @error('name') is-error @enderror"
                                 value="{{ old('name', $product->name) }}" required>
                             @error('name')<span class="form-error">{{ $message }}</span>@enderror
                         </div>
                         <div class="form-group">
-                            <label class="form-label required">الماركة</label>
+                            <label class="form-label required">{{ __('app.brand') }}</label>
                             <input type="text" name="brand" class="form-control @error('brand') is-error @enderror"
                                 value="{{ old('brand', $product->brand) }}" required>
                             @error('brand')<span class="form-error">{{ $message }}</span>@enderror
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label required">الوصف</label>
+                        <label class="form-label required">{{ __('app.description') }}</label>
                         <textarea name="description" class="form-control" rows="4" required>{{ old('description', $product->description) }}</textarea>
                     </div>
                 </div>
@@ -46,9 +46,9 @@
             <!-- Specs -->
             <div class="card">
                 <div class="card-header">
-                    <h2><i class="fas fa-list-ul" style="color:var(--primary);margin-left:.5rem"></i> المواصفات</h2>
+                    <h2><i class="fas fa-list-ul" style="color:var(--primary);margin-{{ app()->getLocale() === 'ar' ? 'left' : 'right' }}:.5rem"></i> {{ __('app.specs') }}</h2>
                     <button type="button" id="addSpecBtn" class="btn btn-secondary btn-sm">
-                        <i class="fas fa-plus"></i> إضافة
+                        <i class="fas fa-plus"></i> {{ __('app.add') }}
                     </button>
                 </div>
                 <div class="card-body">
@@ -62,7 +62,7 @@
                             @endforeach
                         @else
                         <div class="spec-row">
-                            <input type="text" name="specs[]" class="form-control" placeholder="مثال: السرعة: 40 صفحة/دقيقة">
+                            <input type="text" name="specs[]" class="form-control">
                             <button type="button" class="btn btn-danger btn-sm remove-spec"><i class="fas fa-trash"></i></button>
                         </div>
                         @endif
@@ -78,8 +78,8 @@
             <!-- Images -->
             <div class="card" style="margin-bottom:1.5rem">
                 <div class="card-header">
-                    <h2><i class="fas fa-images" style="color:var(--primary);margin-left:.5rem"></i> صور المنتج</h2>
-                    <span style="font-size:.8125rem;color:#64748B">{{ $product->getMedia('product-images')->count() }} صورة</span>
+                    <h2><i class="fas fa-images" style="color:var(--primary);margin-{{ app()->getLocale() === 'ar' ? 'left' : 'right' }}:.5rem"></i> {{ __('app.product_images') }}</h2>
+                    <span style="font-size:.8125rem;color:#64748B">{{ $product->getMedia('product-images')->count() }} {{ __('app.images_count') }}</span>
                 </div>
                 <div class="card-body">
 
@@ -100,8 +100,8 @@
 
                     <div class="multi-upload-zone" id="multiUploadZone">
                         <i class="fas fa-plus-circle"></i>
-                        <p>إضافة صور جديدة — <span>اضغط أو اسحب</span></p>
-                        <small>JPG, PNG, WEBP — حد أقصى 10MB لكل صورة</small>
+                        <p>{{ __('app.add_new_images') }} — <span>{{ __('app.click_or_drag') }}</span></p>
+                        <small>{{ __('app.image_limits') }}</small>
                     </div>
                     <input type="file" name="images[]" id="productImages"
                            accept="image/jpeg,image/png,image/webp"
@@ -115,35 +115,38 @@
             <!-- Category & Price -->
             <div class="card" style="margin-bottom:1.5rem">
                 <div class="card-header">
-                    <h2><i class="fas fa-tag" style="color:var(--primary);margin-left:.5rem"></i> التصنيف والسعر</h2>
+                    <h2><i class="fas fa-tag" style="color:var(--primary);margin-{{ app()->getLocale() === 'ar' ? 'left' : 'right' }}:.5rem"></i> {{ __('app.category_and_price') }}</h2>
                 </div>
                 <div class="card-body">
                     <div class="form-group">
-                        <label class="form-label required">الفئة</label>
+                        <label class="form-label required">{{ __('app.category') }}</label>
                         <select name="category" class="form-control" required>
-                            <option value="printers"   {{ old('category',$product->category)=='printers'   ? 'selected':'' }}>الطابعات</option>
-                            <option value="mice"       {{ old('category',$product->category)=='mice'       ? 'selected':'' }}>الماوسات</option>
-                            <option value="headphones" {{ old('category',$product->category)=='headphones' ? 'selected':'' }}>السماعات</option>
-                            <option value="flash"      {{ old('category',$product->category)=='flash'      ? 'selected':'' }}>الفلاشات</option>
+                            <option value="">{{ __('app.select_category') }}</option>
+                            @foreach($categories as $cat)
+                            <option value="{{ $cat->slug }}" {{ old('category', $product->category) == $cat->slug ? 'selected' : '' }}>
+                                {{ app()->getLocale() === 'ar' ? $cat->name_ar : $cat->name_en }}
+                            </option>
+                            @endforeach
                         </select>
+                        @error('category')<span class="form-error">{{ $message }}</span>@enderror
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label required">السعر</label>
+                            <label class="form-label required">{{ __('app.price') }}</label>
                             <input type="number" name="price" class="form-control" value="{{ old('price', $product->price) }}" min="0" step="0.01" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">السعر القديم</label>
+                            <label class="form-label">{{ __('app.old_price') }}</label>
                             <input type="number" name="old_price" class="form-control" value="{{ old('old_price', $product->old_price) }}" min="0" step="0.01">
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label required">المخزون</label>
+                            <label class="form-label required">{{ __('app.stock') }}</label>
                             <input type="number" name="stock" class="form-control" value="{{ old('stock', $product->stock) }}" min="0" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label required">التقييم</label>
+                            <label class="form-label required">{{ __('app.rating') }}</label>
                             <select name="rating" class="form-control">
                                 @for($i=5;$i>=1;$i--)
                                 <option value="{{ $i }}" {{ old('rating',$product->rating)==$i ? 'selected':'' }}>{{ str_repeat('⭐',$i) }} ({{ $i }})</option>
@@ -157,19 +160,19 @@
             <!-- Badge -->
             <div class="card" style="margin-bottom:1.5rem">
                 <div class="card-header">
-                    <h2><i class="fas fa-certificate" style="color:var(--primary);margin-left:.5rem"></i> الشارة</h2>
+                    <h2><i class="fas fa-certificate" style="color:var(--primary);margin-{{ app()->getLocale() === 'ar' ? 'left' : 'right' }}:.5rem"></i> {{ __('app.badge') }}</h2>
                 </div>
                 <div class="card-body">
                     <div class="form-group">
-                        <label class="form-label">نص الشارة</label>
+                        <label class="form-label">{{ __('app.badge_text') }}</label>
                         <input type="text" name="badge" class="form-control" value="{{ old('badge', $product->badge) }}">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">لون الشارة</label>
+                        <label class="form-label">{{ __('app.badge_color') }}</label>
                         <select name="badge_color" class="form-control">
-                            <option value="">بدون لون</option>
-                            @foreach(['blue'=>'أزرق','green'=>'أخضر','red'=>'أحمر','orange'=>'برتقالي','purple'=>'بنفسجي'] as $val => $label)
-                            <option value="{{ $val }}" {{ old('badge_color',$product->badge_color)==$val ? 'selected':'' }}>{{ $label }}</option>
+                            <option value="">{{ __('app.no_color') }}</option>
+                            @foreach(['blue'=>'blue','green'=>'green','red'=>'red','orange'=>'orange','purple'=>'purple'] as $val => $key)
+                            <option value="{{ $val }}" {{ old('badge_color',$product->badge_color)==$val ? 'selected':'' }}>{{ __('app.' . $key) }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -179,26 +182,26 @@
             <!-- Settings -->
             <div class="card">
                 <div class="card-header">
-                    <h2><i class="fas fa-cog" style="color:var(--primary);margin-left:.5rem"></i> الإعدادات</h2>
+                    <h2><i class="fas fa-cog" style="color:var(--primary);margin-{{ app()->getLocale() === 'ar' ? 'left' : 'right' }}:.5rem"></i> {{ __('app.product_settings') }}</h2>
                 </div>
                 <div class="card-body">
                     <div class="form-check">
                         <input type="checkbox" name="is_active" id="is_active" value="1" {{ old('is_active', $product->is_active) ? 'checked':'' }}>
-                        <label for="is_active">منتج نشط</label>
+                        <label for="is_active">{{ __('app.active_product') }}</label>
                     </div>
                     <div class="form-check">
                         <input type="checkbox" name="is_featured" id="is_featured" value="1" {{ old('is_featured', $product->is_featured) ? 'checked':'' }}>
-                        <label for="is_featured">منتج مميز</label>
+                        <label for="is_featured">{{ __('app.featured_product') }}</label>
                     </div>
                 </div>
             </div>
 
             <div class="btn-group" style="margin-top:1.5rem">
                 <button type="submit" class="btn btn-primary" style="flex:1">
-                    <i class="fas fa-save"></i> حفظ التعديلات
+                    <i class="fas fa-save"></i> {{ __('app.save') }}
                 </button>
                 <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">
-                    <i class="fas fa-times"></i> إلغاء
+                    <i class="fas fa-times"></i> {{ __('app.cancel') }}
                 </a>
             </div>
 

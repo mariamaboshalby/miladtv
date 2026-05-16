@@ -42,13 +42,37 @@ class HomeController extends Controller
 
         $productCount = Product::where('is_active', true)->count();
 
-        $stats = [
-            ['number' => $productCount . '+', 'label' => 'منتج متاح',  'icon' => 'fa-box'],
-            ['number' => '15K+',              'label' => 'عميل سعيد',  'icon' => 'fa-users'],
-            ['number' => '10+',               'label' => 'سنوات خبرة', 'icon' => 'fa-award'],
-            ['number' => '24/7',              'label' => 'دعم فني',    'icon' => 'fa-headset'],
-        ];
+        // Dynamically fetch About Stats
+        $aboutStats = \App\Models\AboutStat::active()->take(4)->get();
+        if ($aboutStats->count() > 0) {
+            $stats = $aboutStats->map(function($stat) {
+                return [
+                    'number' => $stat->number,
+                    'label'  => app()->getLocale() === 'ar' ? $stat->title_ar : $stat->title_en,
+                    'icon'   => $stat->icon,
+                ];
+            })->toArray();
+        } else {
+            $stats = [
+                ['number' => $productCount . '+', 'label' => 'منتج متاح',  'icon' => 'fa-box'],
+                ['number' => '15K+',              'label' => 'عميل سعيد',  'icon' => 'fa-users'],
+                ['number' => '10+',               'label' => 'سنوات خبرة', 'icon' => 'fa-award'],
+                ['number' => '24/7',              'label' => 'دعم فني',    'icon' => 'fa-headset'],
+            ];
+        }
 
-        return view('home', compact('featuredProducts', 'stats'));
+        // Dynamically fetch Blog Posts
+        $blogPosts = \App\Models\BlogPost::active()
+            ->latest('published_at')
+            ->take(3)
+            ->get();
+
+        // Dynamically fetch latest Downloads
+        $downloads = \App\Models\Download::active()
+            ->latest()
+            ->take(4)
+            ->get();
+
+        return view('home', compact('featuredProducts', 'stats', 'blogPosts', 'downloads'));
     }
 }

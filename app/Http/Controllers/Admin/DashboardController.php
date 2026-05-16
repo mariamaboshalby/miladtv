@@ -18,6 +18,9 @@ class DashboardController extends Controller
             'pending_orders' => Order::where('status', 'pending')->count(),
             'total_revenue' => Order::where('payment_status', 'paid')->sum('total'),
             'today_orders' => Order::whereDate('created_at', today())->count(),
+            'total_blog_posts' => \App\Models\BlogPost::count(),
+            'total_downloads' => \App\Models\Download::count(),
+            'total_about_entries' => \App\Models\AboutStat::count() + \App\Models\AboutTeam::count() + \App\Models\AboutValue::count(),
         ];
 
         $recent_orders = Order::with('items')
@@ -25,11 +28,12 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        $low_stock_products = Product::where('stock', '<', 10)
-            ->where('is_active', true)
-            ->orderBy('stock')
-            ->take(5)
+        $low_stock_products = Product::where('stock', '<=', 5)
+            ->orderBy('stock', 'asc')
+            ->take(10)
             ->get();
+
+        $categories = \App\Models\Category::all();
 
         $top_products = Product::withCount('orderItems')
             ->orderBy('order_items_count', 'desc')
@@ -49,7 +53,8 @@ class DashboardController extends Controller
             'recent_orders',
             'low_stock_products',
             'top_products',
-            'sales_data'
+            'sales_data',
+            'categories'
         ));
     }
 }

@@ -1,7 +1,7 @@
 @extends('admin.layouts.app')
 
-@section('title', 'لوحة التحكم')
-@section('page-title', 'لوحة التحكم')
+@section('title', __('app.dashboard'))
+@section('page-title', __('app.dashboard'))
 
 @section('content')
 
@@ -11,28 +11,49 @@
         <div class="stat-icon blue"><i class="fas fa-box"></i></div>
         <div class="stat-content">
             <h3>{{ number_format($stats['total_products']) }}</h3>
-            <p>إجمالي المنتجات</p>
+            <p>{{ __('app.total_products') }}</p>
         </div>
     </div>
     <div class="stat-card">
         <div class="stat-icon green"><i class="fas fa-shopping-bag"></i></div>
         <div class="stat-content">
             <h3>{{ number_format($stats['total_orders']) }}</h3>
-            <p>إجمالي الطلبات</p>
+            <p>{{ __('app.total_orders') }}</p>
         </div>
     </div>
     <div class="stat-card">
         <div class="stat-icon orange"><i class="fas fa-clock"></i></div>
         <div class="stat-content">
             <h3>{{ number_format($stats['pending_orders']) }}</h3>
-            <p>طلبات قيد الانتظار</p>
+            <p>{{ __('app.pending_orders') }}</p>
         </div>
     </div>
     <div class="stat-card">
         <div class="stat-icon purple"><i class="fas fa-coins"></i></div>
         <div class="stat-content">
             <h3>{{ number_format($stats['total_revenue']) }}</h3>
-            <p>إجمالي الإيرادات (جنيه)</p>
+            <p>{{ __('app.total_revenue') }}</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background:#eef2ff;color:#4f46e5;"><i class="fas fa-pen-nib"></i></div>
+        <div class="stat-content">
+            <h3>{{ number_format($stats['total_blog_posts']) }}</h3>
+            <p>{{ __('app.blog') }}</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background:#f0fdf4;color:#16a34a;"><i class="fas fa-download"></i></div>
+        <div class="stat-content">
+            <h3>{{ number_format($stats['total_downloads']) }}</h3>
+            <p>{{ __('app.downloads') }}</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon" style="background:#fff7ed;color:#ea580c;"><i class="fas fa-info-circle"></i></div>
+        <div class="stat-content">
+            <h3>{{ number_format($stats['total_about_entries']) }}</h3>
+            <p>{{ __('app.about') }}</p>
         </div>
     </div>
 </div>
@@ -43,19 +64,19 @@
     <!-- Recent Orders -->
     <div class="card">
         <div class="card-header">
-            <h2><i class="fas fa-shopping-bag" style="color:var(--primary-blue);margin-left:.5rem"></i> آخر الطلبات</h2>
-            <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary btn-sm">عرض الكل</a>
+            <h2><i class="fas fa-shopping-bag" style="color:var(--primary-blue);margin-{{ app()->getLocale() === 'ar' ? 'left' : 'right' }}:.5rem"></i> {{ __('app.recent_orders') }}</h2>
+            <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary btn-sm">{{ __('app.view_all') }}</a>
         </div>
         <div class="table-container">
             @if($recent_orders->count())
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th>رقم الطلب</th>
-                        <th>العميل</th>
-                        <th>الإجمالي</th>
-                        <th>الحالة</th>
-                        <th>التاريخ</th>
+                        <th>{{ __('app.order_number') }}</th>
+                        <th>{{ __('app.customer') }}</th>
+                        <th>{{ __('app.total') }}</th>
+                        <th>{{ __('app.status') }}</th>
+                        <th>{{ __('app.date') }}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -64,7 +85,7 @@
                     <tr>
                         <td><strong>{{ $order->order_number }}</strong></td>
                         <td>{{ $order->customer_name }}</td>
-                        <td><strong style="color:var(--primary-blue)">{{ number_format($order->total) }} ج</strong></td>
+                        <td><strong style="color:var(--primary-blue)">{{ number_format($order->total) }} {{ app()->getLocale() === 'ar' ? 'ج' : 'EGP' }}</strong></td>
                         <td>
                             <span class="badge badge-{{ $order->status_color }}">
                                 {{ $order->status_label }}
@@ -83,7 +104,7 @@
             @else
             <div class="empty-state">
                 <i class="fas fa-shopping-bag"></i>
-                <p>لا توجد طلبات بعد</p>
+                <p>{{ __('app.no_orders') }}</p>
             </div>
             @endif
         </div>
@@ -95,20 +116,21 @@
         <!-- Low Stock -->
         <div class="card" style="margin-bottom:1.5rem">
             <div class="card-header">
-                <h2><i class="fas fa-exclamation-triangle" style="color:var(--warning);margin-left:.5rem"></i> مخزون منخفض</h2>
-                <a href="{{ route('admin.products.index') }}" class="btn btn-secondary btn-sm">إدارة</a>
+                <h2><i class="fas fa-exclamation-triangle" style="color:var(--warning);margin-{{ app()->getLocale() === 'ar' ? 'left' : 'right' }}:.5rem"></i> {{ __('app.low_stock') }}</h2>
+                <a href="{{ route('admin.products.index') }}" class="btn btn-secondary btn-sm">{{ __('app.manage') }}</a>
             </div>
             <div class="card-body" style="padding:0">
                 @if($low_stock_products->count())
                 @foreach($low_stock_products as $product)
                 <div class="stock-item">
                     <div class="stock-icon">
-                        <i class="fas fa-{{ $product->category === 'printers' ? 'print' : ($product->category === 'mice' ? 'mouse' : ($product->category === 'headphones' ? 'headphones' : 'usb')) }}"></i>
+                        @php $catModel = $categories->where('slug', $product->category)->first(); @endphp
+                        <i class="fas fa-{{ $catModel ? $catModel->icon : 'box' }}"></i>
                     </div>
                     <div class="stock-info">
                         <span class="stock-name">{{ Str::limit($product->name, 30) }}</span>
                         <span class="stock-qty {{ $product->stock == 0 ? 'out' : 'low' }}">
-                            {{ $product->stock == 0 ? 'نفد المخزون' : $product->stock . ' قطعة' }}
+                            {{ $product->stock == 0 ? __('app.out_of_stock') : $product->stock . ' ' . __('app.pieces') }}
                         </span>
                     </div>
                     <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-secondary btn-sm">
@@ -119,7 +141,7 @@
                 @else
                 <div class="empty-state" style="padding:2rem">
                     <i class="fas fa-check-circle" style="color:var(--success)"></i>
-                    <p>المخزون بخير!</p>
+                    <p>{{ __('app.stock_ok') }}</p>
                 </div>
                 @endif
             </div>
@@ -127,25 +149,37 @@
         <!-- Quick Actions -->
         <div class="card">
             <div class="card-header">
-                <h2><i class="fas fa-bolt" style="color:var(--warning);margin-left:.5rem"></i> إجراءات سريعة</h2>
+                <h2><i class="fas fa-bolt" style="color:var(--warning);margin-{{ app()->getLocale() === 'ar' ? 'left' : 'right' }}:.5rem"></i> {{ __('app.quick_actions') }}</h2>
             </div>
             <div class="card-body">
                 <div class="quick-actions">
                     <a href="{{ route('admin.products.create') }}" class="quick-action-btn">
                         <i class="fas fa-plus-circle"></i>
-                        <span>إضافة منتج</span>
+                        <span>{{ __('app.add_product') }}</span>
                     </a>
                     <a href="{{ route('admin.orders.index', ['status' => 'pending']) }}" class="quick-action-btn">
                         <i class="fas fa-clock"></i>
-                        <span>طلبات الانتظار</span>
+                        <span>{{ __('app.pending_orders') }}</span>
                     </a>
                     <a href="{{ route('admin.orders.index', ['status' => 'processing']) }}" class="quick-action-btn">
                         <i class="fas fa-cog"></i>
-                        <span>قيد المعالجة</span>
+                        <span>{{ __('app.processing') }}</span>
                     </a>
                     <a href="{{ route('home') }}" target="_blank" class="quick-action-btn">
                         <i class="fas fa-globe"></i>
-                        <span>عرض الموقع</span>
+                        <span>{{ __('app.view_site') }}</span>
+                    </a>
+                    <a href="{{ route('admin.blog.index') }}" class="quick-action-btn">
+                        <i class="fas fa-pen-nib"></i>
+                        <span>{{ __('app.blog') }}</span>
+                    </a>
+                    <a href="{{ route('admin.downloads.index') }}" class="quick-action-btn">
+                        <i class="fas fa-download"></i>
+                        <span>{{ __('app.downloads') }}</span>
+                    </a>
+                    <a href="{{ route('admin.about.index') }}" class="quick-action-btn">
+                        <i class="fas fa-info-circle"></i>
+                        <span>{{ __('app.about') }}</span>
                     </a>
                 </div>
             </div>
@@ -159,12 +193,12 @@
     <div class="card-header">
         <h2>
             <i class="fas fa-exclamation-triangle ls-header-icon"></i>
-            تنبيه المخزون المنخفض
+            {{ __('app.low_stock_alert') }}
             @if($low_stock_products->count())
-            <span class="ls-count-badge">{{ $low_stock_products->count() }} منتج</span>
+            <span class="ls-count-badge">{{ $low_stock_products->count() }} {{ __('app.products') }}</span>
             @endif
         </h2>
-        <a href="{{ route('admin.products.index') }}" class="btn btn-secondary btn-sm">إدارة المنتجات</a>
+        <a href="{{ route('admin.products.index') }}" class="btn btn-secondary btn-sm">{{ __('app.manage_products') }}</a>
     </div>
 
     @if($low_stock_products->count())
@@ -174,12 +208,9 @@
             $isOut  = $product->stock == 0;
             $isLow  = $product->stock > 0 && $product->stock <= 5;
             $pct    = $isOut ? 0 : min(100, ($product->stock / 10) * 100);
-            $catIcon = match($product->category) {
-                'printers'   => 'print',
-                'mice'       => 'mouse',
-                'headphones' => 'headphones',
-                default      => 'usb',
-            };
+            $catModel = $categories->where('slug', $product->category)->first();
+            $catIcon = $catModel ? $catModel->icon : 'box';
+            $catName = $catModel ? $catModel->name_ar : ucfirst($product->category);
         @endphp
         <div class="ls-item {{ $isOut ? 'ls-out' : 'ls-low' }}">
 
@@ -197,7 +228,7 @@
                 <div class="ls-meta">
                     <span class="ls-brand">{{ $product->brand }}</span>
                     <span class="ls-sep">·</span>
-                    <span class="ls-cat">{{ ucfirst($product->category) }}</span>
+                    <span class="ls-cat">{{ $catName }}</span>
                 </div>
 
                 {{-- Progress bar --}}
@@ -210,13 +241,13 @@
             <div class="ls-badge-wrap">
                 <span class="ls-badge {{ $isOut ? 'ls-badge-out' : 'ls-badge-low' }}">
                     @if($isOut)
-                        <i class="fas fa-times-circle"></i> نفد
+                        <i class="fas fa-times-circle"></i> {{ __('app.out') }}
                     @else
-                        <i class="fas fa-exclamation-circle"></i> {{ $product->stock }} قطعة
+                        <i class="fas fa-exclamation-circle"></i> {{ $product->stock }} {{ __('app.pieces') }}
                     @endif
                 </span>
                 <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-secondary btn-sm ls-edit-btn">
-                    <i class="fas fa-edit"></i> تعديل
+                    <i class="fas fa-edit"></i> {{ __('app.edit') }}
                 </a>
             </div>
 
@@ -226,8 +257,8 @@
     @else
     <div class="empty-state" style="padding:3rem">
         <i class="fas fa-check-circle" style="color:var(--success);font-size:3rem;margin-bottom:1rem;display:block;"></i>
-        <p style="font-size:1.125rem;font-weight:600;color:var(--gray-700)">المخزون بخير!</p>
-        <p style="color:var(--gray-500)">جميع المنتجات لديها مخزون كافٍ</p>
+        <p style="font-size:1.125rem;font-weight:600;color:var(--gray-700)">{{ __('app.stock_ok') }}</p>
+        <p style="color:var(--gray-500)">{{ __('app.all_stock_good') }}</p>
     </div>
     @endif
 </div>

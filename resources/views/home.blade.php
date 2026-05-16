@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'MJK - Your #1 Destination for Printers & Tech Accessories')
+@section('title', __('app.home_about_badge') === 'About Us' ? 'MJK - Your #1 Destination for Printers & Tech Accessories' : 'MJK - وجهتك الأولى للطابعات والملحقات التقنية')
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/printer-loader.css') }}">
@@ -163,19 +163,12 @@
 
                 {{-- Text + Stats --}}
                 <div class="col-lg-6 order-2 order-lg-1">
-                    <span class="badge text-bg-primary rounded-pill px-3 py-2 mb-3 fs-6">About Us</span>
-                    <h2 class="fw-bold display-6 mb-3">An Egyptian Brand with a Global Mindset</h2>
-                    <p class="text-secondary fs-5 lh-lg">
-                        Founded in <strong>2017</strong>, MJK was built on a simple belief — that Egyptian businesses
-                        and individuals deserve world-class tech products without compromise. From day one, we've
-                        combined local expertise with a global standard of quality.
-                    </p>
-                    <p class="text-secondary fs-5 lh-lg">
-                        We specialise in printers, accessories, and tech solutions from the world's leading brands,
-                        backed by expert support and a commitment to excellence that goes beyond the sale.
-                    </p>
+                    <span class="badge text-bg-primary rounded-pill px-3 py-2 mb-3 fs-6">{{ __('app.home_about_badge') }}</span>
+                    <h2 class="fw-bold display-6 mb-3">{{ __('app.home_about_title') }}</h2>
+                    <p class="text-secondary fs-5 lh-lg">{!! __('app.home_about_p1') !!}</p>
+                    <p class="text-secondary fs-5 lh-lg">{{ __('app.home_about_p2') }}</p>
                     <a href="{{ route('about.index') }}" class="btn btn-primary btn-lg mt-2 mb-4">
-                        <i class="fas fa-arrow-right me-2"></i> Learn More
+                        <i class="fas fa-arrow-right me-2"></i> {{ __('app.home_about_btn') }}
                     </a>
 
                     {{-- Stats row under the text --}}
@@ -188,7 +181,7 @@
                                 </div>
                                 <div>
                                     <h4 class="fw-bold mb-0">500+</h4>
-                                    <p class="text-secondary mb-0 small">Products Available</p>
+                                    <p class="text-secondary mb-0 small">{{ __('app.home_stat_products') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -200,7 +193,7 @@
                                 </div>
                                 <div>
                                     <h4 class="fw-bold mb-0">15K+</h4>
-                                    <p class="text-secondary mb-0 small">Happy Customers</p>
+                                    <p class="text-secondary mb-0 small">{{ __('app.home_stat_customers') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -212,7 +205,7 @@
                                 </div>
                                 <div>
                                     <h4 class="fw-bold mb-0">8+</h4>
-                                    <p class="text-secondary mb-0 small">Years Since 2017</p>
+                                    <p class="text-secondary mb-0 small">{{ __('app.home_stat_years') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -224,7 +217,7 @@
                                 </div>
                                 <div>
                                     <h4 class="fw-bold mb-0">24/7</h4>
-                                    <p class="text-secondary mb-0 small">Technical Support</p>
+                                    <p class="text-secondary mb-0 small">{{ __('app.home_stat_support') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -246,7 +239,7 @@
                             </div>
                             <div>
                                 <p class="fw-bold mb-0 small">Est. 2017</p>
-                                <p class="text-secondary mb-0" style="font-size:.7rem;">Mansoura, Egypt</p>
+                                <p class="text-secondary mb-0" style="font-size:.7rem;">{{ __('app.home_est_location') }}</p>
                             </div>
                         </div>
                     </div>
@@ -258,8 +251,8 @@
             <div class="row g-4">
 
                 <div class="col-12 text-center mb-2">
-                    <h3 class="fw-bold">Our Core Values</h3>
-                    <p class="text-secondary">The principles that drive everything we do</p>
+                    <h3 class="fw-bold">{{ __('app.home_values_title') }}</h3>
+                    <p class="text-secondary">{{ __('app.home_values_sub') }}</p>
                 </div>
 
                 <div class="col-sm-6 col-lg-3">
@@ -268,9 +261,8 @@
                             style="width:64px;height:64px;font-size:1.75rem;">
                             <i class="fas fa-star"></i>
                         </div>
-                        <h5 class="fw-bold">Quality</h5>
-                        <p class="text-secondary small mb-0">We only offer genuine products from the world's top brands.
-                        </p>
+                        <h5 class="fw-bold">{{ __('app.home_val_quality') }}</h5>
+                        <p class="text-secondary small mb-0">{{ __('app.home_val_quality_desc') }}</p>
                     </div>
                 </div>
 
@@ -280,9 +272,8 @@
                             style="width:64px;height:64px;font-size:1.75rem;">
                             <i class="fas fa-handshake"></i>
                         </div>
-                        <h5 class="fw-bold">Trust</h5>
-                        <p class="text-secondary small mb-0">We build long-term relationships grounded in transparency and
-                            integrity.</p>
+                        <h5 class="fw-bold">{{ __('app.home_val_trust') }}</h5>
+                        <p class="text-secondary small mb-0">{{ __('app.home_val_trust_desc') }}</p>
                     </div>
                 </div>
 
@@ -292,9 +283,8 @@
                             style="width:64px;height:64px;font-size:1.75rem;">
                             <i class="fas fa-lightbulb"></i>
                         </div>
-                        <h5 class="fw-bold">Innovation</h5>
-                        <p class="text-secondary small mb-0">We stay ahead of the curve and bring cutting-edge solutions to
-                            our customers.</p>
+                        <h5 class="fw-bold">{{ __('app.home_val_innovation') }}</h5>
+                        <p class="text-secondary small mb-0">{{ __('app.home_val_innovation_desc') }}</p>
                     </div>
                 </div>
 
@@ -304,9 +294,8 @@
                             style="width:64px;height:64px;font-size:1.75rem;">
                             <i class="fas fa-headset"></i>
                         </div>
-                        <h5 class="fw-bold">Support</h5>
-                        <p class="text-secondary small mb-0">Our technical team is available around the clock to help you
-                            whenever you need.</p>
+                        <h5 class="fw-bold">{{ __('app.home_val_support') }}</h5>
+                        <p class="text-secondary small mb-0">{{ __('app.home_val_support_desc') }}</p>
                     </div>
                 </div>
 
@@ -321,12 +310,9 @@
             {{-- Header --}}
             <div class="text-center mb-5">
                 <span class="badge rounded-pill px-3 py-2 mb-3 fs-6"
-                    style="background:rgba(37,99,235,.15);color:#60a5fa;border:1px solid rgba(37,99,235,.3);">Our
-                    Products</span>
-                <h2 class="fw-bold text-white mb-2">Built Different. <span style="color:#3b82f6;">Engineered to
-                        Last.</span></h2>
-                <p class="text-secondary mx-auto" style="max-width:520px;">From gaming peripherals to enterprise
-                    networking — every product carries the MJK standard.</p>
+                    style="background:rgba(37,99,235,.15);color:#60a5fa;border:1px solid rgba(37,99,235,.3);">{{ __('app.home_prod_badge') }}</span>
+                <h2 class="fw-bold text-white mb-2">{{ __('app.home_prod_title') }} <span style="color:#3b82f6;">{{ __('app.home_prod_title_span') }}</span></h2>
+                <p class="text-secondary mx-auto" style="max-width:520px;">{{ __('app.home_prod_sub') }}</p>
             </div>
 
             {{-- Masonry-style grid --}}
@@ -337,8 +323,8 @@
                     <a href="{{ route('products.index') }}">
                         <img src="{{ asset('images/prod-gamepad.jpg') }}" alt="MJK Gaming Headset">
                         <div class="mjk-gallery-overlay">
-                            <span class="mjk-gallery-tag">Controllers</span>
-                            <p>MJK Premium Gamepad</p>
+                            <span class="mjk-gallery-tag">{{ __('app.home_prod_tag_ctrl') }}</span>
+                            <p>{{ __('app.home_prod_gamepad') }}</p>
                         </div>
                     </a>
                 </div>
@@ -348,8 +334,8 @@
                     <a href="{{ route('products.index') }}">
                         <img src="{{ asset('images/prod-mouse.jpg') }}" alt="MJK Gaming Mouse">
                         <div class="mjk-gallery-overlay">
-                            <span class="mjk-gallery-tag">Gaming Mice</span>
-                            <p>MJK Pro Wireless</p>
+                            <span class="mjk-gallery-tag">{{ __('app.home_prod_tag_mice') }}</span>
+                            <p>{{ __('app.home_prod_mouse') }}</p>
                         </div>
                     </a>
                 </div>
@@ -359,20 +345,19 @@
                     <a href="{{ route('products.index') }}">
                         <img src="{{ asset('images/prod-scanner.jpg') }}" alt="MJK Barcode Scanner">
                         <div class="mjk-gallery-overlay">
-                            <span class="mjk-gallery-tag">Scanners</span>
-                            <p>MJK Barcode Pro</p>
+                            <span class="mjk-gallery-tag">{{ __('app.home_prod_tag_scan') }}</span>
+                            <p>{{ __('app.home_prod_scanner') }}</p>
                         </div>
                     </a>
                 </div>
 
                 {{-- Wide bottom --}}
-
                 <div class="mjk-gallery-item mjk-gallery-wide">
                     <a href="{{ route('products.index') }}">
                         <img src="{{ asset('images/prod-switch.jpg') }}" alt="MJK PoE Switch">
                         <div class="mjk-gallery-overlay">
-                            <span class="mjk-gallery-tag">Networking</span>
-                            <p>MJK PoE Switch — 4GE+2GE+1SFP</p>
+                            <span class="mjk-gallery-tag">{{ __('app.home_prod_tag_net') }}</span>
+                            <p>{{ __('app.home_prod_switch') }}</p>
                         </div>
                     </a>
                 </div>
@@ -382,7 +367,7 @@
             {{-- CTA --}}
             <div class="text-center mt-5">
                 <a href="{{ route('products.index') }}" class="btn btn-primary btn-lg px-5">
-                    <i class="fas fa-th-large me-2"></i> Browse All Products
+                    <i class="fas fa-th-large me-2"></i> {{ __('app.home_prod_browse') }}
                 </a>
             </div>
 
@@ -395,23 +380,15 @@
 
             <div class="d-flex align-items-end justify-content-between mb-4">
                 <div>
-                    <span class="badge text-bg-primary rounded-pill px-3 py-2 mb-2 fs-6">Blog</span>
-                    <h2 class="fw-bold mb-0">Latest Articles</h2>
+                    <span class="badge text-bg-primary rounded-pill px-3 py-2 mb-2 fs-6">{{ __('app.home_blog_badge') }}</span>
+                    <h2 class="fw-bold mb-0">{{ __('app.home_blog_title') }}</h2>
                 </div>
                 <a href="{{ route('blog.index') }}" class="btn btn-outline-primary rounded-pill px-4 d-none d-md-inline-flex align-items-center gap-2">
-                    View All <i class="fas fa-arrow-right"></i>
+                    {{ __('app.home_blog_view_all') }} <i class="fas fa-arrow-right"></i>
                 </a>
             </div>
 
             <div class="row g-4">
-
-                @php
-                $blogPosts = [
-                    ['id'=>6,'title'=>'Sony WH-1000XM5 Review — Is It Worth the Price?','excerpt'=>'A full review of the Sony WH-1000XM5 covering sound quality, comfort, and noise cancellation.','category'=>'Reviews','date'=>'2026-03-25','read_time'=>8,'views'=>4230],
-                    ['id'=>5,'title'=>'How to Maintain Your Printer and Extend Its Life','excerpt'=>'Simple maintenance steps that keep your printer running longer and save you repair costs.','category'=>'Maintenance','date'=>'2026-03-30','read_time'=>9,'views'=>2780],
-                    ['id'=>1,'title'=>'How to Choose the Right Printer for Your Office','excerpt'=>'A complete guide to picking the perfect printer based on your needs and budget.','category'=>'Buying Guides','date'=>'2026-04-20','read_time'=>8,'views'=>2340],
-                ];
-                @endphp
 
                 @foreach($blogPosts as $post)
                 <div class="col-md-4">
@@ -420,24 +397,24 @@
                         <div class="d-flex align-items-center justify-content-center position-relative" style="height:180px;background:linear-gradient(135deg,#1e3a8a,#2563eb);">
                             <i class="fas fa-newspaper text-white opacity-25" style="font-size:4rem;"></i>
                             <span class="position-absolute top-0 start-0 m-3 badge rounded-pill" style="background:rgba(255,255,255,.2);color:#fff;font-size:.75rem;">
-                                {{ $post['category'] }}
+                                {{ $post->category }}
                             </span>
                         </div>
 
                         <div class="card-body p-4 d-flex flex-column">
                             <div class="d-flex align-items-center gap-3 mb-2 text-secondary" style="font-size:.8rem;">
-                                <span><i class="fas fa-calendar-alt me-1 text-primary"></i>{{ \Carbon\Carbon::parse($post['date'])->format('d M Y') }}</span>
-                                <span><i class="fas fa-clock me-1 text-primary"></i>{{ $post['read_time'] }} min read</span>
-                                <span><i class="fas fa-eye me-1 text-primary"></i>{{ number_format($post['views']) }}</span>
+                                <span><i class="fas fa-calendar-alt me-1 text-primary"></i>{{ $post->published_at ? \Carbon\Carbon::parse($post->published_at)->format('d M Y') : $post->created_at->format('d M Y') }}</span>
+                                <span><i class="fas fa-clock me-1 text-primary"></i>{{ $post->read_time ?? 5 }} {{ __('app.home_blog_min_read') }}</span>
+                                <span><i class="fas fa-eye me-1 text-primary"></i>{{ number_format($post->views) }}</span>
                             </div>
                             <h6 class="fw-bold mb-2 lh-base" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
-                                {{ $post['title'] }}
+                                {{ app()->getLocale() === 'ar' ? ($post->title_ar ?? $post->title) : $post->title }}
                             </h6>
                             <p class="text-secondary small mb-3 flex-grow-1" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">
-                                {{ $post['excerpt'] }}
+                                {{ app()->getLocale() === 'ar' ? ($post->excerpt_ar ?? $post->excerpt) : $post->excerpt }}
                             </p>
-                            <a href="{{ route('blog.show', $post['id']) }}" class="btn btn-sm btn-outline-primary rounded-pill align-self-start">
-                                Read More <i class="fas fa-arrow-right ms-1"></i>
+                            <a href="{{ route('blog.show', $post->id) }}" class="btn btn-sm btn-outline-primary rounded-pill align-self-start">
+                                {{ __('app.home_blog_read_more') }} <i class="fas fa-arrow-right ms-1"></i>
                             </a>
                         </div>
                     </article>
@@ -448,7 +425,7 @@
 
             <div class="text-center mt-4 d-md-none">
                 <a href="{{ route('blog.index') }}" class="btn btn-outline-primary rounded-pill px-4">
-                    View All Articles <i class="fas fa-arrow-right ms-1"></i>
+                    {{ __('app.home_blog_view_all_full') }} <i class="fas fa-arrow-right ms-1"></i>
                 </a>
             </div>
 
@@ -461,9 +438,9 @@
 
             {{-- Header --}}
             <div class="text-center mb-5">
-                <span class="badge text-bg-primary rounded-pill px-3 py-2 mb-3 fs-6">Contact Us</span>
-                <h2 class="fw-bold mb-2">We'd Love to Hear From You</h2>
-                <p class="text-secondary mx-auto" style="max-width:480px;">Visit us in Mansoura, drop us a message, or just say hello.</p>
+                <span class="badge text-bg-primary rounded-pill px-3 py-2 mb-3 fs-6">{{ __('app.home_contact_badge') }}</span>
+                <h2 class="fw-bold mb-2">{{ __('app.home_contact_title') }}</h2>
+                <p class="text-secondary mx-auto" style="max-width:480px;">{{ __('app.home_contact_sub') }}</p>
             </div>
 
             <div class="row g-4 align-items-stretch">
@@ -475,40 +452,40 @@
                         {{-- Mini info strip --}}
                         <div class="d-flex flex-wrap gap-3 mb-4 pb-3 border-bottom">
                             <span class="small text-secondary">
-                                <i class="fas fa-map-marker-alt text-primary me-1"></i>Al Galaa St, Mansoura
+                                <i class="fas fa-map-marker-alt text-primary me-1"></i>{{ __('app.home_contact_address') }}
                             </span>
                             <a href="tel:+201001324539" class="small text-secondary text-decoration-none">
                                 <i class="fas fa-phone-alt text-primary me-1"></i>+20 123 456 7890
                             </a>
                             <a href="https://wa.me/201001324539" target="_blank" class="small text-secondary text-decoration-none">
-                                <i class="fab fa-whatsapp text-primary me-1"></i>WhatsApp
+                                <i class="fab fa-whatsapp text-primary me-1"></i>{{ __('app.home_contact_whatsapp') }}
                             </a>
                         </div>
 
-                        <h5 class="fw-bold mb-1">Send Us a Message</h5>
-                        <p class="text-secondary small mb-4">We'll get back to you as soon as possible.</p>
+                        <h5 class="fw-bold mb-1">{{ __('app.home_contact_form_title') }}</h5>
+                        <p class="text-secondary small mb-4">{{ __('app.home_contact_form_sub') }}</p>
 
                         <form id="contactForm" class="d-flex flex-column flex-grow-1">
                             <div class="row g-3 mb-3">
                                 <div class="col-sm-6">
-                                    <label class="form-label small fw-semibold">Full Name</label>
-                                    <input id="contactName" type="text" class="form-control rounded-3" placeholder="John Doe" required>
+                                    <label class="form-label small fw-semibold">{{ __('app.home_contact_name') }}</label>
+                                    <input id="contactName" type="text" class="form-control rounded-3" placeholder="{{ __('app.home_contact_name_ph') }}" required>
                                 </div>
                                 <div class="col-sm-6">
-                                    <label class="form-label small fw-semibold">Email Address</label>
-                                    <input id="contactEmail" type="email" class="form-control rounded-3" placeholder="you@example.com" required>
+                                    <label class="form-label small fw-semibold">{{ __('app.home_contact_email') }}</label>
+                                    <input id="contactEmail" type="email" class="form-control rounded-3" placeholder="{{ __('app.home_contact_email_ph') }}" required>
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label small fw-semibold">Subject</label>
-                                <input id="contactSubject" type="text" class="form-control rounded-3" placeholder="How can we help?" required>
+                                <label class="form-label small fw-semibold">{{ __('app.home_contact_subject') }}</label>
+                                <input id="contactSubject" type="text" class="form-control rounded-3" placeholder="{{ __('app.home_contact_subject_ph') }}" required>
                             </div>
                             <div class="mb-4 flex-grow-1">
-                                <label class="form-label small fw-semibold">Message</label>
-                                <textarea id="contactMessage" class="form-control rounded-3" style="min-height:140px;" placeholder="Write your message here..." required></textarea>
+                                <label class="form-label small fw-semibold">{{ __('app.home_contact_message') }}</label>
+                                <textarea id="contactMessage" class="form-control rounded-3" style="min-height:140px;" placeholder="{{ __('app.home_contact_message_ph') }}" required></textarea>
                             </div>
                             <button type="submit" class="btn btn-primary btn-lg w-100 rounded-3">
-                                <i class="fas fa-paper-plane me-2"></i> Send Message
+                                <i class="fas fa-paper-plane me-2"></i> {{ __('app.home_contact_send') }}
                             </button>
                             <div id="contactFeedback" class="mt-3 small text-center d-none"></div>
                         </form>
@@ -559,7 +536,7 @@
 
         feedback.classList.remove('d-none', 'text-danger');
         feedback.classList.add('text-success');
-        feedback.innerHTML = '<i class="fas fa-check-circle me-1"></i> Opening Gmail...';
+        feedback.innerHTML = '<i class="fas fa-check-circle me-1"></i> {{ __("app.home_contact_opening") }}';
 
         setTimeout(() => {
             this.reset();

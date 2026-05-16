@@ -2,145 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Download;
+
 class DownloadController extends Controller
 {
     public function index()
     {
-        $downloads = [
-            [
-                'id' => 1,
-                'title' => 'HP Printer Drivers - Complete Package',
-                'description' => 'Complete driver package for all HP LaserJet and OfficeJet printers. Compatible with Windows 10/11.',
-                'category' => 'Drivers',
-                'brand' => 'HP',
-                'version' => '2.5.1',
-                'size' => '145 MB',
-                'date' => '2026-04-01',
-                'downloads' => 12450,
-                'os' => 'Windows 10/11',
-                'icon' => 'fa-print',
-            ],
-            [
-                'id' => 2,
-                'title' => 'Canon PIXMA Printer Drivers',
-                'description' => 'Official drivers for Canon PIXMA G-Series printers. Includes print and scan software.',
-                'category' => 'Drivers',
-                'brand' => 'Canon',
-                'version' => '3.2.0',
-                'size' => '98 MB',
-                'date' => '2026-03-28',
-                'downloads' => 8920,
-                'os' => 'Windows 10/11',
-                'icon' => 'fa-print',
-            ],
-            [
-                'id' => 3,
-                'title' => 'Epson EcoTank Printer Drivers',
-                'description' => 'Drivers and utilities for Epson EcoTank printers. Supports wireless and mobile printing.',
-                'category' => 'Drivers',
-                'brand' => 'Epson',
-                'version' => '4.1.2',
-                'size' => '112 MB',
-                'date' => '2026-03-25',
-                'downloads' => 7650,
-                'os' => 'Windows 10/11',
-                'icon' => 'fa-print',
-            ],
-            [
-                'id' => 4,
-                'title' => 'Brother Printer Drivers',
-                'description' => 'Complete driver package for Brother HL, DCP, and MFC printers. Includes management and maintenance tools.',
-                'category' => 'Drivers',
-                'brand' => 'Brother',
-                'version' => '2.8.5',
-                'size' => '87 MB',
-                'date' => '2026-03-20',
-                'downloads' => 5430,
-                'os' => 'Windows 10/11',
-                'icon' => 'fa-print',
-            ],
-            [
-                'id' => 5,
-                'title' => 'HP Smart - Printer Management App',
-                'description' => 'Official HP app for printer management, mobile printing, and cloud scanning.',
-                'category' => 'Software',
-                'brand' => 'HP',
-                'version' => '8.12.0',
-                'size' => '156 MB',
-                'date' => '2026-04-10',
-                'downloads' => 23400,
-                'os' => 'Windows 10/11',
-                'icon' => 'fa-mobile-alt',
-            ],
-            [
-                'id' => 6,
-                'title' => 'Epson Print Layout',
-                'description' => 'Professional photo printing software for Epson printers. Ideal for photographers.',
-                'category' => 'Software',
-                'brand' => 'Epson',
-                'version' => '1.6.3',
-                'size' => '64 MB',
-                'date' => '2026-03-15',
-                'downloads' => 4320,
-                'os' => 'Windows 10/11',
-                'icon' => 'fa-image',
-            ],
-            [
-                'id' => 7,
-                'title' => 'User Manual - HP LaserJet Pro',
-                'description' => 'Comprehensive user guide for HP LaserJet Pro Series printers.',
-                'category' => 'Manuals',
-                'brand' => 'HP',
-                'version' => '1.0',
-                'size' => '12 MB',
-                'date' => '2026-02-01',
-                'downloads' => 6780,
-                'os' => 'PDF',
-                'icon' => 'fa-file-pdf',
-            ],
-            [
-                'id' => 8,
-                'title' => 'Troubleshooting Guide - Canon PIXMA',
-                'description' => 'Detailed guide for resolving common Canon PIXMA issues. Includes error codes and solutions.',
-                'category' => 'Manuals',
-                'brand' => 'Canon',
-                'version' => '2.0',
-                'size' => '8 MB',
-                'date' => '2026-01-15',
-                'downloads' => 5120,
-                'os' => 'PDF',
-                'icon' => 'fa-file-pdf',
-            ],
-            [
-                'id' => 9,
-                'title' => 'Logitech Options+',
-                'description' => 'Customization software for Logitech mice and keyboards. Supports all modern models.',
-                'category' => 'Software',
-                'brand' => 'Logitech',
-                'version' => '1.52.0',
-                'size' => '178 MB',
-                'date' => '2026-04-15',
-                'downloads' => 18900,
-                'os' => 'Windows 10/11',
-                'icon' => 'fa-mouse',
-            ],
-            [
-                'id' => 10,
-                'title' => 'MJK Product Catalogue 2026',
-                'description' => 'Comprehensive catalogue of all MJK products for 2026 with prices and detailed specifications.',
-                'category' => 'Catalogues',
-                'brand' => 'MJK',
-                'version' => '2026',
-                'size' => '24 MB',
-                'date' => '2026-01-01',
-                'downloads' => 15670,
-                'os' => 'PDF',
-                'icon' => 'fa-book',
-            ],
-        ];
-
-        $categories = array_unique(array_column($downloads, 'category'));
-        $brands = array_unique(array_column($downloads, 'brand'));
+        $downloads  = Download::active()->latest()->get();
+        $categories = $downloads->pluck('category')->unique()->values()->toArray();
+        $brands     = $downloads->pluck('brand')->unique()->filter()->values()->toArray();
 
         return view('downloads.index', compact('downloads', 'categories', 'brands'));
     }

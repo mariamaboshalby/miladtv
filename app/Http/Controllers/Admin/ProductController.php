@@ -28,28 +28,23 @@ class ProductController extends Controller
         }
 
         $products = $query->latest()->paginate(15);
+        $categories = \App\Models\Category::active()->get();
 
-        return view('admin.products.index', compact('products'));
+        return view('admin.products.index', compact('products', 'categories'));
     }
 
     public function create()
     {
-        return view('admin.products.create');
+        $categories = \App\Models\Category::active()->get();
+        return view('admin.products.create', compact('categories'));
     }
 
     public function store(Request $request)
     {
-        \Log::info('STORE - files: ' . json_encode(array_keys($request->allFiles())));
-        \Log::info('STORE - has images: ' . ($request->hasFile('images') ? 'yes' : 'no'));
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $k => $f) {
-                \Log::info("Image[$k]: " . ($f ? $f->getClientOriginalName() . ' valid=' . ($f->isValid() ? 'yes' : 'no') : 'null'));
-            }
-        }
         $validated = $request->validate([
             'name'           => 'required|string|max:255',
             'brand'          => 'required|string|max:255',
-            'category'       => 'required|in:printers,mice,headphones,flash',
+            'category'       => 'required|string|exists:categories,slug',
             'description'    => 'required|string',
             'price'          => 'required|numeric|min:0',
             'old_price'      => 'nullable|numeric|min:0',
@@ -65,12 +60,11 @@ class ProductController extends Controller
         $validated['is_active']   = $request->boolean('is_active');
         $validated['is_featured'] = $request->boolean('is_featured');
 
-        // إزالة images من البيانات قبل الحفظ (لا تُخزَّن في جدول products)
+        // إزالة images من البيانات قبل الحفظ
         unset($validated['images']);
 
         $product = Product::create($validated);
 
-        // رفع الصور عبر Spatie Media Library
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 if ($image && $image->isValid()) {
@@ -80,7 +74,6 @@ class ProductController extends Controller
             }
         }
 
-        // رفع صورة واحدة (fallback)
         if ($request->hasFile('image')) {
             $product->addMediaFromRequest('image')
                     ->toMediaCollection('product-images');
@@ -92,7 +85,8 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
-        return view('admin.products.edit', compact('product'));
+        $categories = \App\Models\Category::active()->get();
+        return view('admin.products.edit', compact('product', 'categories'));
     }
 
     public function update(Request $request, Product $product)
@@ -100,7 +94,7 @@ class ProductController extends Controller
         $validated = $request->validate([
             'name'           => 'required|string|max:255',
             'brand'          => 'required|string|max:255',
-            'category'       => 'required|in:printers,mice,headphones,flash',
+            'category'       => 'required|string|exists:categories,slug',
             'description'    => 'required|string',
             'price'          => 'required|numeric|min:0',
             'old_price'      => 'nullable|numeric|min:0',

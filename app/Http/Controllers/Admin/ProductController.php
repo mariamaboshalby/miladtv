@@ -54,7 +54,8 @@ class ProductController extends Controller
             'rating'         => 'required|integer|min:1|max:5',
             'specs'          => 'nullable|array',
             'images'         => 'nullable|array',
-            'images.*'       => 'image|mimes:jpg,jpeg,png,webp|max:10240',
+            'images.*'       => 'image|mimes:jpg,jpeg,png,webp|max:51200',
+            'image'          => 'nullable|image|mimes:jpg,jpeg,png,webp|max:51200',
         ]);
 
         $validated['is_active']   = $request->boolean('is_active');
@@ -104,7 +105,8 @@ class ProductController extends Controller
             'rating'         => 'required|integer|min:1|max:5',
             'specs'          => 'nullable|array',
             'images'         => 'nullable|array',
-            'images.*'       => 'image|mimes:jpg,jpeg,png,webp|max:10240',
+            'images.*'       => 'image|mimes:jpg,jpeg,png,webp|max:51200',
+            'image'          => 'nullable|image|mimes:jpg,jpeg,png,webp|max:51200',
             'delete_media'   => 'nullable|array',
             'delete_media.*' => 'integer',
         ]);

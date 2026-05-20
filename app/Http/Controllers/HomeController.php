@@ -73,6 +73,12 @@ class HomeController extends Controller
             ->take(4)
             ->get();
 
-        return view('home', compact('featuredProducts', 'stats', 'blogPosts', 'downloads'));
+        // Fetch approved testimonials
+        $testimonials = \App\Models\Testimonial::approved()
+            ->latest()
+            ->take(6)
+            ->get();
+
+        return view('home', compact('featuredProducts', 'stats', 'blogPosts', 'downloads', 'testimonials'));
     }
 }

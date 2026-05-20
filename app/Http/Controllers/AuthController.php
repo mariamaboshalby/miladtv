@@ -66,7 +66,7 @@ class AuthController extends Controller
             'phone'    => 'nullable|string|max:20',
             'address'  => 'nullable|string|max:500',
             'city'     => 'nullable|string|max:100',
-            'password' => ['required', 'confirmed', Password::min(8)],
+            'password' => ['required', 'confirmed', Password::min(4)],
         ]);
 
         $user = User::create([

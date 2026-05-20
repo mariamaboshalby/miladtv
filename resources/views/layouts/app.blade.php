@@ -268,8 +268,8 @@
                         <h6 class="mjk-footer-heading">{{ __('app.get_in_touch') }}</h6>
                         <ul class="list-unstyled mjk-footer-contact mb-4">
                             <li><i class="fas fa-map-marker-alt text-primary"></i>{{ __('app.footer_address') }}</li>
-                            <li><i class="fas fa-phone-alt text-primary"></i>+20 123 456 7890</li>
-                            <li><i class="fas fa-envelope text-primary"></i>info@mjk.com</li>
+                            <li><i class="fas fa-phone-alt text-primary"></i>+20 10 01324539</li>
+                            <li><i class="fas fa-envelope text-primary"></i>mjk@gmail.com</li>
                             <li><i class="fas fa-clock text-primary"></i>{{ __('app.footer_hours') }}</li>
                         </ul>
                         <h6 class="mjk-footer-heading">{{ __('app.newsletter') }}</h6>
@@ -285,7 +285,8 @@
 
         <div class="mjk-footer-bottom">
             <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
-                <p class="mb-0 small text-secondary">{{ __('app.footer_copy', ['year' => date('Y')]) }}</p>
+                <p class="mb-0 small text-secondary">{{ __('app.footer_copy', ['year' => date('Y')]) }}</p><br>
+                <p class="mb-0 small text-secondary">{{ __('app.rights') }}</p>
                 <div class="d-flex gap-3 align-items-center" style="font-size:1.5rem; color:#64748b;">
                     <i class="fab fa-cc-visa" title="Visa"></i>
                     <i class="fab fa-cc-mastercard" title="Mastercard"></i>

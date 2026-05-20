@@ -19,6 +19,8 @@ use App\Http\Controllers\Admin\BlogController as AdminBlogController;
 use App\Http\Controllers\Admin\AboutController as AdminAboutController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\DownloadController as AdminDownloadController;
+use App\Http\Controllers\Admin\TestimonialController as AdminTestimonialController;
+use App\Http\Controllers\TestimonialController;
 
 
 // ── Auth ──────────────────────────────────────────────────────────────────
@@ -70,6 +72,9 @@ Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remov
 Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
 Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
 
+// Testimonials
+Route::post('/testimonials', [TestimonialController::class, 'store'])->name('testimonials.store');
+
 // ============================================================
 // Admin Dashboard (no auth for now — add middleware later)
 // ============================================================
@@ -110,4 +115,10 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::post('about/values',             [AdminAboutController::class, 'storeValue'])->name('about.values.store');
     Route::put('about/values/{value}',      [AdminAboutController::class, 'updateValue'])->name('about.values.update');
     Route::delete('about/values/{value}',   [AdminAboutController::class, 'destroyValue'])->name('about.values.destroy');
+
+    // Testimonials
+    Route::get('testimonials', [AdminTestimonialController::class, 'index'])->name('testimonials.index');
+    Route::post('testimonials/{id}/approve', [AdminTestimonialController::class, 'approve'])->name('testimonials.approve');
+    Route::post('testimonials/{id}/reject', [AdminTestimonialController::class, 'reject'])->name('testimonials.reject');
+    Route::delete('testimonials/{id}', [AdminTestimonialController::class, 'destroy'])->name('testimonials.destroy');
 });

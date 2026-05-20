@@ -432,6 +432,98 @@
         </div>
     </section>
 
+    {{-- ===== Customer Testimonials Section ===== --}}
+    <section class="py-5" style="background:#f8fafc;">
+        <div class="container py-3">
+
+            {{-- Header --}}
+            <div class="text-center mb-5">
+                <span class="badge text-bg-primary rounded-pill px-3 py-2 mb-3 fs-6">{{ __('app.home_testimonials_badge') }}</span>
+                <h2 class="fw-bold mb-2">{{ __('app.home_testimonials_title') }}</h2>
+                <p class="text-secondary mx-auto" style="max-width:480px;">{{ __('app.home_testimonials_sub') }}</p>
+            </div>
+
+            {{-- Testimonials Grid --}}
+            @if($testimonials->count() > 0)
+            <div class="row g-4 mb-5">
+                @foreach($testimonials as $testimonial)
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 p-4">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width:48px;height:48px;">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0">{{ $testimonial->name }}</h6>
+                                <div class="text-warning small">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <i class="fas fa-star{{ $i <= $testimonial->rating ? '' : '-o' }}"></i>
+                                    @endfor
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-secondary mb-0 small">{{ $testimonial->message }}</p>
+                        <div class="mt-3 pt-3 border-top">
+                            <small class="text-muted">
+                                <i class="fas fa-calendar-alt me-1"></i>{{ $testimonial->created_at->format('d M Y') }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+            @endif
+
+            {{-- Testimonial Form --}}
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5">
+                <div class="row align-items-center">
+                    <div class="col-lg-5 mb-4 mb-lg-0">
+                        <h4 class="fw-bold mb-3">{{ __('app.home_testimonial_form_title') }}</h4>
+                        <p class="text-secondary">{{ __('app.home_testimonial_form_sub') }}</p>
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            <i class="fas fa-shield-alt text-primary"></i>
+                            <small class="text-muted">{{ __('app.home_testimonial_privacy') }}</small>
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <form id="testimonialForm">
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <label class="form-label small fw-semibold">{{ __('app.home_testimonial_name') }}</label>
+                                    <input id="testimonialName" type="text" class="form-control rounded-3" placeholder="{{ __('app.home_testimonial_name_ph') }}" required>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="form-label small fw-semibold">{{ __('app.home_testimonial_email') }}</label>
+                                    <input id="testimonialEmail" type="email" class="form-control rounded-3" placeholder="{{ __('app.home_testimonial_email_ph') }}" required>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label small fw-semibold">{{ __('app.home_testimonial_rating') }}</label>
+                                    <div class="d-flex gap-2" id="ratingStars">
+                                        @for($i = 1; $i <= 5; $i++)
+                                        <i class="fas fa-star fa-2x text-muted rating-star" data-rating="{{ $i }}" style="cursor:pointer;"></i>
+                                        @endfor
+                                    </div>
+                                    <input type="hidden" id="testimonialRating" value="5">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label small fw-semibold">{{ __('app.home_testimonial_message') }}</label>
+                                    <textarea id="testimonialMessage" class="form-control rounded-3" rows="3" placeholder="{{ __('app.home_testimonial_message_ph') }}" required></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary btn-lg w-100 rounded-3">
+                                        <i class="fas fa-paper-plane me-2"></i> {{ __('app.home_testimonial_submit') }}
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="testimonialFeedback" class="mt-3 small text-center d-none"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
     {{-- ===== Contact & Map Section ===== --}}
     <section class="py-5 bg-white">
         <div class="container py-4">
@@ -542,6 +634,95 @@
             this.reset();
             feedback.classList.add('d-none');
         }, 3000);
+    });
+
+    // Testimonial Form
+    const ratingStars = document.querySelectorAll('.rating-star');
+    const ratingInput = document.getElementById('testimonialRating');
+    let currentRating = 5;
+
+    ratingStars.forEach(star => {
+        star.addEventListener('click', function() {
+            currentRating = parseInt(this.dataset.rating);
+            ratingInput.value = currentRating;
+            updateStars();
+        });
+
+        star.addEventListener('mouseenter', function() {
+            const hoverRating = parseInt(this.dataset.rating);
+            highlightStars(hoverRating);
+        });
+
+        star.addEventListener('mouseleave', function() {
+            highlightStars(currentRating);
+        });
+    });
+
+    function updateStars() {
+        highlightStars(currentRating);
+    }
+
+    function highlightStars(rating) {
+        ratingStars.forEach(star => {
+            const starRating = parseInt(star.dataset.rating);
+            if (starRating <= rating) {
+                star.classList.remove('text-muted');
+                star.classList.add('text-warning');
+            } else {
+                star.classList.remove('text-warning');
+                star.classList.add('text-muted');
+            }
+        });
+    }
+
+    // Initialize stars
+    updateStars();
+
+    // Submit testimonial
+    document.getElementById('testimonialForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const name = document.getElementById('testimonialName').value.trim();
+        const email = document.getElementById('testimonialEmail').value.trim();
+        const rating = document.getElementById('testimonialRating').value;
+        const message = document.getElementById('testimonialMessage').value.trim();
+        const feedback = document.getElementById('testimonialFeedback');
+
+        if (!name || !email || !message) return;
+
+        fetch('{{ route('testimonials.store') }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ name, email, rating, message })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                feedback.classList.remove('d-none', 'text-danger');
+                feedback.classList.add('text-success');
+                feedback.innerHTML = '<i class="fas fa-check-circle me-1"></i> ' + data.message;
+                this.reset();
+                ratingInput.value = 5;
+                currentRating = 5;
+                updateStars();
+                
+                setTimeout(() => {
+                    feedback.classList.add('d-none');
+                }, 5000);
+            } else {
+                feedback.classList.remove('d-none', 'text-success');
+                feedback.classList.add('text-danger');
+                feedback.innerHTML = '<i class="fas fa-exclamation-circle me-1"></i> ' + data.message;
+            }
+        })
+        .catch(error => {
+            feedback.classList.remove('d-none', 'text-success');
+            feedback.classList.add('text-danger');
+            feedback.innerHTML = '<i class="fas fa-exclamation-circle me-1"></i> {{ __("app.home_testimonial_error") }}';
+        });
     });
     </script>
     @endpush

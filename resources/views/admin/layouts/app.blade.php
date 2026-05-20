@@ -178,6 +178,12 @@
                     <span class="adm-nav-icon"><i class="fas fa-info-circle"></i></span>
                     <span>{{ __('app.about') }}</span>
                 </a>
+                <a href="{{ route('admin.testimonials.index') }}"
+                    class="adm-nav-item {{ request()->routeIs('admin.testimonials.*') ? 'is-active' : '' }}">
+                    <span class="adm-nav-icon"><i class="fas fa-star"></i></span>
+                    <span>{{ __('app.manage_testimonials') }}</span>
+                    <span class="adm-nav-count">{{ \App\Models\Testimonial::where('is_approved', false)->count() }}</span>
+                </a>
             </div>
 
             <div class="adm-nav-group">

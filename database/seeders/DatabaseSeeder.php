@@ -25,6 +25,24 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-      
+        // ── Categories ──────────────────────────────────────────────
+        $categories = [
+            ['slug' => 'printers',   'name_ar' => 'طابعات', 'name_en' => 'Printers', 'icon' => 'print'],
+            ['slug' => 'mice',       'name_ar' => 'ماوسات', 'name_en' => 'Mice',     'icon' => 'mouse'],
+            ['slug' => 'headphones', 'name_ar' => 'سماعات', 'name_en' => 'Headphones', 'icon' => 'headphones'],
+            ['slug' => 'flash',      'name_ar' => 'فلاشات', 'name_en' => 'Flash Drives', 'icon' => 'usb'],
+        ];
+
+        foreach ($categories as $cat) {
+            \App\Models\Category::firstOrCreate(
+                ['slug' => $cat['slug']],
+                [
+                    'name_ar'   => $cat['name_ar'],
+                    'name_en'   => $cat['name_en'],
+                    'icon'      => $cat['icon'],
+                    'is_active' => true,
+                ]
+            );
+        }
     }
 }

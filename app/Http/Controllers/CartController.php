@@ -111,13 +111,19 @@ class CartController extends Controller
         $quantity = $request->input('quantity', 1);
 
         if (isset($cart[$productId])) {
-            $cart[$productId]['quantity'] = max(1, $quantity);
+            if ($quantity <= 0) {
+                unset($cart[$productId]);
+            } else {
+                $cart[$productId]['quantity'] = $quantity;
+                $cart[$productId]['qty'] = $quantity;
+            }
             session()->put('cart', $cart);
         }
 
         return response()->json([
             'success' => true,
             'message' => 'تم تحديث الكمية',
+            'count' => count($cart),
         ]);
     }
 

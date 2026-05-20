@@ -1,4 +1,4 @@
-﻿﻿@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', $product['name'] . ' - MJK')
 
@@ -55,7 +55,8 @@
                         <img src="{{ $media->first()->getUrl('card') }}"
                              id="mainImg"
                              class="pd-main-img"
-                             alt="{{ $product['name'] }}">
+                             alt="{{ $product['name'] }}"
+                             onclick="openImgModal(this.src)">
                     @else
                         <div class="pd-no-img">
                             <i class="fas fa-{{ $catIcon }}"></i>
@@ -197,6 +198,13 @@
     </div>
 </section>
 
+{{-- Image Modal Overlay --}}
+<div id="imageModal" class="img-modal" onclick="closeImgModal()">
+    <span class="img-modal-close" onclick="closeImgModal()">&times;</span>
+    <img class="img-modal-content" id="imgModalSrc">
+</div>
+
+
 @endsection
 
 @push('styles')
@@ -234,6 +242,7 @@
     transition: transform .4s ease; padding: 1rem;
 }
 .pd-main-img-wrap:hover .pd-main-img { transform: scale(1.04); }
+.pd-main-img { cursor: pointer; }
 .pd-no-img {
     display: flex; align-items: center; justify-content: center;
     width: 100%; height: 100%; font-size: 7rem; color: #CBD5E1;
@@ -312,6 +321,43 @@
     .related-grid { grid-template-columns: 1fr; }
     .pd-guarantees { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* Modal for Image */
+.img-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.85);
+    backdrop-filter: blur(5px);
+    align-items: center;
+    justify-content: center;
+}
+.img-modal-content {
+    max-width: 90%;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 8px;
+    animation: zoomIn 0.3s ease;
+}
+.img-modal-close {
+    position: absolute;
+    top: 20px;
+    right: 40px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.img-modal-close:hover { color: #ccc; }
+@keyframes zoomIn {
+    from {transform: scale(0.9); opacity: 0;}
+    to {transform: scale(1); opacity: 1;}
+}
 </style>
 @endpush
 
@@ -327,6 +373,15 @@ function switchImg(url, btn) {
 function changeQty(delta) {
     const input = document.getElementById('qty');
     input.value = Math.max(1, parseInt(input.value || 1) + delta);
+}
+
+function openImgModal(src) {
+    document.getElementById('imageModal').style.display = "flex";
+    document.getElementById('imgModalSrc').src = src;
+}
+
+function closeImgModal() {
+    document.getElementById('imageModal').style.display = "none";
 }
 </script>
 @endpush

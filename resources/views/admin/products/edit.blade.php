@@ -290,13 +290,15 @@ function markDelete(id) {
         addFiles(Array.from(e.dataTransfer.files));
     });
     input.addEventListener('change', function() {
-        addFiles(Array.from(this.files)); this.value = '';
+        const selected = Array.from(this.files);
+        this.value = ''; // Clear before syncInput to avoid clearing the synced files
+        addFiles(selected);
     });
 
     function addFiles(newFiles) {
         newFiles.forEach(file => {
             if (!file.type.startsWith('image/')) return;
-            if (file.size > 10 * 1024 * 1024) { alert(file.name + ' اكبر من 10MB'); return; }
+            if (file.size > 50 * 1024 * 1024) { alert(file.name + ' أكبر من 50MB'); return; }
             files.push(file);
         });
         renderGallery(); syncInput();

@@ -54,15 +54,10 @@ class ProductController extends Controller
 
         $products = $query->get()->map(fn($p) => $this->toArray($p))->toArray();
 
-        $categories = [
-            'all'        => __('app.cat_all'),
-            'printers'   => __('app.cat_printers'),
-            'mice'       => __('app.cat_mice'),
-            'headphones' => __('app.cat_headphones'),
-            'flash'      => __('app.cat_flash'),
-        ];
+        $dbCategories = \App\Models\Category::active()->get();
+        $categoryIconMap = $dbCategories->pluck('icon', 'slug')->toArray();
 
-        return view('products.index', compact('products', 'category', 'sort', 'categories'));
+        return view('products.index', compact('products', 'category', 'sort', 'dbCategories', 'categoryIconMap'));
     }
 
     public function category($category)

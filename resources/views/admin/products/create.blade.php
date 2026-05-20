@@ -300,7 +300,7 @@
     function addFiles(newFiles) {
         newFiles.forEach(file => {
             if (!file.type.startsWith('image/')) return;
-            if (file.size > 10 * 1024 * 1024) { alert(file.name + ' أكبر من 10MB'); return; }
+            if (file.size > 50 * 1024 * 1024) { alert(file.name + ' أكبر من 50MB'); return; }
             files.push(file);
         });
         renderGallery();

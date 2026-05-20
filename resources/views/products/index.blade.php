@@ -1,4 +1,4 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 
 @section('title', __('app.prod_page_title'))
 
@@ -52,11 +52,15 @@
                             {{-- Category --}}
                             <div class="mb-4">
                                 <p class="text-uppercase text-muted fw-semibold mb-2" style="font-size:.75rem;letter-spacing:.5px;">{{ __('app.prod_cat_label') }}</p>
-                                @foreach($categories as $key => $label)
-                                <a href="{{ route('products.index', ['category' => $key, 'sort' => $sort]) }}"
-                                   class="filter-option d-flex align-items-center gap-2 px-3 py-2 rounded-3 mb-1 text-decoration-none {{ $category === $key ? 'active' : '' }}">
-                                    <i class="fas fa-{{ $key === 'printers' ? 'print' : ($key === 'mice' ? 'mouse' : ($key === 'headphones' ? 'headphones' : ($key === 'flash' ? 'usb' : 'th-large'))) }}"></i>
-                                    {{ $label }}
+                                <a href="{{ route('products.index', ['category' => 'all', 'sort' => $sort]) }}"
+                                   class="filter-option d-flex align-items-center gap-2 px-3 py-2 rounded-3 mb-1 text-decoration-none {{ $category === 'all' ? 'active' : '' }}">
+                                    <i class="fas fa-th-large"></i> {{ __('app.cat_all') }}
+                                </a>
+                                @foreach($dbCategories as $cat)
+                                <a href="{{ route('products.index', ['category' => $cat->slug, 'sort' => $sort]) }}"
+                                   class="filter-option d-flex align-items-center gap-2 px-3 py-2 rounded-3 mb-1 text-decoration-none {{ $category === $cat->slug ? 'active' : '' }}">
+                                    <i class="fas fa-{{ $cat->icon ?? 'list' }}"></i>
+                                    {{ app()->getLocale() === 'ar' ? $cat->name_ar : $cat->name_en }}
                                 </a>
                                 @endforeach
                             </div>
@@ -109,11 +113,11 @@
                                          class="w-100 h-100" style="object-fit:cover;"
                                          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                                     <div class="product-placeholder" style="display:none;">
-                                        <i class="fas fa-{{ $product['category'] === 'printers' ? 'print' : ($product['category'] === 'mice' ? 'mouse' : ($product['category'] === 'headphones' ? 'headphones' : 'usb')) }}"></i>
+                                        <i class="fas fa-{{ $categoryIconMap[$product['category']] ?? 'box' }}"></i>
                                     </div>
                                 @else
                                     <div class="product-placeholder">
-                                        <i class="fas fa-{{ $product['category'] === 'printers' ? 'print' : ($product['category'] === 'mice' ? 'mouse' : ($product['category'] === 'headphones' ? 'headphones' : 'usb')) }}"></i>
+                                        <i class="fas fa-{{ $categoryIconMap[$product['category']] ?? 'box' }}"></i>
                                     </div>
                                 @endif
                             </div>

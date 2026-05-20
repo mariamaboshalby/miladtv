@@ -7,12 +7,12 @@
     {{-- Page Header --}}
     <div style="background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%);padding:2.5rem 0;">
         <div class="container">
-            <h1 class="text-white fw-bold mb-1"><i class="fas fa-shopping-cart me-2"></i>Shopping Cart</h1>
+            <h1 class="text-white fw-bold mb-1"><i class="fas fa-shopping-cart me-2"></i>{{ __('app.cart_title') }}</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item"><a href="{{ route('home') }}"
-                            class="text-white-50 text-decoration-none">Home</a></li>
-                    <li class="breadcrumb-item active text-white-50">Shopping Cart</li>
+                            class="text-white-50 text-decoration-none">{{ __('app.prod_breadcrumb_home') }}</a></li>
+                    <li class="breadcrumb-item active text-white-50">{{ __('app.cart_title') }}</li>
                 </ol>
             </nav>
         </div>
@@ -27,11 +27,10 @@
                     <div class="empty-icon mx-auto mb-4">
                         <i class="fas fa-cart-shopping"></i>
                     </div>
-                    <h3 class="fw-bold mb-2" style="color:#0f172a;">Your Cart is Empty</h3>
-                    <p class="text-secondary mb-4">You haven't added any products yet. Browse our catalogue and find
-                        something you love.</p>
+                    <h3 class="fw-bold mb-2" style="color:#0f172a;">{{ __('app.cart_empty_title') }}</h3>
+                    <p class="text-secondary mb-4">{{ __('app.cart_empty_sub') }}</p>
                     <a href="{{ route('products.index') }}" class="btn btn-primary btn-lg px-5">
-                        <i class="fas fa-shopping-bag me-2"></i>Browse Products
+                        <i class="fas fa-shopping-bag me-2"></i>{{ __('app.cart_browse') }}
                     </a>
                 </div>
             @else
@@ -44,11 +43,11 @@
                             <div class="card-body p-4">
                                 <div class="d-flex justify-content-between align-items-center mb-4">
                                     <h5 class="fw-bold mb-0" style="color:#0f172a;">
-                                        Items <span
+                                        {{ __('app.cart_items') }} <span
                                             class="text-muted fw-normal">({{ array_sum(array_column($cart, 'qty')) }})</span>
                                     </h5>
                                     <button class="btn btn-sm btn-outline-danger" id="clearCartBtn">
-                                        <i class="fas fa-trash me-1"></i>Clear Cart
+                                        <i class="fas fa-trash me-1"></i>{{ __('app.cart_clear') }}
                                     </button>
                                 </div>
 
@@ -106,51 +105,47 @@
                     <div class="col-lg-4">
                         <div class="card border-0 shadow-sm sticky-top" style="border-radius:16px;top:90px;">
                             <div class="card-body p-4">
-                                <h5 class="fw-bold mb-4" style="color:#0f172a;">Order Summary</h5>
+                                <h5 class="fw-bold mb-4" style="color:#0f172a;">{{ __('app.checkout_order_sum') }}</h5>
 
-                                <div class="d-flex justify-content-between mb-2">
-                                    <span class="text-secondary">Subtotal</span>
-                                    <span class="fw-semibold" id="cartSubtotal">{{ number_format($total) }} EGP</span>
-                                </div>
                                 <div class="d-flex justify-content-between mb-3">
-                                    <span class="text-secondary">Shipping</span>
-                                    <span class="text-success fw-semibold">Free</span>
+                                    <span class="text-secondary">{{ __('app.cart_subtotal') }}</span>
+                                    <span class="fw-semibold" id="cartSubtotal">{{ number_format($total) }} EGP</span>
                                 </div>
 
                                 <hr>
 
                                 <div class="d-flex justify-content-between mb-4">
-                                    <span class="fw-bold fs-5">Total</span>
+                                    <span class="fw-bold fs-5">{{ __('app.total') }}</span>
                                     <span class="fw-bold fs-5 text-primary" id="cartTotal">{{ number_format($total) }}
                                         EGP</span>
                                 </div>
 
                                 @auth
                                     <a href="{{ route('checkout.index') }}" class="btn btn-primary w-100 btn-lg mb-2 fw-bold">
-                                        <i class="fas fa-check-circle me-2"></i>Proceed to Checkout
+                                        <i class="fas fa-check-circle me-2"></i>{{ __('app.cart_proceed') }}
                                     </a>
                                 @else
                                     <button id="checkoutBtn" class="btn btn-primary w-100 btn-lg mb-2 fw-bold">
-                                        <i class="fas fa-check-circle me-2"></i>Proceed to Checkout
+                                        <i class="fas fa-check-circle me-2"></i>{{ __('app.cart_proceed') }}
                                     </button>
                                 @endauth
                                 <a href="{{ route('products.index') }}" class="btn btn-outline-secondary w-100 mb-4">
-                                    <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+                                    <i class="fas fa-arrow-left me-2"></i>{{ __('app.cart_continue') }}
                                 </a>
 
                                 {{-- Trust Badges --}}
                                 <div class="d-flex justify-content-around pt-3 border-top">
                                     <div class="text-center">
                                         <i class="fas fa-lock text-primary mb-1 d-block"></i>
-                                        <small class="text-muted">Secure</small>
+                                        <small class="text-muted">{{ __('app.cart_secure') }}</small>
                                     </div>
                                     <div class="text-center">
                                         <i class="fas fa-shield-halved text-primary mb-1 d-block"></i>
-                                        <small class="text-muted">Guaranteed</small>
+                                        <small class="text-muted">{{ __('app.cart_guaranteed') }}</small>
                                     </div>
                                     <div class="text-center">
                                         <i class="fas fa-truck text-primary mb-1 d-block"></i>
-                                        <small class="text-muted">Free Delivery</small>
+                                        <small class="text-muted">{{ __('app.cart_free_delivery') }}</small>
                                     </div>
                                 </div>
                             </div>
@@ -221,26 +216,22 @@
                 if ($(this).hasClass('cart-qty-plus')) qty++;
                 else qty--;
 
+                if (qty <= 0) qty = 1; // Minimum 1
+
                 $.post('{{ route('cart.update') }}', {
                     _token: '{{ csrf_token() }}',
                     product_id: id,
                     quantity: qty
                 }, function(res) {
                     if (res.success) {
-                        if (qty <= 0) {
-                            location.reload();
-                        } else {
-                            $qtyEl.text(qty);
-                            $('#cartCount').text(res.count);
-                            location.reload();
-                        }
+                        location.reload();
                     }
                 });
             });
 
             // Clear cart
             $('#clearCartBtn').on('click', function() {
-                if (confirm('Are you sure you want to clear the cart?')) {
+                if (confirm('{{ __('app.cart_clear_confirm') }}')) {
                     $.post('{{ route('cart.clear') }}', {
                         _token: '{{ csrf_token() }}'
                     }, function() {

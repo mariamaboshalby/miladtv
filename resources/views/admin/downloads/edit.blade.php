@@ -9,7 +9,7 @@
         <h2><i class="fas fa-edit" style="color:var(--primary-blue);margin-{{ app()->getLocale() === 'ar' ? 'left' : 'right' }}:.5rem"></i> {{ __('app.edit') }}: {{ Str::limit($download->title, 40) }}</h2>
     </div>
     <div class="card-body">
-        <form method="POST" action="{{ route('admin.downloads.update', $download) }}">
+        <form method="POST" action="{{ route('admin.downloads.update', $download) }}" enctype="multipart/form-data">
             @csrf @method('PUT')
             @include('admin.downloads._form', ['item' => $download])
             <div class="d-flex gap-2 mt-4">

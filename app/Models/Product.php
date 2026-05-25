@@ -43,21 +43,25 @@ class Product extends Model implements HasMedia
         $this->addMediaConversion('thumb')
              ->width(400)
              ->height(400)
-             ->sharpen(5)
-             ->nonQueued();
+             ->sharpen(5);
 
         $this->addMediaConversion('card')
              ->width(800)
              ->height(800)
-             ->sharpen(5)
-             ->nonQueued();
+             ->sharpen(5);
     }
 
     /* ── Helpers ── */
     public function getMainImageUrl(string $conversion = ''): string
     {
-        return $this->getFirstMediaUrl('product-images', $conversion)
-            ?: '';
+        $media = $this->getFirstMedia('product-images');
+        if (! $media) {
+            return '';
+        }
+
+        // Build a root-relative URL (/storage/...) that works regardless of APP_URL
+        $relativePath = $media->getPathRelativeToRoot($conversion);
+        return '/storage/' . ltrim($relativePath, '/');
     }
 
     /* ── Scopes ── */

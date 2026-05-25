@@ -8,7 +8,7 @@ class Download extends Model
 {
     protected $fillable = [
         'title', 'description', 'category', 'brand',
-        'version', 'size', 'os', 'icon',
+        'version', 'size', 'os', 'icon', 'image',
         'file_url', 'downloads', 'is_active',
     ];
 

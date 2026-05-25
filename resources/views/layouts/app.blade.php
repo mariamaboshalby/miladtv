@@ -83,31 +83,21 @@
                         </a>
                         <div class="mjk-mega-menu">
                             <div class="mjk-mega-inner">
+                                @forelse($categories as $category)
                                 <div class="mjk-mega-col">
-                                    <p class="mjk-mega-heading"><i class="fas fa-print"></i> {{ __('app.cat_printers') }}</p>
-                                    <a href="{{ route('products.index', ['category' => 'printers']) }}">{{ __('app.hp_printers') }}</a>
-                                    <a href="{{ route('products.index', ['category' => 'printers']) }}">{{ __('app.canon_printers') }}</a>
-                                    <a href="{{ route('products.index', ['category' => 'printers']) }}">{{ __('app.epson_printers') }}</a>
-                                    <a href="{{ route('products.index', ['category' => 'printers']) }}">{{ __('app.brother_printers') }}</a>
+                                    <p class="mjk-mega-heading">
+                                        @if($category->icon)
+                                        <i class="{{ $category->icon }}"></i>
+                                        @endif
+                                        {{ $isAr ? $category->name_ar : $category->name_en }}
+                                    </p>
+                                    <a href="{{ route('products.index', ['category' => $category->slug]) }}">{{ $isAr ? $category->name_ar : $category->name_en }}</a>
                                 </div>
+                                @empty
                                 <div class="mjk-mega-col">
-                                    <p class="mjk-mega-heading"><i class="fas fa-mouse"></i> {{ __('app.cat_mice') }}</p>
-                                    <a href="{{ route('products.index', ['category' => 'mice']) }}">{{ __('app.wireless_mice') }}</a>
-                                    <a href="{{ route('products.index', ['category' => 'mice']) }}">{{ __('app.gaming_mice') }}</a>
-                                    <a href="{{ route('products.index', ['category' => 'mice']) }}">{{ __('app.office_mice') }}</a>
+                                    <p class="mjk-mega-heading">{{ __('app.no_categories') }}</p>
                                 </div>
-                                <div class="mjk-mega-col">
-                                    <p class="mjk-mega-heading"><i class="fas fa-headphones"></i> {{ __('app.cat_headphones') }}</p>
-                                    <a href="{{ route('products.index', ['category' => 'headphones']) }}">{{ __('app.wireless_hp') }}</a>
-                                    <a href="{{ route('products.index', ['category' => 'headphones']) }}">{{ __('app.gaming_hs') }}</a>
-                                    <a href="{{ route('products.index', ['category' => 'headphones']) }}">{{ __('app.office_hs') }}</a>
-                                </div>
-                                <div class="mjk-mega-col">
-                                    <p class="mjk-mega-heading"><i class="fas fa-usb"></i> {{ __('app.cat_flash') }}</p>
-                                    <a href="{{ route('products.index', ['category' => 'flash']) }}">{{ __('app.usb30') }}</a>
-                                    <a href="{{ route('products.index', ['category' => 'flash']) }}">{{ __('app.usb32') }}</a>
-                                    <a href="{{ route('products.index', ['category' => 'flash']) }}">{{ __('app.highcap') }}</a>
-                                </div>
+                                @endforelse
                             </div>
                         </div>
                     </div>
@@ -256,10 +246,16 @@
                     <div class="col-sm-6 col-lg-2">
                         <h6 class="mjk-footer-heading">{{ __('app.categories') }}</h6>
                         <ul class="list-unstyled mjk-footer-links">
-                            <li><a href="{{ route('products.index', ['category' => 'printers']) }}"><i class="fas fa-print me-2 text-primary"></i>{{ __('app.cat_printers') }}</a></li>
-                            <li><a href="{{ route('products.index', ['category' => 'mice']) }}"><i class="fas fa-mouse me-2 text-primary"></i>{{ __('app.cat_mice') }}</a></li>
-                            <li><a href="{{ route('products.index', ['category' => 'headphones']) }}"><i class="fas fa-headphones me-2 text-primary"></i>{{ __('app.cat_headphones') }}</a></li>
-                            <li><a href="{{ route('products.index', ['category' => 'flash']) }}"><i class="fas fa-usb me-2 text-primary"></i>{{ __('app.cat_flash') }}</a></li>
+                            @forelse($categories as $category)
+                            <li><a href="{{ route('products.index', ['category' => $category->slug]) }}">
+                                @if($category->icon)
+                                <i class="{{ $category->icon }} me-2 text-primary"></i>
+                                @endif
+                                {{ $isAr ? $category->name_ar : $category->name_en }}
+                            </a></li>
+                            @empty
+                            <li><span class="text-muted small">{{ __('app.no_categories') }}</span></li>
+                            @endforelse
                         </ul>
                     </div>
 

@@ -9,7 +9,7 @@
         <h2><i class="fas fa-plus" style="color:var(--primary-blue);margin-{{ app()->getLocale() === 'ar' ? 'left' : 'right' }}:.5rem"></i> {{ __('app.add_download_file') }}</h2>
     </div>
     <div class="card-body">
-        <form method="POST" action="{{ route('admin.downloads.store') }}">
+        <form method="POST" action="{{ route('admin.downloads.store') }}" enctype="multipart/form-data">
             @csrf
             @include('admin.downloads._form')
             <div class="d-flex gap-2 mt-4">

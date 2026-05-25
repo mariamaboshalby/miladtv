@@ -1,122 +1,123 @@
 @extends('layouts.app')
-@section('title', __('app.home_about_badge') === 'About Us' ? 'MJK - Your #1 Destination for Printers & Tech Accessories' : 'MJK - وجهتك الأولى للطابعات والملحقات التقنية')
+@section('title', __('app.home_about_badge') === 'About Us' ? 'MJK - Your #1 Destination for Printers & Tech
+    Accessories' : 'MJK - وجهتك الأولى للطابعات والملحقات التقنية')
 
-@push('styles')
-    <link rel="stylesheet" href="{{ asset('css/printer-loader.css') }}">
-@endpush
-@push('styles')
-    <style>
-        /* ── Gallery Grid ── */
-        .mjk-gallery {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: 280px 280px;
-            gap: 12px;
-        }
-
-        /* tall item spans 2 rows */
-        .mjk-gallery-tall {
-            grid-row: span 2;
-        }
-
-        /* wide item spans 2 cols */
-        .mjk-gallery-wide {
-            grid-column: span 2;
-        }
-
-        .mjk-gallery-item {
-            position: relative;
-            overflow: hidden;
-            border-radius: 16px;
-            cursor: pointer;
-        }
-
-        .mjk-gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform .5s cubic-bezier(.25, .46, .45, .94);
-            display: block;
-        }
-
-        .mjk-gallery-item:hover img {
-            transform: scale(1.07);
-        }
-
-        /* Overlay */
-        .mjk-gallery-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to top, rgba(0, 0, 0, .75) 0%, rgba(0, 0, 0, .1) 50%, transparent 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 1.25rem 1.5rem;
-            opacity: 0;
-            transition: opacity .35s ease;
-        }
-
-        .mjk-gallery-item:hover .mjk-gallery-overlay {
-            opacity: 1;
-        }
-
-        .mjk-gallery-tag {
-            display: inline-block;
-            background: rgba(37, 99, 235, .85);
-            color: #fff;
-            font-size: .7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: .08em;
-            padding: .25rem .75rem;
-            border-radius: 999px;
-            margin-bottom: .5rem;
-            width: fit-content;
-        }
-
-        .mjk-gallery-overlay p {
-            color: #fff;
-            font-weight: 600;
-            font-size: 1rem;
-            margin: 0;
-            text-shadow: 0 1px 4px rgba(0, 0, 0, .5);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
+    @push('styles')
+        <link rel="stylesheet" href="{{ asset('css/printer-loader.css') }}">
+    @endpush
+    @push('styles')
+        <style>
+            /* ── Gallery Grid ── */
             .mjk-gallery {
-                grid-template-columns: 1fr 1fr;
-                grid-template-rows: auto;
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: 280px 280px;
+                gap: 12px;
             }
 
+            /* tall item spans 2 rows */
             .mjk-gallery-tall {
-                grid-row: span 1;
+                grid-row: span 2;
             }
 
+            /* wide item spans 2 cols */
             .mjk-gallery-wide {
                 grid-column: span 2;
             }
 
             .mjk-gallery-item {
-                height: 200px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .mjk-gallery {
-                grid-template-columns: 1fr;
+                position: relative;
+                overflow: hidden;
+                border-radius: 16px;
+                cursor: pointer;
             }
 
-            .mjk-gallery-wide {
-                grid-column: span 1;
+            .mjk-gallery-item img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform .5s cubic-bezier(.25, .46, .45, .94);
+                display: block;
             }
 
-            .mjk-gallery-item {
-                height: 220px;
+            .mjk-gallery-item:hover img {
+                transform: scale(1.07);
             }
-        }
-    </style>
-@endpush
+
+            /* Overlay */
+            .mjk-gallery-overlay {
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(to top, rgba(0, 0, 0, .75) 0%, rgba(0, 0, 0, .1) 50%, transparent 100%);
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end;
+                padding: 1.25rem 1.5rem;
+                opacity: 0;
+                transition: opacity .35s ease;
+            }
+
+            .mjk-gallery-item:hover .mjk-gallery-overlay {
+                opacity: 1;
+            }
+
+            .mjk-gallery-tag {
+                display: inline-block;
+                background: rgba(37, 99, 235, .85);
+                color: #fff;
+                font-size: .7rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: .08em;
+                padding: .25rem .75rem;
+                border-radius: 999px;
+                margin-bottom: .5rem;
+                width: fit-content;
+            }
+
+            .mjk-gallery-overlay p {
+                color: #fff;
+                font-weight: 600;
+                font-size: 1rem;
+                margin: 0;
+                text-shadow: 0 1px 4px rgba(0, 0, 0, .5);
+            }
+
+            /* Responsive */
+            @media (max-width: 768px) {
+                .mjk-gallery {
+                    grid-template-columns: 1fr 1fr;
+                    grid-template-rows: auto;
+                }
+
+                .mjk-gallery-tall {
+                    grid-row: span 1;
+                }
+
+                .mjk-gallery-wide {
+                    grid-column: span 2;
+                }
+
+                .mjk-gallery-item {
+                    height: 200px;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .mjk-gallery {
+                    grid-template-columns: 1fr;
+                }
+
+                .mjk-gallery-wide {
+                    grid-column: span 1;
+                }
+
+                .mjk-gallery-item {
+                    height: 220px;
+                }
+            }
+        </style>
+    @endpush
 @section('content')
 
     {{-- ===== Hero Carousel ===== --}}
@@ -163,7 +164,8 @@
 
                 {{-- Text + Stats --}}
                 <div class="col-lg-6 order-2 order-lg-1">
-                    <span class="badge text-bg-primary rounded-pill px-3 py-2 mb-3 fs-6">{{ __('app.home_about_badge') }}</span>
+                    <span
+                        class="badge text-bg-primary rounded-pill px-3 py-2 mb-3 fs-6">{{ __('app.home_about_badge') }}</span>
                     <h2 class="fw-bold display-6 mb-3">{{ __('app.home_about_title') }}</h2>
                     <p class="text-secondary fs-5 lh-lg">{!! __('app.home_about_p1') !!}</p>
                     <p class="text-secondary fs-5 lh-lg">{{ __('app.home_about_p2') }}</p>
@@ -239,7 +241,8 @@
                             </div>
                             <div>
                                 <p class="fw-bold mb-0 small">Est. 2017</p>
-                                <p class="text-secondary mb-0" style="font-size:.7rem;">{{ __('app.home_est_location') }}</p>
+                                <p class="text-secondary mb-0" style="font-size:.7rem;">{{ __('app.home_est_location') }}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -311,7 +314,8 @@
             <div class="text-center mb-5">
                 <span class="badge rounded-pill px-3 py-2 mb-3 fs-6"
                     style="background:rgba(37,99,235,.15);color:#60a5fa;border:1px solid rgba(37,99,235,.3);">{{ __('app.home_prod_badge') }}</span>
-                <h2 class="fw-bold text-white mb-2">{{ __('app.home_prod_title') }} <span style="color:#3b82f6;">{{ __('app.home_prod_title_span') }}</span></h2>
+                <h2 class="fw-bold text-white mb-2">{{ __('app.home_prod_title') }} <span
+                        style="color:#3b82f6;">{{ __('app.home_prod_title_span') }}</span></h2>
                 <p class="text-secondary mx-auto" style="max-width:520px;">{{ __('app.home_prod_sub') }}</p>
             </div>
 
@@ -380,45 +384,56 @@
 
             <div class="d-flex align-items-end justify-content-between mb-4">
                 <div>
-                    <span class="badge text-bg-primary rounded-pill px-3 py-2 mb-2 fs-6">{{ __('app.home_blog_badge') }}</span>
+                    <span
+                        class="badge text-bg-primary rounded-pill px-3 py-2 mb-2 fs-6">{{ __('app.home_blog_badge') }}</span>
                     <h2 class="fw-bold mb-0">{{ __('app.home_blog_title') }}</h2>
                 </div>
-                <a href="{{ route('blog.index') }}" class="btn btn-outline-primary rounded-pill px-4 d-none d-md-inline-flex align-items-center gap-2">
+                <a href="{{ route('blog.index') }}"
+                    class="btn btn-outline-primary rounded-pill px-4 d-none d-md-inline-flex align-items-center gap-2">
                     {{ __('app.home_blog_view_all') }} <i class="fas fa-arrow-right"></i>
                 </a>
             </div>
 
             <div class="row g-4">
 
-                @foreach($blogPosts as $post)
-                <div class="col-md-4">
-                    <article class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden" style="transition:transform .25s,box-shadow .25s;">
-                        {{-- Placeholder image with category colour --}}
-                        <div class="d-flex align-items-center justify-content-center position-relative" style="height:180px;background:linear-gradient(135deg,#1e3a8a,#2563eb);">
-                            <i class="fas fa-newspaper text-white opacity-25" style="font-size:4rem;"></i>
-                            <span class="position-absolute top-0 start-0 m-3 badge rounded-pill" style="background:rgba(255,255,255,.2);color:#fff;font-size:.75rem;">
-                                {{ $post->category }}
-                            </span>
-                        </div>
-
-                        <div class="card-body p-4 d-flex flex-column">
-                            <div class="d-flex align-items-center gap-3 mb-2 text-secondary" style="font-size:.8rem;">
-                                <span><i class="fas fa-calendar-alt me-1 text-primary"></i>{{ $post->published_at ? \Carbon\Carbon::parse($post->published_at)->format('d M Y') : $post->created_at->format('d M Y') }}</span>
-                                <span><i class="fas fa-clock me-1 text-primary"></i>{{ $post->read_time ?? 5 }} {{ __('app.home_blog_min_read') }}</span>
-                                <span><i class="fas fa-eye me-1 text-primary"></i>{{ number_format($post->views) }}</span>
+                @foreach ($blogPosts as $post)
+                    <div class="col-md-4">
+                        <article class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden"
+                            style="transition:transform .25s,box-shadow .25s;">
+                            {{-- Placeholder image with category colour --}}
+                            <div class="d-flex align-items-center justify-content-center position-relative"
+                                style="height:180px;background:linear-gradient(135deg,#1e3a8a,#2563eb);">
+                                <i class="fas fa-newspaper text-white opacity-25" style="font-size:4rem;"></i>
+                                <span class="position-absolute top-0 start-0 m-3 badge rounded-pill"
+                                    style="background:rgba(255,255,255,.2);color:#fff;font-size:.75rem;">
+                                    {{ $post->category }}
+                                </span>
                             </div>
-                            <h6 class="fw-bold mb-2 lh-base" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
-                                {{ app()->getLocale() === 'ar' ? ($post->title_ar ?? $post->title) : $post->title }}
-                            </h6>
-                            <p class="text-secondary small mb-3 flex-grow-1" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">
-                                {{ app()->getLocale() === 'ar' ? ($post->excerpt_ar ?? $post->excerpt) : $post->excerpt }}
-                            </p>
-                            <a href="{{ route('blog.show', $post->id) }}" class="btn btn-sm btn-outline-primary rounded-pill align-self-start">
-                                {{ __('app.home_blog_read_more') }} <i class="fas fa-arrow-right ms-1"></i>
-                            </a>
-                        </div>
-                    </article>
-                </div>
+
+                            <div class="card-body p-4 d-flex flex-column">
+                                <div class="d-flex align-items-center gap-3 mb-2 text-secondary" style="font-size:.8rem;">
+                                    <span><i
+                                            class="fas fa-calendar-alt me-1 text-primary"></i>{{ $post->published_at ? \Carbon\Carbon::parse($post->published_at)->format('d M Y') : $post->created_at->format('d M Y') }}</span>
+                                    <span><i class="fas fa-clock me-1 text-primary"></i>{{ $post->read_time ?? 5 }}
+                                        {{ __('app.home_blog_min_read') }}</span>
+                                    <span><i
+                                            class="fas fa-eye me-1 text-primary"></i>{{ number_format($post->views) }}</span>
+                                </div>
+                                <h6 class="fw-bold mb-2 lh-base"
+                                    style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
+                                    {{ app()->getLocale() === 'ar' ? $post->title_ar ?? $post->title : $post->title }}
+                                </h6>
+                                <p class="text-secondary small mb-3 flex-grow-1"
+                                    style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">
+                                    {{ app()->getLocale() === 'ar' ? $post->excerpt_ar ?? $post->excerpt : $post->excerpt }}
+                                </p>
+                                <a href="{{ route('blog.show', $post->id) }}"
+                                    class="btn btn-sm btn-outline-primary rounded-pill align-self-start">
+                                    {{ __('app.home_blog_read_more') }} <i class="fas fa-arrow-right ms-1"></i>
+                                </a>
+                            </div>
+                        </article>
+                    </div>
                 @endforeach
 
             </div>
@@ -438,40 +453,43 @@
 
             {{-- Header --}}
             <div class="text-center mb-5">
-                <span class="badge text-bg-primary rounded-pill px-3 py-2 mb-3 fs-6">{{ __('app.home_testimonials_badge') }}</span>
+                <span
+                    class="badge text-bg-primary rounded-pill px-3 py-2 mb-3 fs-6">{{ __('app.home_testimonials_badge') }}</span>
                 <h2 class="fw-bold mb-2">{{ __('app.home_testimonials_title') }}</h2>
                 <p class="text-secondary mx-auto" style="max-width:480px;">{{ __('app.home_testimonials_sub') }}</p>
             </div>
 
             {{-- Testimonials Grid --}}
-            @if($testimonials->count() > 0)
-            <div class="row g-4 mb-5">
-                @foreach($testimonials as $testimonial)
-                <div class="col-md-4">
-                    <div class="card h-100 border-0 shadow-sm rounded-4 p-4">
-                        <div class="d-flex align-items-center gap-3 mb-3">
-                            <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width:48px;height:48px;">
-                                <i class="fas fa-user"></i>
-                            </div>
-                            <div>
-                                <h6 class="fw-bold mb-0">{{ $testimonial->name }}</h6>
-                                <div class="text-warning small">
-                                    @for($i = 1; $i <= 5; $i++)
-                                        <i class="fas fa-star{{ $i <= $testimonial->rating ? '' : '-o' }}"></i>
-                                    @endfor
+            @if ($testimonials->count() > 0)
+                <div class="row g-4 mb-5">
+                    @foreach ($testimonials as $testimonial)
+                        <div class="col-md-4">
+                            <div class="card h-100 border-0 shadow-sm rounded-4 p-4">
+                                <div class="d-flex align-items-center gap-3 mb-3">
+                                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                                        style="width:48px;height:48px;">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-0">{{ $testimonial->name }}</h6>
+                                        <div class="text-warning small">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                <i class="fas fa-star{{ $i <= $testimonial->rating ? '' : '-o' }}"></i>
+                                            @endfor
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-secondary mb-0 small">{{ $testimonial->message }}</p>
+                                <div class="mt-3 pt-3 border-top">
+                                    <small class="text-muted">
+                                        <i
+                                            class="fas fa-calendar-alt me-1"></i>{{ $testimonial->created_at->format('d M Y') }}
+                                    </small>
                                 </div>
                             </div>
                         </div>
-                        <p class="text-secondary mb-0 small">{{ $testimonial->message }}</p>
-                        <div class="mt-3 pt-3 border-top">
-                            <small class="text-muted">
-                                <i class="fas fa-calendar-alt me-1"></i>{{ $testimonial->created_at->format('d M Y') }}
-                            </small>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
-                @endforeach
-            </div>
             @endif
 
             {{-- Testimonial Form --}}
@@ -489,25 +507,33 @@
                         <form id="testimonialForm">
                             <div class="row g-3">
                                 <div class="col-sm-6">
-                                    <label class="form-label small fw-semibold">{{ __('app.home_testimonial_name') }}</label>
-                                    <input id="testimonialName" type="text" class="form-control rounded-3" placeholder="{{ __('app.home_testimonial_name_ph') }}" required>
+                                    <label
+                                        class="form-label small fw-semibold">{{ __('app.home_testimonial_name') }}</label>
+                                    <input id="testimonialName" type="text" class="form-control rounded-3"
+                                        placeholder="{{ __('app.home_testimonial_name_ph') }}" required>
                                 </div>
                                 <div class="col-sm-6">
-                                    <label class="form-label small fw-semibold">{{ __('app.home_testimonial_email') }}</label>
-                                    <input id="testimonialEmail" type="email" class="form-control rounded-3" placeholder="{{ __('app.home_testimonial_email_ph') }}" required>
+                                    <label
+                                        class="form-label small fw-semibold">{{ __('app.home_testimonial_email') }}</label>
+                                    <input id="testimonialEmail" type="email" class="form-control rounded-3"
+                                        placeholder="{{ __('app.home_testimonial_email_ph') }}" required>
                                 </div>
                                 <div class="col-12">
-                                    <label class="form-label small fw-semibold">{{ __('app.home_testimonial_rating') }}</label>
+                                    <label
+                                        class="form-label small fw-semibold">{{ __('app.home_testimonial_rating') }}</label>
                                     <div class="d-flex gap-2" id="ratingStars">
-                                        @for($i = 1; $i <= 5; $i++)
-                                        <i class="fas fa-star fa-2x text-muted rating-star" data-rating="{{ $i }}" style="cursor:pointer;"></i>
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            <i class="fas fa-star fa-2x text-muted rating-star"
+                                                data-rating="{{ $i }}" style="cursor:pointer;"></i>
                                         @endfor
                                     </div>
                                     <input type="hidden" id="testimonialRating" value="5">
                                 </div>
                                 <div class="col-12">
-                                    <label class="form-label small fw-semibold">{{ __('app.home_testimonial_message') }}</label>
-                                    <textarea id="testimonialMessage" class="form-control rounded-3" rows="3" placeholder="{{ __('app.home_testimonial_message_ph') }}" required></textarea>
+                                    <label
+                                        class="form-label small fw-semibold">{{ __('app.home_testimonial_message') }}</label>
+                                    <textarea id="testimonialMessage" class="form-control rounded-3" rows="3"
+                                        placeholder="{{ __('app.home_testimonial_message_ph') }}" required></textarea>
                                 </div>
                                 <div class="col-12">
                                     <button type="submit" class="btn btn-primary btn-lg w-100 rounded-3">
@@ -530,7 +556,8 @@
 
             {{-- Header --}}
             <div class="text-center mb-5">
-                <span class="badge text-bg-primary rounded-pill px-3 py-2 mb-3 fs-6">{{ __('app.home_contact_badge') }}</span>
+                <span
+                    class="badge text-bg-primary rounded-pill px-3 py-2 mb-3 fs-6">{{ __('app.home_contact_badge') }}</span>
                 <h2 class="fw-bold mb-2">{{ __('app.home_contact_title') }}</h2>
                 <p class="text-secondary mx-auto" style="max-width:480px;">{{ __('app.home_contact_sub') }}</p>
             </div>
@@ -544,12 +571,14 @@
                         {{-- Mini info strip --}}
                         <div class="d-flex flex-wrap gap-3 mb-4 pb-3 border-bottom">
                             <span class="small text-secondary">
-                                <i class="fas fa-map-marker-alt text-primary me-1"></i>{{ __('app.home_contact_address') }}
+                                <i
+                                    class="fas fa-map-marker-alt text-primary me-1"></i>{{ __('app.home_contact_address') }}
                             </span>
                             <a href="tel:+201001324539" class="small text-secondary text-decoration-none">
                                 <i class="fas fa-phone-alt text-primary me-1"></i>+20 123 456 7890
                             </a>
-                            <a href="https://wa.me/201001324539" target="_blank" class="small text-secondary text-decoration-none">
+                            <a href="https://wa.me/201001324539" target="_blank"
+                                class="small text-secondary text-decoration-none">
                                 <i class="fab fa-whatsapp text-primary me-1"></i>{{ __('app.home_contact_whatsapp') }}
                             </a>
                         </div>
@@ -561,20 +590,24 @@
                             <div class="row g-3 mb-3">
                                 <div class="col-sm-6">
                                     <label class="form-label small fw-semibold">{{ __('app.home_contact_name') }}</label>
-                                    <input id="contactName" type="text" class="form-control rounded-3" placeholder="{{ __('app.home_contact_name_ph') }}" required>
+                                    <input id="contactName" type="text" class="form-control rounded-3"
+                                        placeholder="{{ __('app.home_contact_name_ph') }}" required>
                                 </div>
                                 <div class="col-sm-6">
                                     <label class="form-label small fw-semibold">{{ __('app.home_contact_email') }}</label>
-                                    <input id="contactEmail" type="email" class="form-control rounded-3" placeholder="{{ __('app.home_contact_email_ph') }}" required>
+                                    <input id="contactEmail" type="email" class="form-control rounded-3"
+                                        placeholder="{{ __('app.home_contact_email_ph') }}" required>
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label small fw-semibold">{{ __('app.home_contact_subject') }}</label>
-                                <input id="contactSubject" type="text" class="form-control rounded-3" placeholder="{{ __('app.home_contact_subject_ph') }}" required>
+                                <input id="contactSubject" type="text" class="form-control rounded-3"
+                                    placeholder="{{ __('app.home_contact_subject_ph') }}" required>
                             </div>
                             <div class="mb-4 flex-grow-1">
                                 <label class="form-label small fw-semibold">{{ __('app.home_contact_message') }}</label>
-                                <textarea id="contactMessage" class="form-control rounded-3" style="min-height:140px;" placeholder="{{ __('app.home_contact_message_ph') }}" required></textarea>
+                                <textarea id="contactMessage" class="form-control rounded-3" style="min-height:140px;"
+                                    placeholder="{{ __('app.home_contact_message_ph') }}" required></textarea>
                             </div>
                             <button type="submit" class="btn btn-primary btn-lg w-100 rounded-3">
                                 <i class="fas fa-paper-plane me-2"></i> {{ __('app.home_contact_send') }}
@@ -586,145 +619,158 @@
                 </div>
 
                 {{-- Right: Google Map --}}
-                <div class="col-lg-7">
-                    <div class="rounded-4 overflow-hidden shadow-sm" style="height:100%; min-height:500px;">
+                <div class="col-lg-7" style="min-height:500px;">
+                    <div class="rounded-4 overflow-hidden shadow-sm m-2">
                         <iframe
                             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d427.3126741646018!2d31.3651253!3d31.040138600000002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14f79dc660c33b0d%3A0xcc828a49e08b04ae!2z2LTYsdmD2YcgOTAg2YPYp9mF2YrYsdin2Ko!5e0!3m2!1sar!2seg!4v1778597954263!5m2!1sar!2seg"
-                            width="100%" height="100%"
-                            style="border:0; min-height:500px; display:block;"
-                            allowfullscreen="" loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade"
+                            width="100%" height="100%" style="border:0; min-height:500px; display:block;"
+                            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
                             title="MJK Location - Mansoura, Egypt"></iframe>
+                    </div>
+                    <div class="rounded-4 overflow-hidden shadow-sm m-2">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d792.201006963661!2d31.307853230395082!3d30.088475194083156!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2s!5e0!3m2!1sen!2seg!4v1779698431846!5m2!1sen!2seg"
+                            width="100%" height="100%" style="border:0; min-height:400px; display:block;"
+                            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                            title="MJK Additional Location"></iframe>
                     </div>
                 </div>
 
             </div>
+            
         </div>
     </section>
 
     @push('scripts')
-    <script>
-    document.getElementById('contactForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+        <script>
+            document.getElementById('contactForm').addEventListener('submit', function(e) {
+                e.preventDefault();
 
-        const name    = document.getElementById('contactName').value.trim();
-        const email   = document.getElementById('contactEmail').value.trim();
-        const subject = document.getElementById('contactSubject').value.trim();
-        const message = document.getElementById('contactMessage').value.trim();
-        const feedback = document.getElementById('contactFeedback');
+                const name = document.getElementById('contactName').value.trim();
+                const email = document.getElementById('contactEmail').value.trim();
+                const subject = document.getElementById('contactSubject').value.trim();
+                const message = document.getElementById('contactMessage').value.trim();
+                const feedback = document.getElementById('contactFeedback');
 
-        if (!name || !email || !subject || !message) return;
+                if (!name || !email || !subject || !message) return;
 
-        const gmailSubject = encodeURIComponent(subject + '  from ' + name);
-        const gmailBody    = encodeURIComponent(
-            'Name: '    + name    + '\n' +
-            'Email: '   + email   + '\n' +
-            'Subject: ' + subject + '\n\n' +
-            'Message:\n' + message
-        );
+                const gmailSubject = encodeURIComponent(subject + '  from ' + name);
+                const gmailBody = encodeURIComponent(
+                    'Name: ' + name + '\n' +
+                    'Email: ' + email + '\n' +
+                    'Subject: ' + subject + '\n\n' +
+                    'Message:\n' + message
+                );
 
-        const gmailUrl = 'https://mail.google.com/mail/?view=cm&fs=1&to=mjk%40gmail.com&su=' + gmailSubject + '&body=' + gmailBody;
-        window.open(gmailUrl, '_blank');
+                const gmailUrl = 'https://mail.google.com/mail/?view=cm&fs=1&to=mjk%40gmail.com&su=' + gmailSubject +
+                    '&body=' + gmailBody;
+                window.open(gmailUrl, '_blank');
 
-        feedback.classList.remove('d-none', 'text-danger');
-        feedback.classList.add('text-success');
-        feedback.innerHTML = '<i class="fas fa-check-circle me-1"></i> {{ __("app.home_contact_opening") }}';
-
-        setTimeout(() => {
-            this.reset();
-            feedback.classList.add('d-none');
-        }, 3000);
-    });
-
-    // Testimonial Form
-    const ratingStars = document.querySelectorAll('.rating-star');
-    const ratingInput = document.getElementById('testimonialRating');
-    let currentRating = 5;
-
-    ratingStars.forEach(star => {
-        star.addEventListener('click', function() {
-            currentRating = parseInt(this.dataset.rating);
-            ratingInput.value = currentRating;
-            updateStars();
-        });
-
-        star.addEventListener('mouseenter', function() {
-            const hoverRating = parseInt(this.dataset.rating);
-            highlightStars(hoverRating);
-        });
-
-        star.addEventListener('mouseleave', function() {
-            highlightStars(currentRating);
-        });
-    });
-
-    function updateStars() {
-        highlightStars(currentRating);
-    }
-
-    function highlightStars(rating) {
-        ratingStars.forEach(star => {
-            const starRating = parseInt(star.dataset.rating);
-            if (starRating <= rating) {
-                star.classList.remove('text-muted');
-                star.classList.add('text-warning');
-            } else {
-                star.classList.remove('text-warning');
-                star.classList.add('text-muted');
-            }
-        });
-    }
-
-    // Initialize stars
-    updateStars();
-
-    // Submit testimonial
-    document.getElementById('testimonialForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        const name = document.getElementById('testimonialName').value.trim();
-        const email = document.getElementById('testimonialEmail').value.trim();
-        const rating = document.getElementById('testimonialRating').value;
-        const message = document.getElementById('testimonialMessage').value.trim();
-        const feedback = document.getElementById('testimonialFeedback');
-
-        if (!name || !email || !message) return;
-
-        fetch('{{ route('testimonials.store') }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({ name, email, rating, message })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
                 feedback.classList.remove('d-none', 'text-danger');
                 feedback.classList.add('text-success');
-                feedback.innerHTML = '<i class="fas fa-check-circle me-1"></i> ' + data.message;
-                this.reset();
-                ratingInput.value = 5;
-                currentRating = 5;
-                updateStars();
-                
+                feedback.innerHTML = '<i class="fas fa-check-circle me-1"></i> {{ __('app.home_contact_opening') }}';
+
                 setTimeout(() => {
+                    this.reset();
                     feedback.classList.add('d-none');
-                }, 5000);
-            } else {
-                feedback.classList.remove('d-none', 'text-success');
-                feedback.classList.add('text-danger');
-                feedback.innerHTML = '<i class="fas fa-exclamation-circle me-1"></i> ' + data.message;
+                }, 3000);
+            });
+
+            // Testimonial Form
+            const ratingStars = document.querySelectorAll('.rating-star');
+            const ratingInput = document.getElementById('testimonialRating');
+            let currentRating = 5;
+
+            ratingStars.forEach(star => {
+                star.addEventListener('click', function() {
+                    currentRating = parseInt(this.dataset.rating);
+                    ratingInput.value = currentRating;
+                    updateStars();
+                });
+
+                star.addEventListener('mouseenter', function() {
+                    const hoverRating = parseInt(this.dataset.rating);
+                    highlightStars(hoverRating);
+                });
+
+                star.addEventListener('mouseleave', function() {
+                    highlightStars(currentRating);
+                });
+            });
+
+            function updateStars() {
+                highlightStars(currentRating);
             }
-        })
-        .catch(error => {
-            feedback.classList.remove('d-none', 'text-success');
-            feedback.classList.add('text-danger');
-            feedback.innerHTML = '<i class="fas fa-exclamation-circle me-1"></i> {{ __("app.home_testimonial_error") }}';
-        });
-    });
-    </script>
+
+            function highlightStars(rating) {
+                ratingStars.forEach(star => {
+                    const starRating = parseInt(star.dataset.rating);
+                    if (starRating <= rating) {
+                        star.classList.remove('text-muted');
+                        star.classList.add('text-warning');
+                    } else {
+                        star.classList.remove('text-warning');
+                        star.classList.add('text-muted');
+                    }
+                });
+            }
+
+            // Initialize stars
+            updateStars();
+
+            // Submit testimonial
+            document.getElementById('testimonialForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const name = document.getElementById('testimonialName').value.trim();
+                const email = document.getElementById('testimonialEmail').value.trim();
+                const rating = document.getElementById('testimonialRating').value;
+                const message = document.getElementById('testimonialMessage').value.trim();
+                const feedback = document.getElementById('testimonialFeedback');
+
+                if (!name || !email || !message) return;
+
+                fetch('{{ route('testimonials.store') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            name,
+                            email,
+                            rating,
+                            message
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            feedback.classList.remove('d-none', 'text-danger');
+                            feedback.classList.add('text-success');
+                            feedback.innerHTML = '<i class="fas fa-check-circle me-1"></i> ' + data.message;
+                            this.reset();
+                            ratingInput.value = 5;
+                            currentRating = 5;
+                            updateStars();
+
+                            setTimeout(() => {
+                                feedback.classList.add('d-none');
+                            }, 5000);
+                        } else {
+                            feedback.classList.remove('d-none', 'text-success');
+                            feedback.classList.add('text-danger');
+                            feedback.innerHTML = '<i class="fas fa-exclamation-circle me-1"></i> ' + data.message;
+                        }
+                    })
+                    .catch(error => {
+                        feedback.classList.remove('d-none', 'text-success');
+                        feedback.classList.add('text-danger');
+                        feedback.innerHTML =
+                            '<i class="fas fa-exclamation-circle me-1"></i> {{ __('app.home_testimonial_error') }}';
+                    });
+            });
+        </script>
     @endpush
 
 @endsection

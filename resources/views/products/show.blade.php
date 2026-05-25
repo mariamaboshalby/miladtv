@@ -42,8 +42,8 @@
                 <div class="pd-thumbs">
                     @foreach($media as $img)
                     <button class="pd-thumb {{ $loop->first ? 'active' : '' }}"
-                            onclick="switchImg('{{ $img->getUrl('card') }}', this)">
-                        <img src="{{ $img->getUrl('thumb') }}" alt="">
+                            onclick="switchImg('{{ '/storage/' . ltrim($img->getPathRelativeToRoot('card'), '/') }}', this)">
+                        <img src="{{ '/storage/' . ltrim($img->getPathRelativeToRoot('thumb'), '/') }}" alt="">
                     </button>
                     @endforeach
                 </div>
@@ -52,7 +52,7 @@
                 {{-- Main image --}}
                 <div class="pd-main-img-wrap">
                     @if($media->count() > 0)
-                        <img src="{{ $media->first()->getUrl('card') }}"
+                        <img src="{{ '/storage/' . ltrim($media->first()->getPathRelativeToRoot('card'), '/') }}"
                              id="mainImg"
                              class="pd-main-img"
                              alt="{{ $product['name'] }}"

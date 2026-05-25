@@ -155,4 +155,15 @@ return [
     'prod_support'          => 'دعم فني',
     'prod_related_title'    => 'منتجات ذات صلة',
 
+    // ── Image Upload ─────────────────────────────────────────────────────────
+    'cover_image'           => 'صورة الغلاف',
+    'remove_image'          => 'حذف الصورة الحالية',
+    'upload_new_to_replace' => 'أو ارفع صورة جديدة لاستبدالها',
+    'drag_image'            => 'اسحب الصورة هنا أو',
+    'drag_images'           => 'اسحب الصور هنا أو',
+    'click_to_select'       => 'اضغط للاختيار',
+    'upload_limit_single'   => 'JPG، PNG، WEBP — الحد الأقصى 2MB',
+    'upload_limit'          => 'الحد الأقصى 50MB للصورة الواحدة',
+    'multiple_images'       => 'يمكن رفع أكثر من صورة',
+
 ];

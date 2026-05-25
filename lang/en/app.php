@@ -155,4 +155,15 @@ return [
     'prod_support'          => 'Tech Support',
     'prod_related_title'    => 'Related Products',
 
+    // ── Image Upload ─────────────────────────────────────────────────────────
+    'cover_image'           => 'Cover Image',
+    'remove_image'          => 'Remove current image',
+    'upload_new_to_replace' => 'Or upload a new image to replace it',
+    'drag_image'            => 'Drag image here or',
+    'drag_images'           => 'Drag images here or',
+    'click_to_select'       => 'click to select',
+    'upload_limit_single'   => 'JPG, PNG, WEBP — Max 2MB',
+    'upload_limit'          => 'Max 50MB per image',
+    'multiple_images'       => 'Multiple images allowed',
+
 ];

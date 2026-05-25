@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Download;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class DownloadController extends Controller
 {
@@ -45,9 +46,14 @@ class DownloadController extends Controller
             'os'          => 'nullable|string|max:100',
             'icon'        => 'nullable|string|max:50',
             'file_url'    => 'nullable|url|max:500',
+            'image'       => 'nullable|image|mimes:jpeg,png,webp,gif|max:2048',
         ]);
 
         $validated['is_active'] = $request->boolean('is_active');
+
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('downloads', 'public');
+        }
 
         Download::create($validated);
 
@@ -72,9 +78,24 @@ class DownloadController extends Controller
             'os'          => 'nullable|string|max:100',
             'icon'        => 'nullable|string|max:50',
             'file_url'    => 'nullable|url|max:500',
+            'image'       => 'nullable|image|mimes:jpeg,png,webp,gif|max:2048',
         ]);
 
         $validated['is_active'] = $request->boolean('is_active');
+
+        if ($request->hasFile('image')) {
+            // حذف الصورة القديمة إن وجدت
+            if ($download->image) {
+                Storage::disk('public')->delete($download->image);
+            }
+            $validated['image'] = $request->file('image')->store('downloads', 'public');
+        }
+
+        // حذف الصورة إذا طلب المستخدم ذلك
+        if ($request->boolean('remove_image') && $download->image) {
+            Storage::disk('public')->delete($download->image);
+            $validated['image'] = null;
+        }
 
         $download->update($validated);
 
@@ -84,6 +105,10 @@ class DownloadController extends Controller
 
     public function destroy(Download $download)
     {
+        if ($download->image) {
+            Storage::disk('public')->delete($download->image);
+        }
+
         $download->delete();
 
         return redirect()->route('admin.downloads.index')

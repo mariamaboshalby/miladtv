@@ -34,6 +34,15 @@
                 $catIcon = $product['category'] === 'printers' ? 'print'
                          : ($product['category'] === 'mice' ? 'mouse'
                          : ($product['category'] === 'headphones' ? 'headphones' : 'usb'));
+
+                // Helper: return conversion URL if file exists, else fallback to original
+                $mediaUrl = function($img, $conversion) {
+                    $path = $img->getPath($conversion);
+                    if ($conversion && file_exists($path)) {
+                        return '/storage/' . ltrim($img->getPathRelativeToRoot($conversion), '/');
+                    }
+                    return '/storage/' . ltrim($img->getPathRelativeToRoot(''), '/');
+                };
             @endphp
 
             <div class="pd-gallery">
@@ -42,8 +51,8 @@
                 <div class="pd-thumbs">
                     @foreach($media as $img)
                     <button class="pd-thumb {{ $loop->first ? 'active' : '' }}"
-                            onclick="switchImg('{{ '/storage/' . ltrim($img->getPathRelativeToRoot('card'), '/') }}', this)">
-                        <img src="{{ '/storage/' . ltrim($img->getPathRelativeToRoot('thumb'), '/') }}" alt="">
+                            onclick="switchImg('{{ $mediaUrl($img, 'card') }}', this)">
+                        <img src="{{ $mediaUrl($img, 'thumb') }}" alt="">
                     </button>
                     @endforeach
                 </div>
@@ -52,7 +61,7 @@
                 {{-- Main image --}}
                 <div class="pd-main-img-wrap">
                     @if($media->count() > 0)
-                        <img src="{{ '/storage/' . ltrim($media->first()->getPathRelativeToRoot('card'), '/') }}"
+                        <img src="{{ $mediaUrl($media->first(), 'card') }}"
                              id="mainImg"
                              class="pd-main-img"
                              alt="{{ $product['name'] }}"

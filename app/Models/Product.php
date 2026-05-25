@@ -59,7 +59,14 @@ class Product extends Model implements HasMedia
             return '';
         }
 
-        // Build a root-relative URL (/storage/...) that works regardless of APP_URL
+        // If a conversion is requested but doesn't exist yet, fall back to original
+        if ($conversion !== '') {
+            $conversionPath = $media->getPath($conversion);
+            if (! file_exists($conversionPath)) {
+                $conversion = '';
+            }
+        }
+
         $relativePath = $media->getPathRelativeToRoot($conversion);
         return '/storage/' . ltrim($relativePath, '/');
     }

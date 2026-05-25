@@ -87,7 +87,7 @@
                     <div class="img-gallery" style="margin-bottom:1rem">
                         @foreach($product->getMedia('product-images') as $media)
                         <div class="gallery-item" id="media-{{ $media->id }}">
-                            <img src="{{ '/storage/' . ltrim($media->getPathRelativeToRoot('thumb'), '/') }}" alt="{{ $product->name }}">
+                            <img src="{{ file_exists($media->getPath('thumb')) ? '/storage/' . ltrim($media->getPathRelativeToRoot('thumb'), '/') : '/storage/' . ltrim($media->getPathRelativeToRoot(''), '/') }}" alt="{{ $product->name }}">
                             <span class="gallery-item-order">{{ $loop->iteration }}</span>
                             <button type="button" class="gallery-item-remove" onclick="markDelete({{ $media->id }})">
                                 <i class="fas fa-times"></i>

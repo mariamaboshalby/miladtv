@@ -349,6 +349,32 @@
             <i class="fas fa-info-circle"></i>
             <span>{{ __('app.bn_about') }}</span>
         </a>
+        @auth
+        <div class="mjk-bn-item dropdown">
+            <button class="mjk-bn-item-btn" data-bs-toggle="dropdown" aria-label="Account" aria-expanded="false">
+                <i class="fas fa-user-circle"></i>
+                <span>{{ __('app.bn_account') }}</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3" style="min-width:160px;bottom:68px;top:auto;position:fixed;right:4px;">
+                <li><span class="dropdown-item-text small text-muted fw-semibold">{{ Auth::user()->name }}</span></li>
+                <li><hr class="dropdown-divider my-1"></li>
+                <li>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="dropdown-item text-danger small">
+                            <i class="fas fa-sign-out-alt me-2"></i>{{ __('app.nav_signout') }}
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+        @else
+        <a href="{{ route('login') }}"
+           class="mjk-bn-item {{ request()->routeIs('login') ? 'active' : '' }}">
+            <i class="fas fa-sign-in-alt"></i>
+            <span>{{ __('app.bn_login') }}</span>
+        </a>
+        @endauth
     </nav>
 
     <!-- Scripts -->

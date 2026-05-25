@@ -50,12 +50,15 @@ return [
     'footer_address'  => 'Al Galaa St, Mansoura, Egypt 7650001',
     'footer_hours'    => 'Sat - Thu: 9AM - 9PM',
     'footer_copy'     => '© :year MJK Technology. All rights reserved.',
+    'rights'          => 'crafted by core-house team',
 
     // ── Bottom Nav ──────────────────────────────────────────────────────────
     'bn_home'         => 'Home',
     'bn_products'     => 'Products',
     'bn_news'         => 'News',
     'bn_about'        => 'About',
+    'bn_login'        => 'Login',
+    'bn_account'      => 'Account',
 
     // ── Language Toggle ─────────────────────────────────────────────────────
     'lang_switch'     => 'عربي',

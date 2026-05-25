@@ -50,12 +50,15 @@ return [
     'footer_address'  => 'شارع الجلاء، المنصورة، مصر 7650001',
     'footer_hours'    => 'السبت - الخميس: 9 صباحاً - 9 مساءً',
     'footer_copy'     => '© :year MJK Technology. جميع الحقوق محفوظة.',
+    'rights'          => 'صنع بواسطة فريق core-house',
 
     // ── Bottom Nav ──────────────────────────────────────────────────────────
     'bn_home'         => 'الرئيسية',
     'bn_products'     => 'المنتجات',
     'bn_news'         => 'الأخبار',
     'bn_about'        => 'من نحن',
+    'bn_login'        => 'دخول',
+    'bn_account'      => 'حسابي',
 
     // ── Language Toggle ─────────────────────────────────────────────────────
     'lang_switch'     => 'English',

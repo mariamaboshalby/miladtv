@@ -120,14 +120,20 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label class="form-label required">{{ __('app.category') }}</label>
-                        <select name="category" class="form-control" required>
-                            <option value="">{{ __('app.select_category') }}</option>
-                            @foreach($categories as $cat)
-                            <option value="{{ $cat->slug }}" {{ old('category', $product->category) == $cat->slug ? 'selected' : '' }}>
-                                {{ app()->getLocale() === 'ar' ? $cat->name_ar : $cat->name_en }}
-                            </option>
-                            @endforeach
-                        </select>
+                        <div style="display:flex;gap:.5rem;align-items:stretch;box-sizing:border-box">
+                            <select name="category" id="categorySelect" class="form-control" required style="flex:1;min-width:0">
+                                <option value="">{{ __('app.select_category') }}</option>
+                                @foreach($categories as $cat)
+                                <option value="{{ $cat->slug }}" {{ old('category', $product->category) == $cat->slug ? 'selected' : '' }}>
+                                    {{ app()->getLocale() === 'ar' ? $cat->name_ar : $cat->name_en }}
+                                </option>
+                                @endforeach
+                            </select>
+                            <button type="button" id="addCategoryBtn" class="btn btn-primary btn-sm"
+                                style="flex-shrink:0;white-space:nowrap">
+                                <i class="fas fa-plus"></i> فئة
+                            </button>
+                        </div>
                         @error('category')<span class="form-error">{{ $message }}</span>@enderror
                     </div>
                     <div class="form-row">
@@ -334,5 +340,97 @@ function markDelete(id) {
         input.files = dt.files;
     }
 })();
+
+// ── Quick Add Category ──────────────────────────────────────────
+document.getElementById('addCategoryBtn').addEventListener('click', function () {
+    Swal.fire({
+        title: 'إضافة فئة جديدة',
+        html: `
+            <div style="text-align:right;display:flex;flex-direction:column;gap:1rem;margin-top:.5rem">
+                <div>
+                    <label style="display:block;font-weight:600;margin-bottom:.35rem;font-size:.9rem">الاسم بالعربية <span style="color:#ef4444">*</span></label>
+                    <input id="swal-name-ar" class="swal2-input" style="margin:0;width:100%;box-sizing:border-box" placeholder="مثال: ماسحات ضوئية">
+                </div>
+                <div>
+                    <label style="display:block;font-weight:600;margin-bottom:.35rem;font-size:.9rem">الاسم بالإنجليزية <span style="color:#ef4444">*</span></label>
+                    <input id="swal-name-en" class="swal2-input" style="margin:0;width:100%;box-sizing:border-box" placeholder="e.g. Scanners">
+                </div>
+                <div>
+                    <label style="display:block;font-weight:600;margin-bottom:.35rem;font-size:.9rem">الـ Slug <span style="color:#ef4444">*</span></label>
+                    <input id="swal-slug" class="swal2-input" style="margin:0;width:100%;box-sizing:border-box" placeholder="مثال: scanners">
+                </div>
+                <div>
+                    <label style="display:block;font-weight:600;margin-bottom:.35rem;font-size:.9rem">الأيقونة (Font Awesome)</label>
+                    <input id="swal-icon" class="swal2-input" style="margin:0;width:100%;box-sizing:border-box" placeholder="مثال: barcode" value="box">
+                </div>
+            </div>
+        `,
+        confirmButtonText: '<i class="fas fa-plus"></i> إضافة',
+        cancelButtonText: 'إلغاء',
+        showCancelButton: true,
+        confirmButtonColor: '#0056D2',
+        cancelButtonColor: '#64748B',
+        focusConfirm: false,
+        width: '480px',
+        didOpen: () => {
+            const nameEn = document.getElementById('swal-name-en');
+            const slugEl = document.getElementById('swal-slug');
+            nameEn.addEventListener('input', () => {
+                slugEl.value = nameEn.value.toLowerCase().trim()
+                    .replace(/[^a-z0-9\s-]/g, '')
+                    .replace(/\s+/g, '-');
+            });
+        },
+        preConfirm: () => {
+            const name_ar = document.getElementById('swal-name-ar').value.trim();
+            const name_en = document.getElementById('swal-name-en').value.trim();
+            const slug    = document.getElementById('swal-slug').value.trim();
+            const icon    = document.getElementById('swal-icon').value.trim() || 'box';
+
+            if (!name_ar || !name_en || !slug) {
+                Swal.showValidationMessage('يرجى ملء جميع الحقول المطلوبة');
+                return false;
+            }
+
+            return fetch('{{ route('admin.categories.store') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ name_ar, name_en, slug, icon, is_active: true })
+            })
+            .then(res => {
+                if (!res.ok) return res.json().then(err => { throw err; });
+                return res.json();
+            })
+            .catch(err => {
+                const msg = err?.errors
+                    ? Object.values(err.errors).flat().join(' | ')
+                    : (err?.message || 'حدث خطأ، يرجى المحاولة مرة أخرى');
+                Swal.showValidationMessage(msg);
+            });
+        }
+    }).then(result => {
+        if (result.isConfirmed && result.value) {
+            const cat    = result.value;
+            const select = document.getElementById('categorySelect');
+            const option = new Option(cat.name_ar, cat.slug, true, true);
+            select.appendChild(option);
+            select.value = cat.slug;
+
+            Swal.fire({
+                icon: 'success',
+                title: 'تمت الإضافة!',
+                text: `تم إضافة فئة "${cat.name_ar}" بنجاح وتم تحديدها.`,
+                timer: 2000,
+                showConfirmButton: false,
+                position: 'top-end',
+                toast: true,
+            });
+        }
+    });
+});
 </script>
 @endpush

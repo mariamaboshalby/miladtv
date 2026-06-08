@@ -27,15 +27,16 @@ class AppServiceProvider extends ServiceProvider
             App::setLocale(session('locale'));
         }
 
-        // Share categories with views using a composer to avoid querying during application boot, and cache it.
+        // Share active categories with views using a composer to avoid querying during application boot, and cache it.
+        // Uses 'navCategories' to avoid colliding with controller-passed 'categories' variables.
         View::composer('*', function ($view) {
             try {
-                $categories = \Illuminate\Support\Facades\Cache::remember('active_categories', 3600, function () {
+                $navCategories = \Illuminate\Support\Facades\Cache::remember('active_categories', 3600, function () {
                     return Category::active()->get();
                 });
-                $view->with('categories', $categories);
+                $view->with('navCategories', $navCategories);
             } catch (\Exception $e) {
-                $view->with('categories', collect());
+                $view->with('navCategories', collect());
             }
         });
     }

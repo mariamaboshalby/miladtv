@@ -30,6 +30,13 @@ class CategoryController extends Controller
         $validated['is_active'] = $request->boolean('is_active', true);
 
         Category::create($validated);
+
+        $category = Category::where('slug', $validated['slug'])->first();
+
+        if (request()->expectsJson()) {
+            return response()->json($category, 201);
+        }
+
         return redirect()->route('admin.categories.index')->with('success', 'تم إضافة الفئة بنجاح');
     }
 

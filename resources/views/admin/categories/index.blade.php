@@ -31,7 +31,7 @@
             <tbody>
                 @foreach($categories as $category)
                 <tr>
-                    <td>{{ $category->id }}</td>
+                    <td>{{ ($categories->currentPage() - 1) * $categories->perPage() + $loop->iteration }}</td>
                     <td><strong>{{ $category->name_ar }}</strong></td>
                     <td>{{ $category->name_en }}</td>
                     <td>{{ $category->slug }}</td>
@@ -54,7 +54,9 @@
                 @endforeach
             </tbody>
         </table>
-        <div style="padding:1rem 1.5rem;">{{ $categories->links() }}</div>
+        @if($categories->hasPages())
+        <div style="padding:1rem 1.5rem;">{{ $categories->withQueryString()->links('admin.pagination') }}</div>
+        @endif
         @else
         <div class="empty-state"><i class="fas fa-tags"></i><p>{{ __('app.no_categories_found') }}</p></div>
         @endif

@@ -83,7 +83,7 @@
                         </a>
                         <div class="mjk-mega-menu">
                             <div class="mjk-mega-inner">
-                                @forelse($categories as $category)
+                                @forelse($navCategories as $category)
                                 <div class="mjk-mega-col">
                                     <p class="mjk-mega-heading">
                                         @if($category->icon)
@@ -246,7 +246,7 @@
                     <div class="col-sm-6 col-lg-2">
                         <h6 class="mjk-footer-heading">{{ __('app.categories') }}</h6>
                         <ul class="list-unstyled mjk-footer-links">
-                            @forelse($categories as $category)
+                            @forelse($navCategories as $category)
                             <li><a href="{{ route('products.index', ['category' => $category->slug]) }}">
                                 @if($category->icon)
                                 <i class="{{ $category->icon }} me-2 text-primary"></i>

@@ -25,6 +25,7 @@ class HomeController extends Controller
 
         $featuredProducts = Product::active()
             ->featured()
+            ->with('media')
             ->latest()
             ->take(6)
             ->get()
@@ -33,6 +34,7 @@ class HomeController extends Controller
 
         if (empty($featuredProducts)) {
             $featuredProducts = Product::active()
+                ->with('media')
                 ->latest()
                 ->take(6)
                 ->get()

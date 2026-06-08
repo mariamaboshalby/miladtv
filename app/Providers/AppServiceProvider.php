@@ -27,7 +27,16 @@ class AppServiceProvider extends ServiceProvider
             App::setLocale(session('locale'));
         }
 
-        // Share categories with all views
-        View::share('categories', Category::active()->get());
+        // Share categories with views using a composer to avoid querying during application boot, and cache it.
+        View::composer('*', function ($view) {
+            try {
+                $categories = \Illuminate\Support\Facades\Cache::remember('active_categories', 3600, function () {
+                    return Category::active()->get();
+                });
+                $view->with('categories', $categories);
+            } catch (\Exception $e) {
+                $view->with('categories', collect());
+            }
+        });
     }
 }

@@ -57,7 +57,7 @@
             <tbody>
                 @forelse($products as $product)
                 <tr>
-                    <td style="color:var(--gray-400);font-size:.875rem">{{ $product->id }}</td>
+                    <td style="color:var(--gray-400);font-size:.875rem">{{ ($products->currentPage() - 1) * $products->perPage() + $loop->iteration }}</td>
                     <td>
                         <div class="product-cell">
                             <div class="product-thumb">

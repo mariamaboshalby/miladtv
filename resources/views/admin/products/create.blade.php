@@ -224,13 +224,22 @@
     position:relative; border-radius:10px; overflow:hidden;
     aspect-ratio:1; background:#F1F5F9; border:2px solid #E2E8F0;
 }
-.gallery-item:first-child { border-color:#2563EB; }
-.gallery-item:first-child::after {
-    content:'رئيسية'; position:absolute; bottom:0; left:0; right:0;
+.gallery-item.is-main { border-color:#2563EB; }
+.gallery-item.is-main::after {
+    content:'{{ __("app.main_image") }}'; position:absolute; bottom:0; left:0; right:0;
     background:rgba(37,99,235,.85); color:#fff; font-size:.625rem;
     font-weight:700; text-align:center; padding:.2rem;
 }
 .gallery-item img { width:100%; height:100%; object-fit:cover; }
+.gallery-item-set-main {
+    position:absolute; bottom:.35rem; left:50%; transform:translateX(-50%);
+    width:26px; height:26px; background:rgba(37,99,235,.9); color:#fff;
+    border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:.625rem; cursor:pointer; transition:all .2s ease; z-index:2; border:none;
+    opacity:0;
+}
+.gallery-item:hover .gallery-item-set-main { opacity:1; }
+.gallery-item-set-main:hover { background:#1D4ED8; transform:translateX(-50%) scale(1.1); }
 .gallery-item-remove {
     position:absolute; top:.3rem; left:.3rem;
     width:22px; height:22px; background:rgba(239,68,68,.9); color:#fff;
@@ -252,6 +261,8 @@
 
 @push('scripts')
 <script>
+const setMainLabel = @json(__('app.set_as_main'));
+
 (function() {
     const zone    = document.getElementById('multiUploadZone');
     const input   = document.getElementById('productImages');
@@ -271,17 +282,13 @@
         this.value = '';
     });
 
-    // عند إرسال الفورم، نضيف الملفات كـ hidden file inputs
     form.addEventListener('submit', function(e) {
-        if (files.length === 0) return; // لا صور، اتركه يكمل عادي
+        if (files.length === 0) return;
 
         e.preventDefault();
 
-        // إنشاء FormData يدوياً
         const fd = new FormData(form);
-        // احذف images[] الفارغة
         fd.delete('images[]');
-        // أضف الملفات الحقيقية
         files.forEach(f => fd.append('images[]', f));
 
         fetch(form.action, {
@@ -318,21 +325,32 @@
             const reader = new FileReader();
             reader.onload = e => {
                 const item = document.createElement('div');
-                item.className = 'gallery-item';
+                item.className = 'gallery-item' + (idx === 0 ? ' is-main' : '');
                 item.innerHTML = `
                     <img src="${e.target.result}" alt="">
                     <span class="gallery-item-order">${idx + 1}</span>
                     <button type="button" class="gallery-item-remove" data-idx="${idx}">
                         <i class="fas fa-times"></i>
                     </button>
+                    ${idx === 0 ? '' : `<button type="button" class="gallery-item-set-main" data-idx="${idx}" title="${setMainLabel}"><i class="fas fa-star"></i></button>`}
                 `;
                 item.querySelector('.gallery-item-remove').addEventListener('click', function() {
-                    removeFile(parseInt(this.dataset.idx));
+                    removeFile(parseInt(this.dataset.idx, 10));
+                });
+                item.querySelector('.gallery-item-set-main')?.addEventListener('click', function() {
+                    setAsMain(parseInt(this.dataset.idx, 10));
                 });
                 gallery.appendChild(item);
             };
             reader.readAsDataURL(file);
         });
+    }
+
+    function setAsMain(idx) {
+        if (idx <= 0 || idx >= files.length) return;
+        const [file] = files.splice(idx, 1);
+        files.unshift(file);
+        renderGallery();
     }
 
     function removeFile(idx) {

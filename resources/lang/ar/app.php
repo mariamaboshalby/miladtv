@@ -154,6 +154,11 @@ return [
     'product_settings' => 'اعدادات',
     'add_new_images' => 'أضف صور جديدة',
     'click_or_drag' => 'انقر أو اسحب الصور هنا',
+    'images_count' => 'صورة',
+    'image_limits' => 'JPG, PNG, WEBP — حد أقصى 50MB لكل صورة',
+    'main_image' => 'رئيسية',
+    'set_as_main' => 'تعيين كصورة رئيسية',
+    'will_be_deleted' => 'سيُحذف',
     // ── Product Show ─────────────────────────────────────────────────────────
     'prod_reviews' => 'تقييم',
     'prod_save' => 'وفّر :amount جنيه',

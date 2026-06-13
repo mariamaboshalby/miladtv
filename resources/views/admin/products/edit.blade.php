@@ -84,14 +84,21 @@
                 <div class="card-body">
 
                     @if($product->hasMedia('product-images'))
-                    <div class="img-gallery" style="margin-bottom:1rem">
+                    @php $mainMedia = $product->getFirstMedia('product-images'); @endphp
+                    <input type="hidden" name="main_media_id" id="mainMediaId" value="{{ $mainMedia?->id }}">
+                    <div class="img-gallery" id="existingGallery" style="margin-bottom:1rem">
                         @foreach($product->getMedia('product-images') as $media)
-                        <div class="gallery-item" id="media-{{ $media->id }}">
+                        <div class="gallery-item {{ $loop->first ? 'is-main' : '' }}" id="media-{{ $media->id }}" data-media-id="{{ $media->id }}">
                             <img src="{{ file_exists($media->getPath('thumb')) ? '/storage/' . ltrim($media->getPathRelativeToRoot('thumb'), '/') : '/storage/' . ltrim($media->getPathRelativeToRoot(''), '/') }}" alt="{{ $product->name }}">
                             <span class="gallery-item-order">{{ $loop->iteration }}</span>
                             <button type="button" class="gallery-item-remove" onclick="markDelete({{ $media->id }})">
                                 <i class="fas fa-times"></i>
                             </button>
+                            @unless($loop->first)
+                            <button type="button" class="gallery-item-set-main" onclick="setAsMain({{ $media->id }})" title="{{ __('app.set_as_main') }}">
+                                <i class="fas fa-star"></i>
+                            </button>
+                            @endunless
                             <input type="hidden" name="delete_media[]" id="del-{{ $media->id }}" disabled value="{{ $media->id }}">
                         </div>
                         @endforeach
@@ -240,15 +247,24 @@
     position:relative; border-radius:10px; overflow:hidden;
     aspect-ratio:1; background:#F1F5F9; border:2px solid #E2E8F0;
 }
-.gallery-item:first-child { border-color:#2563EB; }
-.gallery-item:first-child::after {
-    content:'رئيسية'; position:absolute; bottom:0; left:0; right:0;
+.gallery-item.is-main { border-color:#2563EB; }
+.gallery-item.is-main::after {
+    content:'{{ __("app.main_image") }}'; position:absolute; bottom:0; left:0; right:0;
     background:rgba(37,99,235,.85); color:#fff; font-size:.625rem;
     font-weight:700; text-align:center; padding:.2rem;
 }
 .gallery-item.marked-delete { opacity:.35; border-color:#EF4444; }
-.gallery-item.marked-delete::after { content:'سيُحذف'; background:rgba(239,68,68,.85); }
+.gallery-item.marked-delete::after { content:'{{ __("app.will_be_deleted") }}'; background:rgba(239,68,68,.85); }
 .gallery-item img { width:100%; height:100%; object-fit:cover; }
+.gallery-item-set-main {
+    position:absolute; bottom:.35rem; left:50%; transform:translateX(-50%);
+    width:26px; height:26px; background:rgba(37,99,235,.9); color:#fff;
+    border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:.625rem; cursor:pointer; transition:all .2s ease; z-index:2; border:none;
+    opacity:0;
+}
+.gallery-item:hover .gallery-item-set-main { opacity:1; }
+.gallery-item-set-main:hover { background:#1D4ED8; transform:translateX(-50%) scale(1.1); }
 .gallery-item-remove {
     position:absolute; top:.3rem; left:.3rem;
     width:22px; height:22px; background:rgba(239,68,68,.9); color:#fff;
@@ -270,6 +286,8 @@
 
 @push('scripts')
 <script>
+const setMainLabel = @json(__('app.set_as_main'));
+
 function markDelete(id) {
     const item  = document.getElementById('media-' + id);
     const input = document.getElementById('del-' + id);
@@ -279,7 +297,66 @@ function markDelete(id) {
     } else {
         item.classList.add('marked-delete');
         input.disabled = false;
+        if (item.classList.contains('is-main')) {
+            item.classList.remove('is-main');
+            promoteNextMain();
+        }
     }
+    updateGalleryOrder(document.getElementById('existingGallery'));
+}
+
+function setAsMain(id) {
+    const gallery = document.getElementById('existingGallery');
+    const item    = document.getElementById('media-' + id);
+    if (!gallery || !item || item.classList.contains('marked-delete')) return;
+
+    gallery.querySelectorAll('.gallery-item.is-main').forEach(el => {
+        el.classList.remove('is-main');
+        if (!el.querySelector('.gallery-item-set-main')) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'gallery-item-set-main';
+            btn.title = setMainLabel;
+            btn.innerHTML = '<i class="fas fa-star"></i>';
+            btn.onclick = () => setAsMain(el.dataset.mediaId);
+            el.appendChild(btn);
+        }
+    });
+
+    item.classList.add('is-main');
+    item.querySelector('.gallery-item-set-main')?.remove();
+    gallery.prepend(item);
+
+    const mainInput = document.getElementById('mainMediaId');
+    if (mainInput) mainInput.value = id;
+
+    updateGalleryOrder(gallery);
+}
+
+function promoteNextMain() {
+    const gallery = document.getElementById('existingGallery');
+    const mainInput = document.getElementById('mainMediaId');
+    if (!gallery) return;
+
+    const next = gallery.querySelector('.gallery-item:not(.marked-delete)');
+    gallery.querySelectorAll('.gallery-item.is-main').forEach(el => el.classList.remove('is-main'));
+
+    if (next) {
+        next.classList.add('is-main');
+        next.querySelector('.gallery-item-set-main')?.remove();
+        if (mainInput) mainInput.value = next.dataset.mediaId;
+    } else if (mainInput) {
+        mainInput.value = '';
+    }
+}
+
+function updateGalleryOrder(gallery) {
+    if (!gallery) return;
+    let order = 1;
+    gallery.querySelectorAll('.gallery-item:not(.marked-delete)').forEach(el => {
+        const badge = el.querySelector('.gallery-item-order');
+        if (badge) badge.textContent = order++;
+    });
 }
 
 (function() {

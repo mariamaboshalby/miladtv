@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class ProductController extends Controller
 {
@@ -109,6 +110,7 @@ class ProductController extends Controller
             'image'          => 'nullable|image|mimes:jpg,jpeg,png,webp|max:51200',
             'delete_media'   => 'nullable|array',
             'delete_media.*' => 'integer',
+            'main_media_id'  => 'nullable|integer',
         ]);
 
         $validated['is_active']   = $request->boolean('is_active');
@@ -129,6 +131,19 @@ class ProductController extends Controller
             foreach ($request->file('images') as $image) {
                 $product->addMedia($image)
                         ->toMediaCollection('product-images');
+            }
+        }
+
+        if ($request->filled('main_media_id')) {
+            $mainId   = (int) $request->input('main_media_id');
+            $mediaIds = $product->fresh()->getMedia('product-images')->pluck('id')->all();
+
+            if (in_array($mainId, $mediaIds, true)) {
+                $orderedIds = array_values(array_merge(
+                    [$mainId],
+                    array_values(array_filter($mediaIds, fn ($id) => $id !== $mainId))
+                ));
+                Media::setNewOrder($orderedIds);
             }
         }
 

@@ -460,6 +460,7 @@
         }
     </style>
     <!-- Floating Dots Background -->
+    @unless(request()->routeIs('products.*'))
     <style>
         .floating-dot {
             position: fixed;
@@ -488,9 +489,11 @@
             }
         }
     </style>
+    @endunless
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // --- Floating Dots Logic ---
+            @unless(request()->routeIs('products.*'))
             const createDot = () => {
                 const dot = document.createElement('div');
                 dot.className = 'floating-dot';
@@ -522,6 +525,7 @@
             for(let i = 0; i < 15; i++) {
                 setTimeout(createDot, i * 200);
             }
+            @endunless
 
             // --- Mouse Follower Logic ---
             const follower = document.createElement('div');

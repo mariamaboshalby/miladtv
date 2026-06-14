@@ -72,7 +72,7 @@
         #page-transition-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #0a0f1e; /* Dark tech color */
+            background-color: #ffffff; /* White background */
             z-index: 999999;
             display: flex;
             align-items: center;
@@ -86,13 +86,13 @@
             visibility: hidden;
         }
         .loading-icon {
-            font-size: 3rem;
-            color: #3b82f6;
+            font-size: 5rem;
+            color: #0d6efd; /* Primary blue */
             animation: bounceSpin 1.5s infinite ease-in-out;
         }
         @keyframes bounceSpin {
             0% { transform: scale(0.8) rotate(0deg); opacity: 0.5; }
-            50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+            50% { transform: scale(1.1) rotate(180deg); opacity: 1; }
             100% { transform: scale(0.8) rotate(360deg); opacity: 0.5; }
         }
     </style>
@@ -102,7 +102,7 @@
     <!-- Page Transition Overlay -->
     <div id="page-transition-overlay">
         <i class="fas fa-microchip loading-icon"></i>
-        <div class="mt-3 text-white fw-bold" style="letter-spacing: 2px;">MJK</div>
+        <div class="mt-4 text-primary fw-bold" style="letter-spacing: 2px; font-size: 1.5rem;">MJK</div>
     </div>
     <!-- ===== MAIN NAVBAR ===== -->
     <nav class="mjk-navbar sticky-top " id="mjkNavbar" style="z-index: 10000;">

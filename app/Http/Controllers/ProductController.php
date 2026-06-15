@@ -37,6 +37,7 @@ class ProductController extends Controller
             $query->where('category', $category);
         }
 
+        
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
                 $q->where('name', 'like', '%' . $request->search . '%')

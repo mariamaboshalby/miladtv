@@ -19,6 +19,7 @@ class Product extends Model implements HasMedia
         'specs', 'is_active', 'is_featured',
     ];
 
+    
     protected $casts = [
         'price'       => 'decimal:2',
         'old_price'   => 'decimal:2',

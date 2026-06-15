@@ -83,6 +83,11 @@ class Product extends Model implements HasMedia
     }
 
     /* ── Relations ── */
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category', 'slug');
+    }
+
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);

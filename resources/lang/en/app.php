@@ -11,6 +11,7 @@ return [
     'nav_about'       => 'About Us',
     'nav_signin'      => 'Sign In',
     'nav_signout'     => 'Sign Out',
+    'nav_dashboard'   => 'Dashboard',
     'nav_register'    => 'Create Account',
     'nav_search'      => 'Search products...',
 

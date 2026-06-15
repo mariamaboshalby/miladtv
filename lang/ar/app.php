@@ -11,6 +11,7 @@ return [
     'nav_about'       => 'من نحن',
     'nav_signin'      => 'تسجيل الدخول',
     'nav_signout'     => 'تسجيل الخروج',
+    'nav_dashboard'   => 'لوحة التحكم',
     'nav_register'    => 'إنشاء حساب',
     'nav_search'      => 'ابحث عن منتج...',
 

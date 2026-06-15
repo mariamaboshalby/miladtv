@@ -183,6 +183,14 @@
                         <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 mt-2" style="min-width:180px;">
                             <li><span class="dropdown-item-text small text-muted fw-semibold">{{ Auth::user()->name }}</span></li>
                             <li><hr class="dropdown-divider my-1"></li>
+                            @if(Auth::user()->isAdmin())
+                            <li>
+                                <a href="{{ route('admin.dashboard') }}" class="dropdown-item">
+                                    <i class="fas fa-tachometer-alt me-2 text-primary"></i>{{ __('app.nav_dashboard') }}
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider my-1"></li>
+                            @endif
                             <li>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
@@ -229,6 +237,11 @@
                 @auth
                 <div class="px-3 py-2">
                     <p class="small text-muted mb-1 fw-semibold">{{ Auth::user()->name }}</p>
+                    @if(Auth::user()->isAdmin())
+                    <a href="{{ route('admin.dashboard') }}" class="btn btn-sm btn-outline-primary w-100 mb-2">
+                        <i class="fas fa-tachometer-alt me-1"></i>{{ __('app.nav_dashboard') }}
+                    </a>
+                    @endif
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="btn btn-sm btn-outline-danger w-100">
@@ -397,6 +410,14 @@
             <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3" style="min-width:160px;bottom:68px;top:auto;position:fixed;right:4px;">
                 <li><span class="dropdown-item-text small text-muted fw-semibold">{{ Auth::user()->name }}</span></li>
                 <li><hr class="dropdown-divider my-1"></li>
+                @if(Auth::user()->isAdmin())
+                <li>
+                    <a href="{{ route('admin.dashboard') }}" class="dropdown-item small">
+                        <i class="fas fa-tachometer-alt me-2 text-primary"></i>{{ __('app.nav_dashboard') }}
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider my-1"></li>
+                @endif
                 <li>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf

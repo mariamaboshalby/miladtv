@@ -111,9 +111,41 @@ class HomeController extends Controller
             ->map($mapProduct)
             ->toArray();
 
+        // Home Settings & New Sections
+        $settings = \App\Models\Setting::pluck('value', 'key')->toArray();
+
+        // Deal of the Day
+        $dealProduct = null;
+        if (($settings['home_show_deal'] ?? '0') == '1' && !empty($settings['home_deal_product_id'])) {
+            $productModel = Product::with('media')->find($settings['home_deal_product_id']);
+            if ($productModel) {
+                $dealProduct = $mapProduct($productModel);
+                $dealProduct['end_time'] = $settings['home_deal_end_time'] ?? null;
+            }
+        }
+
+        // Brands
+        $brands = [];
+        if (($settings['home_show_brands'] ?? '0') == '1') {
+            $brands = \App\Models\Brand::active()->get();
+        }
+
+        // FAQs
+        $faqs = [];
+        if (($settings['home_show_faq'] ?? '0') == '1') {
+            $faqs = \App\Models\Faq::active()->orderBy('sort_order')->get();
+        }
+
+        // Recommended For You (Random for now)
+        $recommendedProducts = [];
+        if (($settings['home_show_recommended'] ?? '0') == '1') {
+            $recommendedProducts = Product::active()->with('media')->inRandomOrder()->take(6)->get()->map($mapProduct)->toArray();
+        }
+
         return view('home', compact(
             'featuredProducts', 'stats', 'blogPosts', 'downloads', 'testimonials',
-            'bestSellingProducts', 'topCategories', 'mostVisitedProducts', 'latestProducts'
+            'bestSellingProducts', 'topCategories', 'mostVisitedProducts', 'latestProducts',
+            'settings', 'dealProduct', 'brands', 'faqs', 'recommendedProducts'
         ));
     }
 }

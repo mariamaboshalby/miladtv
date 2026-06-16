@@ -184,6 +184,21 @@
                     <span>{{ __('app.manage_testimonials') }}</span>
                     <span class="adm-nav-count">{{ \App\Models\Testimonial::where('is_approved', false)->count() }}</span>
                 </a>
+                <a href="{{ route('admin.brands.index') }}"
+                    class="adm-nav-item {{ request()->routeIs('admin.brands.*') ? 'is-active' : '' }}">
+                    <span class="adm-nav-icon"><i class="fas fa-copyright"></i></span>
+                    <span>Brands</span>
+                </a>
+                <a href="{{ route('admin.faqs.index') }}"
+                    class="adm-nav-item {{ request()->routeIs('admin.faqs.*') ? 'is-active' : '' }}">
+                    <span class="adm-nav-icon"><i class="fas fa-question-circle"></i></span>
+                    <span>FAQs</span>
+                </a>
+                <a href="{{ route('admin.settings.index') }}"
+                    class="adm-nav-item {{ request()->routeIs('admin.settings.*') ? 'is-active' : '' }}">
+                    <span class="adm-nav-icon"><i class="fas fa-cogs"></i></span>
+                    <span>Home Settings</span>
+                </a>
             </div>
 
             <div class="adm-nav-group">

@@ -564,6 +564,195 @@
         </div>
     </section>
 
+    {{-- ===== Deal of the Day ===== --}}
+    @if(($settings['home_show_deal'] ?? '0') == '1' && $dealProduct)
+    <section class="py-5 bg-white">
+        <div class="container py-4">
+            <div class="row align-items-center rounded-4 p-4 p-md-5" style="background: linear-gradient(135deg, #1e3a8a, #2563eb);">
+                <div class="col-md-6 text-white mb-4 mb-md-0">
+                    <span class="badge bg-danger rounded-pill px-3 py-2 mb-3 fs-6">{{ app()->getLocale() === 'ar' ? 'عرض اليوم' : 'Deal of the Day' }}</span>
+                    <h2 class="fw-bold display-6 mb-3">{{ $dealProduct['name'] }}</h2>
+                    <p class="fs-5 mb-4 opacity-75" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ $dealProduct['description'] }}</p>
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <span class="fs-2 fw-bold text-warning">{{ number_format($dealProduct['price']) }} EGP</span>
+                        @if($dealProduct['old_price'])
+                        <span class="fs-5 text-white-50 text-decoration-line-through">{{ number_format($dealProduct['old_price']) }} EGP</span>
+                        @endif
+                    </div>
+                    
+                    @if($dealProduct['end_time'])
+                    <div class="d-flex gap-3 text-center mb-4" id="dealCountdown" data-end="{{ \Carbon\Carbon::parse($dealProduct['end_time'])->toIso8601String() }}">
+                        <div class="bg-white text-dark rounded-3 p-2" style="min-width: 70px;">
+                            <h3 class="fw-bold mb-0" id="dealDays">00</h3>
+                            <small class="text-muted">{{ app()->getLocale() === 'ar' ? 'يوم' : 'Days' }}</small>
+                        </div>
+                        <div class="bg-white text-dark rounded-3 p-2" style="min-width: 70px;">
+                            <h3 class="fw-bold mb-0" id="dealHours">00</h3>
+                            <small class="text-muted">{{ app()->getLocale() === 'ar' ? 'ساعة' : 'Hours' }}</small>
+                        </div>
+                        <div class="bg-white text-dark rounded-3 p-2" style="min-width: 70px;">
+                            <h3 class="fw-bold mb-0" id="dealMinutes">00</h3>
+                            <small class="text-muted">{{ app()->getLocale() === 'ar' ? 'دقيقة' : 'Mins' }}</small>
+                        </div>
+                        <div class="bg-white text-dark rounded-3 p-2" style="min-width: 70px;">
+                            <h3 class="fw-bold mb-0" id="dealSeconds">00</h3>
+                            <small class="text-muted">{{ app()->getLocale() === 'ar' ? 'ثانية' : 'Secs' }}</small>
+                        </div>
+                    </div>
+                    @endif
+
+                    <a href="{{ route('products.show', $dealProduct['id']) }}" class="btn btn-light btn-lg px-5 rounded-pill text-primary fw-bold">
+                        <i class="fas fa-shopping-cart me-2"></i> {{ __('app.prod_add_cart') }}
+                    </a>
+                </div>
+                <div class="col-md-6 text-center">
+                    @if(!empty($dealProduct['image_url']))
+                        <img src="{{ $dealProduct['image_url'] }}" class="img-fluid rounded-4 shadow-lg" style="max-height: 400px; object-fit: cover;">
+                    @else
+                        <div class="bg-light rounded-4 d-flex align-items-center justify-content-center" style="height: 300px;">
+                            <i class="fas fa-box fa-5x text-muted"></i>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </section>
+    @endif
+
+    {{-- ===== Shop by Brand ===== --}}
+    @if(($settings['home_show_brands'] ?? '0') == '1' && count($brands) > 0)
+    <section class="py-4" style="background:#f8fafc;">
+        <div class="container py-3 text-center">
+            <h4 class="fw-bold mb-4 text-muted">{{ app()->getLocale() === 'ar' ? 'تسوق حسب الماركة' : 'Shop by Brand' }}</h4>
+            <div class="d-flex flex-wrap justify-content-center gap-4">
+                @foreach($brands as $brand)
+                <a href="{{ route('products.index', ['brand' => $brand->name]) }}" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm rounded-circle d-flex align-items-center justify-content-center bg-white" style="width: 100px; height: 100px; overflow:hidden;">
+                        @if($brand->hasMedia('brand-logos'))
+                            <img src="{{ $brand->getFirstMediaUrl('brand-logos') }}" alt="{{ $brand->name }}" class="w-75">
+                        @else
+                            <span class="fw-bold text-dark">{{ $brand->name }}</span>
+                        @endif
+                    </div>
+                </a>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
+
+    {{-- ===== Recommended For You ===== --}}
+    @if(($settings['home_show_recommended'] ?? '0') == '1' && count($recommendedProducts) > 0)
+    <section class="py-5 bg-white">
+        <div class="container py-4">
+            <div class="d-flex align-items-end justify-content-between mb-4">
+                <div>
+                    <span class="badge text-bg-primary rounded-pill px-3 py-2 mb-2 fs-6">{{ app()->getLocale() === 'ar' ? 'مقترح لك' : 'Recommended For You' }}</span>
+                    <h2 class="fw-bold mb-0">{{ app()->getLocale() === 'ar' ? 'بناءً على تصفحك' : 'Based on your activity' }}</h2>
+                </div>
+            </div>
+            <div class="row g-4 justify-content-center">
+                @foreach($recommendedProducts as $product)
+                    <div class="col-6 col-md-4 col-lg-2">
+                        <div class="card border-0 shadow-sm h-100 rounded-4">
+                            <div style="height: 150px; overflow: hidden; position: relative;">
+                                @if(!empty($product['image_url']))
+                                    <img src="{{ $product['image_url'] }}" class="w-100 h-100" style="object-fit:cover;">
+                                @else
+                                    <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light text-muted">
+                                        <i class="fas fa-box fa-3x"></i>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="card-body p-3 text-center d-flex flex-column">
+                                <h6 class="fw-bold mb-1" style="font-size:0.9rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ $product['name'] }}</h6>
+                                <p class="text-primary fw-bold mb-0 mt-auto">{{ number_format($product['price']) }} EGP</p>
+                                <a href="{{ route('products.show', $product['id']) }}" class="btn btn-outline-primary btn-sm w-100 mt-2 rounded-pill">{{ __('app.prod_add_cart') }}</a>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
+
+    {{-- ===== FAQ ===== --}}
+    @if(($settings['home_show_faq'] ?? '0') == '1' && count($faqs) > 0)
+    <section class="py-5 bg-white">
+        <div class="container py-4">
+            <div class="text-center mb-5">
+                <span class="badge text-bg-primary rounded-pill px-3 py-2 mb-3 fs-6">{{ app()->getLocale() === 'ar' ? 'الأسئلة الشائعة' : 'FAQ' }}</span>
+                <h2 class="fw-bold mb-2">{{ app()->getLocale() === 'ar' ? 'كيف يمكننا مساعدتك؟' : 'How can we help you?' }}</h2>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="accordion accordion-flush" id="faqAccordion">
+                        @foreach($faqs as $index => $faq)
+                        <div class="accordion-item border-0 mb-3 shadow-sm rounded-4 overflow-hidden">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button {{ $index !== 0 ? 'collapsed' : '' }} fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq{{ $index }}">
+                                    {{ app()->getLocale() === 'ar' ? $faq->question_ar : ($faq->question_en ?: $faq->question_ar) }}
+                                </button>
+                            </h2>
+                            <div id="faq{{ $index }}" class="accordion-collapse collapse {{ $index === 0 ? 'show' : '' }}" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body text-secondary">
+                                    {{ app()->getLocale() === 'ar' ? $faq->answer_ar : ($faq->answer_en ?: $faq->answer_ar) }}
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    @endif
+
+    {{-- ===== Track Your Order ===== --}}
+    @if(($settings['home_show_track_order'] ?? '0') == '1')
+    <section class="py-5" style="background:#f8fafc;">
+        <div class="container py-4">
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 text-center">
+                        <div class="mx-auto mb-3 bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width:64px;height:64px;font-size:1.75rem;">
+                            <i class="fas fa-truck-fast"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">{{ app()->getLocale() === 'ar' ? 'تتبع طلبك' : 'Track Your Order' }}</h4>
+                        <p class="text-secondary mb-4">{{ app()->getLocale() === 'ar' ? 'أدخل رقم الطلب لمعرفة حالته ومكان الشحنة.' : 'Enter your order number to track its status.' }}</p>
+                        
+                        <form id="trackOrderForm">
+                            <div class="input-group mb-3">
+                                <input type="text" id="trackOrderNumber" class="form-control form-control-lg bg-light border-0" placeholder="{{ app()->getLocale() === 'ar' ? 'رقم الطلب (مثال: ORD-12345)' : 'Order Number (e.g. ORD-12345)' }}" required>
+                                <button class="btn btn-primary px-4 fw-bold" type="submit">{{ app()->getLocale() === 'ar' ? 'تتبع' : 'Track' }}</button>
+                            </div>
+                        </form>
+                        <div id="trackOrderResult" class="mt-3 fw-bold p-3 rounded-3 d-none"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    @endif
+
+    {{-- ===== Newsletter ===== --}}
+    @if(($settings['home_show_newsletter'] ?? '0') == '1')
+    <section class="py-5 text-white text-center" style="background: linear-gradient(135deg, #0f172a, #1e3a8a);">
+        <div class="container py-4">
+            <i class="fas fa-envelope-open-text fa-3x mb-3 text-primary"></i>
+            <h2 class="fw-bold mb-3">{{ app()->getLocale() === 'ar' ? 'اشترك في النشرة البريدية' : 'Subscribe to our Newsletter' }}</h2>
+            <p class="mb-4 mx-auto" style="max-width: 500px;">{{ app()->getLocale() === 'ar' ? 'احصل على أحدث العروض والأخبار مباشرة على بريدك الإلكتروني.' : 'Get the latest offers and news directly to your inbox.' }}</p>
+            <form id="newsletterForm" class="d-flex justify-content-center mx-auto" style="max-width: 400px;">
+                @csrf
+                <input type="email" id="newsletterEmail" class="form-control rounded-start-pill border-0 px-4" placeholder="{{ app()->getLocale() === 'ar' ? 'بريدك الإلكتروني' : 'Your Email Address' }}" required>
+                <button type="submit" class="btn btn-primary rounded-end-pill px-4 fw-bold" style="border-radius: 0 50rem 50rem 0;">{{ app()->getLocale() === 'ar' ? 'اشتراك' : 'Subscribe' }}</button>
+            </form>
+            <div id="newsletterFeedback" class="mt-3 small d-none"></div>
+        </div>
+    </section>
+    @endif
+
     {{-- ===== Latest from the Blog ===== --}}
     <section class="py-5" style="background:#f8fafc;">
         <div class="container py-3">
@@ -922,17 +1111,12 @@
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         },
-                        body: JSON.stringify({
-                            name,
-                            email,
-                            rating,
-                            message
-                        })
+                        body: JSON.stringify({ name, email, rating, message })
                     })
                     .then(response => response.json())
                     .then(data => {
+                        feedback.classList.remove('d-none', 'text-danger');
                         if (data.success) {
-                            feedback.classList.remove('d-none', 'text-danger');
                             feedback.classList.add('text-success');
                             feedback.innerHTML = '<i class="fas fa-check-circle me-1"></i> ' + data.message;
                             this.reset();
@@ -944,9 +1128,8 @@
                                 feedback.classList.add('d-none');
                             }, 5000);
                         } else {
-                            feedback.classList.remove('d-none', 'text-success');
                             feedback.classList.add('text-danger');
-                            feedback.innerHTML = '<i class="fas fa-exclamation-circle me-1"></i> ' + data.message;
+                            feedback.innerHTML = '<i class="fas fa-times-circle me-1"></i> ' + data.message;
                         }
                     })
                     .catch(error => {
@@ -956,6 +1139,69 @@
                             '<i class="fas fa-exclamation-circle me-1"></i> {{ __('app.home_testimonial_error') }}';
                     });
             });
+
+            // Countdown Timer
+            const cd = document.getElementById('dealCountdown');
+            if (cd) {
+                const endTime = new Date(cd.dataset.end).getTime();
+                const timer = setInterval(() => {
+                    const now = new Date().getTime();
+                    const diff = endTime - now;
+                    if (diff < 0) {
+                        clearInterval(timer);
+                        return;
+                    }
+                    document.getElementById('dealDays').innerText = Math.floor(diff / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+                    document.getElementById('dealHours').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+                    document.getElementById('dealMinutes').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+                    document.getElementById('dealSeconds').innerText = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
+                }, 1000);
+            }
+
+            // Newsletter
+            const nForm = document.getElementById('newsletterForm');
+            if (nForm) {
+                nForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const email = document.getElementById('newsletterEmail').value;
+                    const fb = document.getElementById('newsletterFeedback');
+                    fetch('{{ route('newsletter.subscribe') }}', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                        body: JSON.stringify({ email })
+                    }).then(res => res.json()).then(data => {
+                        fb.classList.remove('d-none', 'text-danger', 'text-success');
+                        fb.classList.add(data.success ? 'text-white' : 'text-danger');
+                        fb.innerHTML = (data.success ? '<i class="fas fa-check-circle me-1"></i>' : '<i class="fas fa-exclamation-circle me-1"></i>') + data.message;
+                        if(data.success) nForm.reset();
+                    });
+                });
+            }
+
+            // Track Order
+            const tForm = document.getElementById('trackOrderForm');
+            if (tForm) {
+                tForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const orderNum = document.getElementById('trackOrderNumber').value;
+                    const resDiv = document.getElementById('trackOrderResult');
+                    fetch('{{ route('track-order.status') }}', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                        body: JSON.stringify({ order_number: orderNum })
+                    }).then(res => res.json()).then(data => {
+                        resDiv.classList.remove('d-none', 'text-danger', 'bg-danger', 'bg-opacity-10', 'text-success', 'bg-success');
+                        if (data.success) {
+                            resDiv.classList.add('text-success', 'bg-success', 'bg-opacity-10');
+                            resDiv.innerHTML = '<i class="fas fa-check-circle me-2"></i> {{ app()->getLocale() === "ar" ? "حالة الطلب:" : "Order Status:" }} ' + data.status;
+                        } else {
+                            resDiv.classList.add('text-danger', 'bg-danger', 'bg-opacity-10');
+                            resDiv.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i> ' + data.message;
+                        }
+                    });
+                });
+            }
+
             // Parallax Reverse Motion on Carousel
             const heroCarousel = document.getElementById('heroCarousel');
             if (heroCarousel) {

@@ -20,7 +20,12 @@ use App\Http\Controllers\Admin\AboutController as AdminAboutController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\DownloadController as AdminDownloadController;
 use App\Http\Controllers\Admin\TestimonialController as AdminTestimonialController;
+use App\Http\Controllers\Admin\SettingController as AdminSettingController;
+use App\Http\Controllers\Admin\BrandController as AdminBrandController;
+use App\Http\Controllers\Admin\FaqController as AdminFaqController;
 use App\Http\Controllers\TestimonialController;
+use App\Http\Controllers\SubscriberController;
+use App\Http\Controllers\OrderController;
 
 
 // ── Auth ──────────────────────────────────────────────────────────────────
@@ -75,6 +80,13 @@ Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear')
 // Testimonials
 Route::post('/testimonials', [TestimonialController::class, 'store'])->name('testimonials.store');
 
+// Newsletter
+Route::post('/newsletter/subscribe', [SubscriberController::class, 'store'])->name('newsletter.subscribe');
+
+// Track Order
+Route::get('/track-order', [OrderController::class, 'track'])->name('track-order');
+Route::post('/track-order', [OrderController::class, 'trackStatus'])->name('track-order.status');
+
 // ============================================================
 // Admin Dashboard (no auth for now — add middleware later)
 // ============================================================
@@ -121,4 +133,10 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::post('testimonials/{id}/approve', [AdminTestimonialController::class, 'approve'])->name('testimonials.approve');
     Route::post('testimonials/{id}/reject', [AdminTestimonialController::class, 'reject'])->name('testimonials.reject');
     Route::delete('testimonials/{id}', [AdminTestimonialController::class, 'destroy'])->name('testimonials.destroy');
+
+    // Settings & Home Sections
+    Route::get('settings', [AdminSettingController::class, 'index'])->name('settings.index');
+    Route::post('settings', [AdminSettingController::class, 'update'])->name('settings.update');
+    Route::resource('brands', AdminBrandController::class);
+    Route::resource('faqs', AdminFaqController::class);
 });

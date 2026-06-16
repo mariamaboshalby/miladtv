@@ -741,7 +741,7 @@
     <section class="py-5 text-white text-center" style="background: linear-gradient(135deg, #0f172a, #1e3a8a);">
         <div class="container py-4">
             <i class="fas fa-envelope-open-text fa-3x mb-3 text-primary"></i>
-            <h2 class="fw-bold mb-3">{{ app()->getLocale() === 'ar' ? 'اشترك في النشرة البريدية' : 'Subscribe to our Newsletter' }}</h2>
+            <h2 class="fw-bold mb-3 text-white">{{ app()->getLocale() === 'ar' ? 'اشترك في النشرة البريدية' : 'Subscribe to our Newsletter' }}</h2>
             <p class="mb-4 mx-auto" style="max-width: 500px;">{{ app()->getLocale() === 'ar' ? 'احصل على أحدث العروض والأخبار مباشرة على بريدك الإلكتروني.' : 'Get the latest offers and news directly to your inbox.' }}</p>
             <form id="newsletterForm" class="d-flex justify-content-center mx-auto" style="max-width: 400px;">
                 @csrf

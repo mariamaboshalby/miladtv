@@ -81,6 +81,39 @@ class HomeController extends Controller
             ->take(6)
             ->get();
 
-        return view('home', compact('featuredProducts', 'stats', 'blogPosts', 'downloads', 'testimonials'));
+        // Fetch Best Selling Products
+        $bestSellingProducts = Product::active()
+            ->with('media')
+            ->orderBy('sales_count', 'desc')
+            ->take(6)
+            ->get()
+            ->map($mapProduct)
+            ->toArray();
+
+        // Fetch First 4 Categories
+        $topCategories = \App\Models\Category::active()->take(4)->get();
+
+        // Fetch Most Visited Products
+        $mostVisitedProducts = Product::active()
+            ->with('media')
+            ->orderBy('views_count', 'desc')
+            ->take(6)
+            ->get()
+            ->map($mapProduct)
+            ->toArray();
+
+        // Fetch Latest 5 Products
+        $latestProducts = Product::active()
+            ->with('media')
+            ->latest()
+            ->take(5)
+            ->get()
+            ->map($mapProduct)
+            ->toArray();
+
+        return view('home', compact(
+            'featuredProducts', 'stats', 'blogPosts', 'downloads', 'testimonials',
+            'bestSellingProducts', 'topCategories', 'mostVisitedProducts', 'latestProducts'
+        ));
     }
 }

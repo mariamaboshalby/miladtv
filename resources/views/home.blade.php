@@ -439,6 +439,132 @@
         </div>
     </section>
 
+    {{-- ===== Top Categories Section ===== --}}
+    <section class="py-5 bg-white">
+        <div class="container py-4">
+            <div class="text-center mb-5">
+                <span class="badge text-bg-primary rounded-pill px-3 py-2 mb-3 fs-6">{{ app()->getLocale() === 'ar' ? 'التصنيفات' : 'Categories' }}</span>
+                <h2 class="fw-bold mb-2">{{ app()->getLocale() === 'ar' ? 'أول أربع تصنيفات' : 'Top 4 Categories' }}</h2>
+            </div>
+            <div class="row g-4 justify-content-center">
+                @foreach($topCategories as $category)
+                    <div class="col-6 col-md-3">
+                        <a href="{{ route('products.index', ['category' => $category->slug]) }}" class="text-decoration-none">
+                            <div class="card border-0 shadow-sm text-center p-4 rounded-4 h-100">
+                                <div class="mx-auto mb-3 bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width:80px;height:80px;font-size:2rem;">
+                                    <i class="fas fa-{{ $category->icon ?? 'list' }}"></i>
+                                </div>
+                                <h5 class="fw-bold text-dark mb-0">{{ app()->getLocale() === 'ar' ? $category->name_ar : $category->name_en }}</h5>
+                            </div>
+                        </a>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    {{-- ===== Best Selling Products ===== --}}
+    <section class="py-5" style="background:#f8fafc;">
+        <div class="container py-4">
+            <div class="d-flex align-items-end justify-content-between mb-4">
+                <div>
+                    <span class="badge text-bg-danger rounded-pill px-3 py-2 mb-2 fs-6">{{ app()->getLocale() === 'ar' ? 'الأكثر مبيعاً' : 'Best Sellers' }}</span>
+                    <h2 class="fw-bold mb-0">{{ app()->getLocale() === 'ar' ? 'الاصناف الاكثر مبيعا' : 'Best Selling Products' }}</h2>
+                </div>
+            </div>
+            <div class="row g-4">
+                @foreach($bestSellingProducts as $product)
+                    <div class="col-6 col-md-4 col-lg-2">
+                        <div class="card border-0 shadow-sm h-100 rounded-4">
+                            <div style="height: 150px; overflow: hidden; position: relative;">
+                                @if(!empty($product['image_url']))
+                                    <img src="{{ $product['image_url'] }}" class="w-100 h-100" style="object-fit:cover;">
+                                @else
+                                    <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light text-muted">
+                                        <i class="fas fa-box fa-3x"></i>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="card-body p-3 text-center d-flex flex-column">
+                                <h6 class="fw-bold mb-1" style="font-size:0.9rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ $product['name'] }}</h6>
+                                <p class="text-primary fw-bold mb-0 mt-auto">{{ number_format($product['price']) }} EGP</p>
+                                <a href="{{ route('products.show', $product['id']) }}" class="btn btn-outline-primary btn-sm w-100 mt-2 rounded-pill">{{ __('app.prod_add_cart') }}</a>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    {{-- ===== Most Visited Products ===== --}}
+    <section class="py-5 bg-white">
+        <div class="container py-4">
+            <div class="d-flex align-items-end justify-content-between mb-4">
+                <div>
+                    <span class="badge text-bg-warning rounded-pill px-3 py-2 mb-2 fs-6 text-white">{{ app()->getLocale() === 'ar' ? 'الأكثر زيارة' : 'Most Visited' }}</span>
+                    <h2 class="fw-bold mb-0">{{ app()->getLocale() === 'ar' ? 'الاصناف الاكثر زيارة' : 'Most Visited Products' }}</h2>
+                </div>
+            </div>
+            <div class="row g-4">
+                @foreach($mostVisitedProducts as $product)
+                    <div class="col-6 col-md-4 col-lg-2">
+                        <div class="card border-0 shadow-sm h-100 rounded-4">
+                            <div style="height: 150px; overflow: hidden; position: relative;">
+                                @if(!empty($product['image_url']))
+                                    <img src="{{ $product['image_url'] }}" class="w-100 h-100" style="object-fit:cover;">
+                                @else
+                                    <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light text-muted">
+                                        <i class="fas fa-box fa-3x"></i>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="card-body p-3 text-center d-flex flex-column">
+                                <h6 class="fw-bold mb-1" style="font-size:0.9rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ $product['name'] }}</h6>
+                                <p class="text-primary fw-bold mb-0 mt-auto">{{ number_format($product['price']) }} EGP</p>
+                                <a href="{{ route('products.show', $product['id']) }}" class="btn btn-outline-primary btn-sm w-100 mt-2 rounded-pill">{{ __('app.prod_add_cart') }}</a>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    {{-- ===== Latest Products ===== --}}
+    <section class="py-5" style="background:#f8fafc;">
+        <div class="container py-4">
+            <div class="d-flex align-items-end justify-content-between mb-4">
+                <div>
+                    <span class="badge text-bg-success rounded-pill px-3 py-2 mb-2 fs-6">{{ app()->getLocale() === 'ar' ? 'وصل حديثاً' : 'New Arrivals' }}</span>
+                    <h2 class="fw-bold mb-0">{{ app()->getLocale() === 'ar' ? 'اخر 5 اصناف' : 'Latest 5 Products' }}</h2>
+                </div>
+            </div>
+            <div class="row g-4 justify-content-center">
+                @foreach($latestProducts as $product)
+                    <div class="col-6 col-md-4 col-lg-2">
+                        <div class="card border-0 shadow-sm h-100 rounded-4">
+                            <div style="height: 150px; overflow: hidden; position: relative;">
+                                @if(!empty($product['image_url']))
+                                    <img src="{{ $product['image_url'] }}" class="w-100 h-100" style="object-fit:cover;">
+                                @else
+                                    <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light text-muted">
+                                        <i class="fas fa-box fa-3x"></i>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="card-body p-3 text-center d-flex flex-column">
+                                <h6 class="fw-bold mb-1" style="font-size:0.9rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ $product['name'] }}</h6>
+                                <p class="text-primary fw-bold mb-0 mt-auto">{{ number_format($product['price']) }} EGP</p>
+                                <a href="{{ route('products.show', $product['id']) }}" class="btn btn-outline-primary btn-sm w-100 mt-2 rounded-pill">{{ __('app.prod_add_cart') }}</a>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
     {{-- ===== Latest from the Blog ===== --}}
     <section class="py-5" style="background:#f8fafc;">
         <div class="container py-3">

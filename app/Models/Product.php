@@ -16,6 +16,7 @@ class Product extends Model implements HasMedia
         'name', 'brand', 'category', 'description',
         'price', 'old_price', 'stock',
         'badge', 'badge_color', 'rating', 'reviews',
+        'sales_count', 'views_count',
         'specs', 'is_active', 'is_featured',
     ];
 
@@ -25,6 +26,8 @@ class Product extends Model implements HasMedia
         'stock'       => 'integer',
         'rating'      => 'integer',
         'reviews'     => 'integer',
+        'sales_count' => 'integer',
+        'views_count' => 'integer',
         'specs'       => 'array',
         'is_active'   => 'boolean',
         'is_featured' => 'boolean',

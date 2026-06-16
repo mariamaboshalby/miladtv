@@ -116,7 +116,6 @@
                     height: 220px;
                 }
             }
-
             /* Global Hover Effects */
             .card {
                 transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease !important;
@@ -957,7 +956,6 @@
                             '<i class="fas fa-exclamation-circle me-1"></i> {{ __('app.home_testimonial_error') }}';
                     });
             });
-
             // Parallax Reverse Motion on Carousel
             const heroCarousel = document.getElementById('heroCarousel');
             if (heroCarousel) {

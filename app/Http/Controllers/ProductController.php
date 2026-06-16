@@ -13,7 +13,7 @@ class ProductController extends Controller
             'id'          => $p->id,
             'name'        => $p->name,
             'brand'       => $p->brand,
-            'category'    => $p->category,
+            'category'    => $p->getRawOriginal('category'),
             'price'       => $p->price,
             'old_price'   => $p->old_price,
             'badge'       => $p->badge,
@@ -52,7 +52,7 @@ class ProductController extends Controller
             default      => $query->latest(),
         };
 
-        $products = $query->get()->map(fn($p) => $this->toArray($p))->toArray();
+        $products = $query->with('category')->get()->map(fn ($p) => $this->toArray($p))->toArray();
 
         $dbCategories = \App\Models\Category::active()->get();
         $categoryIconMap = $dbCategories->pluck('icon', 'slug')->toArray();
@@ -70,7 +70,7 @@ class ProductController extends Controller
         $product = Product::active()->findOrFail($id);
 
         $related = Product::active()
-            ->where('category', $product->category)
+            ->where('category', $product->getRawOriginal('category'))
             ->where('id', '!=', $product->id)
             ->take(4)
             ->get()
@@ -80,6 +80,28 @@ class ProductController extends Controller
         return view('products.show', [
             'product' => $this->toArray($product),
             'related' => $related,
+        ]);
+    }
+
+    public function getProductCategories(Request $request)
+    {
+        $lazy = $request->boolean('lazy', true);
+
+        $products = Product::active()
+            ->when(! $lazy, fn ($query) => $query->with('category'))
+            ->when(
+                $lazy,
+                fn ($query) => $query->paginate(15),
+                fn ($query) => $query->get()
+            );
+
+        return response()->json([
+            'status'      => true,
+            'message'     => $lazy
+                ? 'Products fetched successfully with lazy loading enabled.'
+                : 'Products and categories fetched successfully with eager loading enabled.',
+            'lazy_status' => $lazy,
+            'data'        => $products,
         ]);
     }
 }

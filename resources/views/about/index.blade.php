@@ -1,9 +1,9 @@
 ﻿@extends('layouts.app')
-@section('title', __('app.nav_about') . ' - MJK')
+@section('title', __('app.nav_about') . ' - ميلاد سامي')
 
 @section('content')
 
-<div style="background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%);padding:2.5rem 0;">
+<div style="background:linear-gradient(135deg,#0f172a 0%,#030f1f 100%);padding:2.5rem 0;">
     <div class="container">
         <h1 class="text-white fw-bold mb-1">{{ __('app.nav_about') }}</h1>
         <nav aria-label="breadcrumb">
@@ -25,7 +25,7 @@
                 <p class="text-secondary lh-lg mb-0" style="font-size:1.0625rem;">{{ __('app.home_about_p2') }}</p>
             </div>
             <div class="col-lg-6">
-                <img src="{{ asset('images/about.png') }}" alt="MJK Store" class="img-fluid rounded-4 shadow-lg w-100" style="object-fit:cover;max-height:400px;">
+                <img src="{{ asset('images/about.png') }}" alt="ميلاد سامي - قطع غيار شاشات التلفزيون" class="img-fluid rounded-4 shadow-lg w-100" style="object-fit:cover;max-height:400px;">
             </div>
         </div>
     </div>
@@ -33,7 +33,7 @@
 
 {{-- Stats --}}
 @if($stats->count())
-<section class="py-5" style="background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 100%);">
+<section class="py-5" style="background:linear-gradient(135deg,#030f1f 0%,#051836 100%);">
     <div class="container">
         <div class="row g-4">
             @foreach($stats as $stat)
@@ -97,16 +97,90 @@
 </section>
 @endif
 
+{{-- Location Map --}}
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-5">
+                <h2 class="fw-bold mb-4" style="color:#0f172a;">
+                    <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                    {{ app()->getLocale() === 'ar' ? 'موقعنا' : 'Our Location' }}
+                </h2>
+                <div class="mb-4">
+                    <div class="d-flex align-items-start gap-3 mb-3">
+                        <div class="flex-shrink-0">
+                            <div class="location-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1" style="color:#0f172a;">{{ __('app.footer_address') }}</h5>
+
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-start gap-3 mb-3">
+                        <div class="flex-shrink-0">
+                            <div class="location-icon">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1" style="color:#0f172a;">{{ app()->getLocale() === 'ar' ? 'اتصل بنا' : 'Call Us' }}</h5>
+                            <a href="tel:+201093803270" class="text-primary text-decoration-none fw-semibold">+20 10 93803270</a>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="flex-shrink-0">
+                            <div class="location-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-1" style="color:#0f172a;">{{ app()->getLocale() === 'ar' ? 'ساعات العمل' : 'Working Hours' }}</h5>
+                            <p class="text-secondary mb-0">{{ __('app.footer_hours') }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="https://www.google.com/maps/place/30%C2%B056'37.3%22N+31%C2%B017'22.0%22E/@30.9436857,31.2894227,21z" 
+                       target="_blank" 
+                       class="btn btn-primary">
+                        <i class="fas fa-directions me-2"></i>{{ app()->getLocale() === 'ar' ? 'احصل على الاتجاهات' : 'Get Directions' }}
+                    </a>
+                    <a href="https://wa.me/201093803270" 
+                       target="_blank" 
+                       class="btn btn-outline-primary">
+                        <i class="fab fa-whatsapp me-2"></i>WhatsApp
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div class="map-container">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d714.1338338154081!2d31.28942265912146!3d30.94368566303161!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2s!5e0!3m2!1sar!2seg!4v1783340972314!5m2!1sar!2seg" 
+                        width="100%" 
+                        height="450" 
+                        style="border:0;border-radius:16px;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 {{-- CTA --}}
-<section class="py-5 text-center" style="background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 100%);">
+<section class="py-5 text-center" style="background:linear-gradient(135deg,#030f1f 0%,#051836 100%);">
     <div class="container">
         <h2 class="text-white fw-bold mb-3" style="font-size:2.5rem;">{{ __('app.about_cta_title') }}</h2>
         <p class="mb-4" style="color:rgba(255,255,255,.9);font-size:1.25rem;">{{ __('app.about_cta_sub') }}</p>
         <div class="d-flex gap-3 justify-content-center flex-wrap">
-            <a href="tel:+201001324539" class="btn btn-light btn-lg px-5 fw-bold">
+            <a href="tel:+201093803270" class="btn btn-light btn-lg px-5 fw-bold">
                 <i class="fas fa-phone-alt me-2"></i>{{ __('app.about_cta_call') }}
             </a>
-            <a href="https://wa.me/201001324539" class="btn btn-outline-light btn-lg px-5 fw-bold">
+            <a href="https://wa.me/201093803270" class="btn btn-outline-light btn-lg px-5 fw-bold">
                 <i class="fab fa-whatsapp me-2"></i>WhatsApp
             </a>
         </div>
@@ -122,11 +196,52 @@
 .stat-icon { width:70px; height:70px; background:rgba(255,255,255,.2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2rem; color:#fff; }
 .value-card { border-radius:16px !important; transition:all .3s ease; }
 .value-card:hover { transform:translateY(-6px); box-shadow:0 16px 48px rgba(0,0,0,.1) !important; }
-.value-icon { width:64px; height:64px; background:#eff6ff; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.75rem; color:#2563eb; transition:all .3s ease; }
-.value-card:hover .value-icon { background:#2563eb; color:#fff; }
+.value-icon { width:64px; height:64px; background:#e8edf5; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.75rem; color:#051836; transition:all .3s ease; }
+.value-card:hover .value-icon { background:#051836; color:#fff; }
 .team-card { border-radius:16px !important; transition:all .3s ease; }
 .team-card:hover { transform:translateY(-6px); box-shadow:0 16px 48px rgba(0,0,0,.1) !important; }
-.team-avatar { width:90px; height:90px; background:#eff6ff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2.5rem; color:#2563eb; transition:all .3s ease; }
-.team-card:hover .team-avatar { background:#2563eb; color:#fff; }
+.team-avatar { width:90px; height:90px; background:#e8edf5; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2.5rem; color:#051836; transition:all .3s ease; }
+.team-card:hover .team-avatar { background:#051836; color:#fff; }
+
+/* Location Section */
+.map-container { 
+    position:relative; 
+    border-radius:16px; 
+    overflow:hidden; 
+    box-shadow:0 8px 32px rgba(0,0,0,.12);
+    transition:all .3s ease;
+}
+.map-container:hover {
+    box-shadow:0 16px 48px rgba(0,0,0,.18);
+    transform:translateY(-4px);
+}
+.map-container iframe {
+    display:block;
+    border-radius:16px;
+}
+.location-icon {
+    width:48px;
+    height:48px;
+    background:#e8edf5;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.25rem;
+    color:#051836;
+    transition:all .3s ease;
+}
+.location-icon:hover {
+    background:#051836;
+    color:#fff;
+    transform:scale(1.1);
+}
+
+/* Responsive Map */
+@media (max-width: 768px) {
+    .map-container iframe {
+        height:350px;
+    }
+}
 </style>
 @endpush

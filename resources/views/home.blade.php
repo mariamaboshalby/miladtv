@@ -1,6 +1,5 @@
-@extends('layouts.app')
-@section('title', __('app.home_about_badge') === 'About Us' ? 'MJK - Your #1 Destination for Printers & Tech
-    Accessories' : 'MJK - وجهتك الأولى للطابعات والملحقات التقنية')
+﻿@extends('layouts.app')
+@section('title', app()->getLocale() === 'ar' ? 'ميلاد سامي - قطع غيار شاشات التلفزيون' : 'Milad Sami - TV Screen Spare Parts')
 
     @push('styles')
         <link rel="stylesheet" href="{{ asset('css/printer-loader.css') }}">
@@ -8,7 +7,7 @@
     @push('styles')
         <style>
             /* ── Gallery Grid ── */
-            .mjk-gallery {
+            .milad-gallery {
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
                 grid-template-rows: 280px 280px;
@@ -16,23 +15,23 @@
             }
 
             /* tall item spans 2 rows */
-            .mjk-gallery-tall {
+            .milad-gallery-tall {
                 grid-row: span 2;
             }
 
             /* wide item spans 2 cols */
-            .mjk-gallery-wide {
+            .milad-gallery-wide {
                 grid-column: span 2;
             }
 
-            .mjk-gallery-item {
+            .milad-gallery-item {
                 position: relative;
                 overflow: hidden;
                 border-radius: 16px;
                 cursor: pointer;
             }
 
-            .mjk-gallery-item img {
+            .milad-gallery-item img {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
@@ -40,12 +39,12 @@
                 display: block;
             }
 
-            .mjk-gallery-item:hover img {
+            .milad-gallery-item:hover img {
                 transform: scale(1.07);
             }
 
             /* Overlay */
-            .mjk-gallery-overlay {
+            .milad-gallery-overlay {
                 position: absolute;
                 inset: 0;
                 background: linear-gradient(to top, rgba(0, 0, 0, .75) 0%, rgba(0, 0, 0, .1) 50%, transparent 100%);
@@ -57,11 +56,11 @@
                 transition: opacity .35s ease;
             }
 
-            .mjk-gallery-item:hover .mjk-gallery-overlay {
+            .milad-gallery-item:hover .milad-gallery-overlay {
                 opacity: 1;
             }
 
-            .mjk-gallery-tag {
+            .milad-gallery-tag {
                 display: inline-block;
                 background: rgba(37, 99, 235, .85);
                 color: #fff;
@@ -75,7 +74,7 @@
                 width: fit-content;
             }
 
-            .mjk-gallery-overlay p {
+            .milad-gallery-overlay p {
                 color: #fff;
                 font-weight: 600;
                 font-size: 1rem;
@@ -85,34 +84,34 @@
 
             /* Responsive */
             @media (max-width: 768px) {
-                .mjk-gallery {
+                .milad-gallery {
                     grid-template-columns: 1fr 1fr;
                     grid-template-rows: auto;
                 }
 
-                .mjk-gallery-tall {
+                .milad-gallery-tall {
                     grid-row: span 1;
                 }
 
-                .mjk-gallery-wide {
+                .milad-gallery-wide {
                     grid-column: span 2;
                 }
 
-                .mjk-gallery-item {
+                .milad-gallery-item {
                     height: 200px;
                 }
             }
 
             @media (max-width: 480px) {
-                .mjk-gallery {
+                .milad-gallery {
                     grid-template-columns: 1fr;
                 }
 
-                .mjk-gallery-wide {
+                .milad-gallery-wide {
                     grid-column: span 1;
                 }
 
-                .mjk-gallery-item {
+                .milad-gallery-item {
                     height: 220px;
                 }
             }
@@ -239,10 +238,10 @@
                             <div class="d-flex align-items-center gap-3 p-3 rounded-4 bg-light shadow-sm">
                                 <div class="flex-shrink-0 bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center"
                                     style="width:48px;height:48px;font-size:1.25rem;">
-                                    <i class="fas fa-box"></i>
+                                    <i class="fas fa-tv"></i>
                                 </div>
                                 <div>
-                                    <h4 class="fw-bold mb-0">500+</h4>
+                                    <h4 class="fw-bold mb-0">1000+</h4>
                                     <p class="text-secondary mb-0 small">{{ __('app.home_stat_products') }}</p>
                                 </div>
                             </div>
@@ -251,10 +250,10 @@
                             <div class="d-flex align-items-center gap-3 p-3 rounded-4 bg-light shadow-sm">
                                 <div class="flex-shrink-0 bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center"
                                     style="width:48px;height:48px;font-size:1.25rem;">
-                                    <i class="fas fa-users"></i>
+                                    <i class="fas fa-smile"></i>
                                 </div>
                                 <div>
-                                    <h4 class="fw-bold mb-0">15K+</h4>
+                                    <h4 class="fw-bold mb-0">5K+</h4>
                                     <p class="text-secondary mb-0 small">{{ __('app.home_stat_customers') }}</p>
                                 </div>
                             </div>
@@ -263,10 +262,10 @@
                             <div class="d-flex align-items-center gap-3 p-3 rounded-4 bg-light shadow-sm">
                                 <div class="flex-shrink-0 bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center"
                                     style="width:48px;height:48px;font-size:1.25rem;">
-                                    <i class="fas fa-award"></i>
+                                    <i class="fas fa-certificate"></i>
                                 </div>
                                 <div>
-                                    <h4 class="fw-bold mb-0">8+</h4>
+                                    <h4 class="fw-bold mb-0">10+</h4>
                                     <p class="text-secondary mb-0 small">{{ __('app.home_stat_years') }}</p>
                                 </div>
                             </div>
@@ -275,7 +274,7 @@
                             <div class="d-flex align-items-center gap-3 p-3 rounded-4 bg-light shadow-sm">
                                 <div class="flex-shrink-0 bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center"
                                     style="width:48px;height:48px;font-size:1.25rem;">
-                                    <i class="fas fa-headset"></i>
+                                    <i class="fas fa-tools"></i>
                                 </div>
                                 <div>
                                     <h4 class="fw-bold mb-0">24/7</h4>
@@ -290,17 +289,17 @@
                 <div class="col-lg-6 order-1 order-lg-2">
                     <div class="about-img-wrap position-relative">
                         <img src="{{ asset('images/about.png') }}"
-                            alt="MJK Store — An Egyptian Brand with a Global Mindset"
+                            alt="ميلاد سامي - متخصصون في قطع غيار شاشات التلفزيون"
                             class="img-fluid rounded-4 shadow-lg w-100" style="object-fit:cover; max-height:480px;">
                         {{-- Floating badge --}}
                         <div
                             class="position-absolute bottom-0 start-0 m-3 bg-white rounded-4 shadow px-3 py-2 d-flex align-items-center gap-2">
                             <div class="bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
                                 style="width:36px;height:36px;font-size:1rem;">
-                                <i class="fas fa-store"></i>
+                                <i class="fas fa-tv"></i>
                             </div>
                             <div>
-                                <p class="fw-bold mb-0 small">Est. 2017</p>
+                                <p class="fw-bold mb-0 small">{{ app()->getLocale() === 'ar' ? 'متخصصون في الشاشات' : 'TV Parts Specialists' }}</p>
                                 <p class="text-secondary mb-0" style="font-size:.7rem;">{{ __('app.home_est_location') }}
                                 </p>
                             </div>
@@ -322,7 +321,7 @@
                     <div class="card h-100 border-0 shadow-sm text-center p-4 rounded-4">
                         <div class="mx-auto mb-3 bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center"
                             style="width:64px;height:64px;font-size:1.75rem;">
-                            <i class="fas fa-star"></i>
+                            <i class="fas fa-medal"></i>
                         </div>
                         <h5 class="fw-bold">{{ __('app.home_val_quality') }}</h5>
                         <p class="text-secondary small mb-0">{{ __('app.home_val_quality_desc') }}</p>
@@ -344,7 +343,7 @@
                     <div class="card h-100 border-0 shadow-sm text-center p-4 rounded-4">
                         <div class="mx-auto mb-3 bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center"
                             style="width:64px;height:64px;font-size:1.75rem;">
-                            <i class="fas fa-lightbulb"></i>
+                            <i class="fas fa-microchip"></i>
                         </div>
                         <h5 class="fw-bold">{{ __('app.home_val_innovation') }}</h5>
                         <p class="text-secondary small mb-0">{{ __('app.home_val_innovation_desc') }}</p>
@@ -355,7 +354,7 @@
                     <div class="card h-100 border-0 shadow-sm text-center p-4 rounded-4">
                         <div class="mx-auto mb-3 bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center"
                             style="width:64px;height:64px;font-size:1.75rem;">
-                            <i class="fas fa-headset"></i>
+                            <i class="fas fa-tools"></i>
                         </div>
                         <h5 class="fw-bold">{{ __('app.home_val_support') }}</h5>
                         <p class="text-secondary small mb-0">{{ __('app.home_val_support_desc') }}</p>
@@ -375,54 +374,42 @@
                 <span class="badge rounded-pill px-3 py-2 mb-3 fs-6"
                     style="background:rgba(37,99,235,.15);color:#60a5fa;border:1px solid rgba(37,99,235,.3);">{{ __('app.home_prod_badge') }}</span>
                 <h2 class="fw-bold text-white mb-2">{{ __('app.home_prod_title') }} <span
-                        style="color:#3b82f6;">{{ __('app.home_prod_title_span') }}</span></h2>
+                        style="color:#0a2e5c;">{{ __('app.home_prod_title_span') }}</span></h2>
                 <p class="text-secondary mx-auto" style="max-width:520px;">{{ __('app.home_prod_sub') }}</p>
             </div>
 
             {{-- Masonry-style grid --}}
-            <div class="mjk-gallery">
+            <div class="milad-gallery">
 
                 {{-- Big left --}}
-                <div class="mjk-gallery-item mjk-gallery-tall">
+                <div class="milad-gallery-item milad-gallery-tall">
                     <a href="{{ route('products.index') }}">
-                        <img src="{{ asset('images/prod-gamepad.jpg') }}" alt="MJK Gaming Headset">
-                        <div class="mjk-gallery-overlay">
-                            <span class="mjk-gallery-tag">{{ __('app.home_prod_tag_ctrl') }}</span>
-                            <p>{{ __('app.home_prod_gamepad') }}</p>
-                        </div>
+                        <img src="{{ asset('images/gallery-1.png') }}" alt="ميلاد سامي">
+                    
                     </a>
                 </div>
 
                 {{-- Top right --}}
-                <div class="mjk-gallery-item">
+                <div class="milad-gallery-item">
                     <a href="{{ route('products.index') }}">
-                        <img src="{{ asset('images/prod-mouse.jpg') }}" alt="MJK Gaming Mouse">
-                        <div class="mjk-gallery-overlay">
-                            <span class="mjk-gallery-tag">{{ __('app.home_prod_tag_mice') }}</span>
-                            <p>{{ __('app.home_prod_mouse') }}</p>
-                        </div>
+                        <img src="{{ asset('images/gallery-2.png') }}" alt="ميلاد سامي">
+                    
                     </a>
                 </div>
 
                 {{-- Bottom right top --}}
-                <div class="mjk-gallery-item">
+                <div class="milad-gallery-item">
                     <a href="{{ route('products.index') }}">
-                        <img src="{{ asset('images/prod-scanner.jpg') }}" alt="MJK Barcode Scanner">
-                        <div class="mjk-gallery-overlay">
-                            <span class="mjk-gallery-tag">{{ __('app.home_prod_tag_scan') }}</span>
-                            <p>{{ __('app.home_prod_scanner') }}</p>
-                        </div>
+                        <img src="{{ asset('images/gallery-5.png') }}" alt="ميلاد سامي">
+                        
                     </a>
                 </div>
 
                 {{-- Wide bottom --}}
-                <div class="mjk-gallery-item mjk-gallery-wide">
+                <div class="milad-gallery-item milad-gallery-wide">
                     <a href="{{ route('products.index') }}">
-                        <img src="{{ asset('images/prod-switch.jpg') }}" alt="MJK PoE Switch">
-                        <div class="mjk-gallery-overlay">
-                            <span class="mjk-gallery-tag">{{ __('app.home_prod_tag_net') }}</span>
-                            <p>{{ __('app.home_prod_switch') }}</p>
-                        </div>
+                        <img src="{{ asset('images/gallery-4.png') }}" alt="ميلاد سامي">
+                      
                     </a>
                 </div>
 
@@ -443,7 +430,7 @@
         <div class="container py-4">
             <div class="text-center mb-5">
                 <span class="badge text-bg-primary rounded-pill px-3 py-2 mb-3 fs-6">{{ app()->getLocale() === 'ar' ? 'التصنيفات' : 'Categories' }}</span>
-                <h2 class="fw-bold mb-2">{{ app()->getLocale() === 'ar' ? 'أول أربع تصنيفات' : 'Top 4 Categories' }}</h2>
+                <h2 class="fw-bold mb-2">{{ app()->getLocale() === 'ar' ? 'تصفح حسب الفئة' : 'Browse by Category' }}</h2>
             </div>
             <div class="row g-4 justify-content-center">
                 @foreach($topCategories as $category)
@@ -468,7 +455,7 @@
             <div class="d-flex align-items-end justify-content-between mb-4">
                 <div>
                     <span class="badge text-bg-danger rounded-pill px-3 py-2 mb-2 fs-6">{{ app()->getLocale() === 'ar' ? 'الأكثر مبيعاً' : 'Best Sellers' }}</span>
-                    <h2 class="fw-bold mb-0">{{ app()->getLocale() === 'ar' ? 'الاصناف الاكثر مبيعا' : 'Best Selling Products' }}</h2>
+                    <h2 class="fw-bold mb-0">{{ app()->getLocale() === 'ar' ? 'قطع الغيار الأكثر مبيعاً' : 'Best Selling Spare Parts' }}</h2>
                 </div>
             </div>
             <div class="row g-4">
@@ -501,8 +488,8 @@
         <div class="container py-4">
             <div class="d-flex align-items-end justify-content-between mb-4">
                 <div>
-                    <span class="badge text-bg-warning rounded-pill px-3 py-2 mb-2 fs-6 text-white">{{ app()->getLocale() === 'ar' ? 'الأكثر زيارة' : 'Most Visited' }}</span>
-                    <h2 class="fw-bold mb-0">{{ app()->getLocale() === 'ar' ? 'الاصناف الاكثر زيارة' : 'Most Visited Products' }}</h2>
+                    <span class="badge text-bg-warning rounded-pill px-3 py-2 mb-2 fs-6 text-white">{{ app()->getLocale() === 'ar' ? 'الأكثر زيارة' : 'Most Viewed' }}</span>
+                    <h2 class="fw-bold mb-0">{{ app()->getLocale() === 'ar' ? 'قطع الغيار الأكثر زيارة' : 'Most Viewed Spare Parts' }}</h2>
                 </div>
             </div>
             <div class="row g-4">
@@ -536,7 +523,7 @@
             <div class="d-flex align-items-end justify-content-between mb-4">
                 <div>
                     <span class="badge text-bg-success rounded-pill px-3 py-2 mb-2 fs-6">{{ app()->getLocale() === 'ar' ? 'وصل حديثاً' : 'New Arrivals' }}</span>
-                    <h2 class="fw-bold mb-0">{{ app()->getLocale() === 'ar' ? 'اخر 5 اصناف' : 'Latest 5 Products' }}</h2>
+                    <h2 class="fw-bold mb-0">{{ app()->getLocale() === 'ar' ? 'أحدث 5 قطع غيار' : 'Latest 5 Spare Parts' }}</h2>
                 </div>
             </div>
             <div class="row g-4 justify-content-center">
@@ -568,7 +555,7 @@
     @if(($settings['home_show_deal'] ?? '0') == '1' && $dealProduct)
     <section class="py-5 bg-white">
         <div class="container py-4">
-            <div class="row align-items-center rounded-4 p-4 p-md-5" style="background: linear-gradient(135deg, #1e3a8a, #2563eb);">
+            <div class="row align-items-center rounded-4 p-4 p-md-5" style="background: linear-gradient(135deg, #030f1f, #051836);">
                 <div class="col-md-6 text-white mb-4 mb-md-0">
                     <span class="badge bg-danger rounded-pill px-3 py-2 mb-3 fs-6">{{ app()->getLocale() === 'ar' ? 'عرض اليوم' : 'Deal of the Day' }}</span>
                     <h2 class="fw-bold display-6 mb-3">{{ $dealProduct['name'] }}</h2>
@@ -683,7 +670,7 @@
         <div class="container py-4">
             <div class="text-center mb-5">
                 <span class="badge text-bg-primary rounded-pill px-3 py-2 mb-3 fs-6">{{ app()->getLocale() === 'ar' ? 'الأسئلة الشائعة' : 'FAQ' }}</span>
-                <h2 class="fw-bold mb-2">{{ app()->getLocale() === 'ar' ? 'كيف يمكننا مساعدتك؟' : 'How can we help you?' }}</h2>
+                <h2 class="fw-bold mb-2">{{ app()->getLocale() === 'ar' ? 'كيف يمكننا مساعدتك؟' : 'How Can We Help You?' }}</h2>
             </div>
             <div class="row justify-content-center">
                 <div class="col-lg-8">
@@ -738,11 +725,11 @@
 
     {{-- ===== Newsletter ===== --}}
     @if(($settings['home_show_newsletter'] ?? '0') == '1')
-    <section class="py-5 text-white text-center" style="background: linear-gradient(135deg, #0f172a, #1e3a8a);">
+    <section class="py-5 text-white text-center" style="background: linear-gradient(135deg, #0f172a, #030f1f);">
         <div class="container py-4">
             <i class="fas fa-envelope-open-text fa-3x mb-3 text-primary"></i>
-            <h2 class="fw-bold mb-3 text-white">{{ app()->getLocale() === 'ar' ? 'اشترك في النشرة البريدية' : 'Subscribe to our Newsletter' }}</h2>
-            <p class="mb-4 mx-auto" style="max-width: 500px;">{{ app()->getLocale() === 'ar' ? 'احصل على أحدث العروض والأخبار مباشرة على بريدك الإلكتروني.' : 'Get the latest offers and news directly to your inbox.' }}</p>
+            <h2 class="fw-bold mb-3 text-white">{{ app()->getLocale() === 'ar' ? 'اشترك في النشرة البريدية' : 'Subscribe to Our Newsletter' }}</h2>
+            <p class="mb-4 mx-auto" style="max-width: 500px;">{{ app()->getLocale() === 'ar' ? 'احصل على أحدث العروض وقطع الغيار الجديدة مباشرة على بريدك الإلكتروني.' : 'Get the latest deals and new spare parts delivered to your inbox.' }}</p>
             <form id="newsletterForm" class="d-flex justify-content-center mx-auto" style="max-width: 400px;">
                 @csrf
                 <input type="email" id="newsletterEmail" class="form-control rounded-start-pill border-0 px-4" placeholder="{{ app()->getLocale() === 'ar' ? 'بريدك الإلكتروني' : 'Your Email Address' }}" required>
@@ -777,7 +764,7 @@
                             style="transition:transform .25s,box-shadow .25s;">
                             {{-- Placeholder image with category colour --}}
                             <div class="d-flex align-items-center justify-content-center position-relative"
-                                style="height:180px;background:linear-gradient(135deg,#1e3a8a,#2563eb);">
+                                style="height:180px;background:linear-gradient(135deg,#030f1f,#051836);">
                                 <i class="fas fa-newspaper text-white opacity-25" style="font-size:4rem;"></i>
                                 <span class="position-absolute top-0 start-0 m-3 badge rounded-pill"
                                     style="background:rgba(255,255,255,.2);color:#fff;font-size:.75rem;">
@@ -949,10 +936,10 @@
                                 <i
                                     class="fas fa-map-marker-alt text-primary me-1"></i>{{ __('app.home_contact_address') }}
                             </span>
-                            <a href="tel:+201001324539" class="small text-secondary text-decoration-none">
+                            <a href="tel:+201093803270" class="small text-secondary text-decoration-none">
                                 <i class="fas fa-phone-alt text-primary me-1"></i>+20 123 456 7890
                             </a>
-                            <a href="https://wa.me/201001324539" target="_blank"
+                            <a href="https://wa.me/201093803270" target="_blank"
                                 class="small text-secondary text-decoration-none">
                                 <i class="fab fa-whatsapp text-primary me-1"></i>{{ __('app.home_contact_whatsapp') }}
                             </a>
@@ -997,18 +984,12 @@
                 <div class="col-lg-7" style="min-height:500px;">
                     <div class="rounded-4 overflow-hidden shadow-sm m-2">
                         <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d427.3126741646018!2d31.3651253!3d31.040138600000002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14f79dc660c33b0d%3A0xcc828a49e08b04ae!2z2LTYsdmD2YcgOTAg2YPYp9mF2YrYsdin2Ko!5e0!3m2!1sar!2seg!4v1778597954263!5m2!1sar!2seg"
-                            width="100%" height="100%" style="border:0; min-height:500px; display:block;"
-                            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                            title="MJK Location - Mansoura, Egypt"></iframe>
-                    </div>
-                    <div class="rounded-4 overflow-hidden shadow-sm m-2">
-                        <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d792.201006963661!2d31.307853230395082!3d30.088475194083156!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2s!5e0!3m2!1sen!2seg!4v1779698431846!5m2!1sen!2seg"
+                                            src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d792.201006963661!2d31.307853230395082!3d30.088475194083156!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2s!5e0!3m2!1sen!2seg!4v1779698431846!5m2!1sen!2seg"
                             width="100%" height="100%" style="border:0; min-height:400px; display:block;"
                             allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                            title="MJK Additional Location"></iframe>
+                            title="ميلاد سامي - المنصورة، مصر"></iframe>
                     </div>
+                    
                 </div>
 
             </div>
@@ -1037,7 +1018,7 @@
                     'Message:\n' + message
                 );
 
-                const gmailUrl = 'https://mail.google.com/mail/?view=cm&fs=1&to=mjk%40gmail.com&su=' + gmailSubject +
+                const gmailUrl = 'https://mail.google.com/mail/?view=cm&fs=1&to=miladsami.tv%40gmail.com&su=' + gmailSubject +
                     '&body=' + gmailBody;
                 window.open(gmailUrl, '_blank');
 

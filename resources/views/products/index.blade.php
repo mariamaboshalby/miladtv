@@ -1,11 +1,11 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', __('app.prod_page_title'))
 
 @section('content')
 
 {{-- Page Header --}}
-<div style="background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%);padding:2.5rem 0;">
+<div style="background:linear-gradient(135deg,#0f172a 0%,#030f1f 100%);padding:2.5rem 0;">
     <div class="container">
         <h1 class="text-white fw-bold mb-1">{{ __('app.prod_header_title') }}</h1>
         <nav aria-label="breadcrumb">
@@ -185,8 +185,8 @@
 }
 .filter-option:hover,
 .filter-option.active {
-    background: #eff6ff;
-    color: #2563eb;
+    background: #e8edf5;
+    color: #051836;
     font-weight: 600;
 }
 .product-card {

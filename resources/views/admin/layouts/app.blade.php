@@ -1,17 +1,18 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', __('app.dashboard')) — MJK</title>
-    <link rel="icon" href="{{ asset('favicon.svg') }}">
+    <title>@yield('title', __('app.dashboard')) — ميلاد سامي</title>
+    <link rel="icon" href="{{ asset('favicon.ico') }}">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/custom-colors.css') }}">
     @if (app()->getLocale() === 'en')
         <style>
             .adm-sidebar {
@@ -90,7 +91,11 @@
         <!-- Logo -->
         <div class="adm-sidebar-head">
             <a href="{{ route('admin.dashboard') }}" class="adm-logo">
-                <img src="{{ asset('images/mjk_logo.png') }}" alt="MJK" class="adm-logo-img">
+                <img src="{{ asset('images/milad_logo.png') }}" alt="ميلاد سامي" class="adm-logo-img"
+                     onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'">
+                <span style="display:none;align-items:center;gap:6px;font-weight:900;font-size:1rem;color:#030f1f;">
+                    <i class="fas fa-tv" style="color:#051836;"></i> ميلاد<span style="color:#051836;">سامي</span>
+                </span>
             </a>
             <button class="adm-sidebar-close" id="admSidebarClose">
                 <i class="fas fa-times"></i>
@@ -166,12 +171,6 @@
                     <span class="adm-nav-icon"><i class="fas fa-pen-nib"></i></span>
                     <span>{{ __('app.blog') }}</span>
                     <span class="adm-nav-count">{{ \App\Models\BlogPost::count() }}</span>
-                </a>
-                <a href="{{ route('admin.downloads.index') }}"
-                    class="adm-nav-item {{ request()->routeIs('admin.downloads.*') ? 'is-active' : '' }}">
-                    <span class="adm-nav-icon"><i class="fas fa-download"></i></span>
-                    <span>{{ __('app.downloads') }}</span>
-                    <span class="adm-nav-count">{{ \App\Models\Download::count() }}</span>
                 </a>
                 <a href="{{ route('admin.about.index') }}"
                     class="adm-nav-item {{ request()->routeIs('admin.about.*') ? 'is-active' : '' }}">

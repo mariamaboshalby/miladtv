@@ -38,7 +38,7 @@ class ContentSeeder extends Seeder
             ['title'=>'User Manual - HP LaserJet Pro','description'=>'Comprehensive user guide for HP LaserJet Pro Series printers.','category'=>'Manuals','brand'=>'HP','version'=>'1.0','size'=>'12 MB','os'=>'PDF','icon'=>'fa-file-pdf','downloads'=>6780],
             ['title'=>'Troubleshooting Guide - Canon PIXMA','description'=>'Detailed guide for resolving common Canon PIXMA issues.','category'=>'Manuals','brand'=>'Canon','version'=>'2.0','size'=>'8 MB','os'=>'PDF','icon'=>'fa-file-pdf','downloads'=>5120],
             ['title'=>'Logitech Options+','description'=>'Customization software for Logitech mice and keyboards.','category'=>'Software','brand'=>'Logitech','version'=>'1.52.0','size'=>'178 MB','os'=>'Windows 10/11','icon'=>'fa-mouse','downloads'=>18900],
-            ['title'=>'MJK Product Catalogue 2026','description'=>'Comprehensive catalogue of all MJK products for 2026 with prices and specifications.','category'=>'Catalogues','brand'=>'MJK','version'=>'2026','size'=>'24 MB','os'=>'PDF','icon'=>'fa-book','downloads'=>15670],
+            ['title'=>'milad Product Catalogue 2026','description'=>'Comprehensive catalogue of all milad products for 2026 with prices and specifications.','category'=>'Catalogues','brand'=>'milad','version'=>'2026','size'=>'24 MB','os'=>'PDF','icon'=>'fa-book','downloads'=>15670],
         ];
 
         foreach ($downloads as $d) {

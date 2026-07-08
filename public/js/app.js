@@ -1,5 +1,5 @@
 /**
- * MJK E-Commerce - Main JavaScript
+ * milad E-Commerce - Main JavaScript
  * Handles all interactive features
  */
 
@@ -133,7 +133,7 @@
         items.forEach(item => {
             html += `
                 <div class="d-flex align-items-center gap-3 py-3 border-bottom" data-id="${item.id}">
-                    <div class="flex-shrink-0 bg-light rounded-3 d-flex align-items-center justify-content-center" style="width:52px;height:52px;font-size:1.25rem;color:#2563eb;">
+                    <div class="flex-shrink-0 bg-light rounded-3 d-flex align-items-center justify-content-center" style="width:52px;height:52px;font-size:1.25rem;color:#051836;">
                         <i class="fas fa-box"></i>
                     </div>
                     <div class="flex-grow-1 min-w-0">
@@ -374,7 +374,7 @@
     // Initialize on Load
     // ========================================================================
     document.addEventListener('DOMContentLoaded', () => {
-        console.log('MJK E-Commerce initialized');
+        console.log('milad E-Commerce initialized');
         handleScroll();
     });
 
@@ -403,7 +403,7 @@ document.querySelectorAll('.animate-on-scroll').forEach(el => {
 
 
 // ============================================================
-// MJK Premium Navbar — mobile menu wiring (new layout)
+// milad Premium Navbar — mobile menu wiring (new layout)
 // ============================================================
 (function () {
     const hamburger  = document.getElementById('mobileMenuBtn');

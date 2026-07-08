@@ -1,9 +1,9 @@
-@extends('layouts.app')
-@section('title', 'Create Account — MJK')
+﻿@extends('layouts.app')
+@section('title', 'إنشاء حساب — ميلاد سامي')
 
 @section('content')
 
-<div style="background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%);padding:2.5rem 0;">
+<div style="background:linear-gradient(135deg,#0f172a 0%,#030f1f 100%);padding:2.5rem 0;">
     <div class="container">
         <h1 class="text-white fw-bold mb-1">Create Account</h1>
         <nav aria-label="breadcrumb">
@@ -28,8 +28,8 @@
                 @endif
 
                 <div class="card border-0 shadow-sm rounded-4 p-4">
-                    <h4 class="fw-bold mb-1 text-center">Join MJK</h4>
-                    <p class="text-secondary text-center small mb-4">Create your account in seconds</p>
+                    <h4 class="fw-bold mb-1 text-center">انضم إلينا</h4>
+                    <p class="text-secondary text-center small mb-4">أنشئ حسابك في ميلاد سامي</p>
 
                     @if($errors->any())
                     <div class="alert alert-danger rounded-3 small">

@@ -7,7 +7,6 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\BlogController;
-use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\LanguageController;
@@ -18,11 +17,11 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\BlogController as AdminBlogController;
 use App\Http\Controllers\Admin\AboutController as AdminAboutController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
-use App\Http\Controllers\Admin\DownloadController as AdminDownloadController;
 use App\Http\Controllers\Admin\TestimonialController as AdminTestimonialController;
 use App\Http\Controllers\Admin\SettingController as AdminSettingController;
 use App\Http\Controllers\Admin\BrandController as AdminBrandController;
 use App\Http\Controllers\Admin\FaqController as AdminFaqController;
+use App\Http\Controllers\Admin\DownloadController as AdminDownloadController;
 use App\Http\Controllers\TestimonialController;
 use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\OrderController;
@@ -62,9 +61,6 @@ Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
 // Blog
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{id}', [BlogController::class, 'show'])->name('blog.show');
-
-// Downloads
-Route::get('/downloads', [DownloadController::class, 'index'])->name('downloads.index');
 
 // About
 Route::get('/about', [AboutController::class, 'index'])->name('about.index');

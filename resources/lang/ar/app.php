@@ -48,10 +48,10 @@ return [
     'get_in_touch' => 'تواصل معنا',
     'newsletter' => 'النشرة البريدية',
     'newsletter_ph' => 'بريدك الإلكتروني',
-    'footer_address' => 'شارع الجلاء، المنصورة، مصر 7650001',
+    'footer_address' => ' أجا، مصر',
     'footer_hours' => 'السبت - الخميس: 9 صباحاً - 9 مساءً',
-    'footer_copy' => '© :year MJK Technology. جميع الحقوق محفوظة.',
-    'rights' => 'صنع بواسطه فريق core-house',
+    'footer_copy' => '© :year milad samy. جميع الحقوق محفوظة.',
+    'rights' => 'صنع بواسطه فريق urca-eg.com team',
 
     // ── Bottom Nav ──────────────────────────────────────────────────────────
     'bn_home' => 'الرئيسية',
@@ -66,14 +66,14 @@ return [
     // ── Home — About Section ─────────────────────────────────────────────────
     'home_about_badge' => 'من نحن',
     'home_about_title' => 'علامة مصرية بعقلية عالمية',
-    'home_about_p1' => 'تأسست عام <strong>2017</strong>، بُنيت MJK على قناعة بسيطة — أن الشركات والأفراد في مصر يستحقون منتجات تقنية عالمية المستوى دون تنازل. منذ اليوم الأول، جمعنا بين الخبرة المحلية ومعايير الجودة العالمية.',
+    'home_about_p1' => 'تأسست عام <strong>2017</strong>، بُنيت milad على قناعة بسيطة — أن الشركات والأفراد في مصر يستحقون منتجات تقنية عالمية المستوى دون تنازل. منذ اليوم الأول، جمعنا بين الخبرة المحلية ومعايير الجودة العالمية.',
     'home_about_p2' => 'نتخصص في الطابعات والملحقات والحلول التقنية من أبرز العلامات العالمية، مدعومين بدعم فني متخصص والتزام بالتميز يتجاوز مجرد البيع.',
     'home_about_btn' => 'اعرف أكثر',
     'home_stat_products' => 'منتج متاح',
     'home_stat_customers' => 'عميل سعيد',
     'home_stat_years' => 'سنوات منذ 2017',
     'home_stat_support' => 'دعم فني',
-    'home_est_location' => 'المنصورة، مصر',
+    'home_est_location' => 'أجا، مصر',
     'home_values_title' => 'قيمنا الأساسية',
     'home_values_sub' => 'المبادئ التي تقود كل ما نقوم به',
     'home_val_quality' => 'الجودة',
@@ -89,15 +89,15 @@ return [
     'home_prod_badge' => 'منتجاتنا',
     'home_prod_title' => 'مختلف بطبيعته.',
     'home_prod_title_span' => 'مصمم ليدوم.',
-    'home_prod_sub' => 'من ملحقات الألعاب إلى شبكات المؤسسات — كل منتج يحمل معيار MJK.',
+    'home_prod_sub' => 'من ملحقات الألعاب إلى شبكات المؤسسات — كل منتج يحمل معيار milad.',
     'home_prod_tag_ctrl' => 'أذرع التحكم',
-    'home_prod_gamepad' => 'ذراع تحكم MJK Premium',
+    'home_prod_gamepad' => 'ذراع تحكم milad Premium',
     'home_prod_tag_mice' => 'ماوسات الألعاب',
-    'home_prod_mouse' => 'MJK Pro لاسلكي',
+    'home_prod_mouse' => 'milad Pro لاسلكي',
     'home_prod_tag_scan' => 'الماسحات الضوئية',
-    'home_prod_scanner' => 'MJK Barcode Pro',
+    'home_prod_scanner' => 'milad Barcode Pro',
     'home_prod_tag_net' => 'الشبكات',
-    'home_prod_switch' => 'سويتش MJK PoE — 4GE+2GE+1SFP',
+    'home_prod_switch' => 'سويتش milad PoE — 4GE+2GE+1SFP',
     'home_prod_browse' => 'تصفح جميع المنتجات',
 
     // ── Home — Blog Section ──────────────────────────────────────────────────
@@ -111,8 +111,8 @@ return [
     // ── Home — Contact Section ───────────────────────────────────────────────
     'home_contact_badge' => 'تواصل معنا',
     'home_contact_title' => 'يسعدنا سماعك',
-    'home_contact_sub' => 'زرنا في المنصورة، أرسل لنا رسالة، أو فقط قل مرحباً.',
-    'home_contact_address' => 'شارع الجلاء، المنصورة',
+    'home_contact_sub' => 'زرنا في أجا، أرسل لنا رسالة، أو فقط قل مرحباً.',
+    'home_contact_address' => ' أجا',
     'home_contact_whatsapp' => 'واتساب',
     'home_contact_form_title' => 'أرسل لنا رسالة',
     'home_contact_form_sub' => 'سنرد عليك في أقرب وقت ممكن.',
@@ -135,7 +135,7 @@ return [
     'about_cta_call' => 'اتصل بنا',
 
     // ── Products Index ───────────────────────────────────────────────────────
-    'prod_page_title' => 'المنتجات - MJK',
+    'prod_page_title' => 'المنتجات - milad',
     'prod_header_title' => 'المنتجات',
     'prod_breadcrumb_home' => 'الرئيسية',
     'prod_filter_btn' => 'تصفية المنتجات',
@@ -170,7 +170,7 @@ return [
     'prod_returns' => 'إرجاع 14 يوم',
     'prod_support' => 'دعم فني',
     'prod_related_title' => 'منتجات ذات صلة',
-
+    'track-order'=>'تتبع الطلب',
     // ── Admin ────────────────────────────────────────────────────────────────
     'dashboard' => 'لوحة التحكم',
     'products' => 'المنتجات',

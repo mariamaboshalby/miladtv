@@ -1,17 +1,17 @@
 ﻿/* ========================================================================
-   MJK E-Commerce — Complete Redesign 2026
+   milad E-Commerce — Complete Redesign 2026
    Clean · Modern · Professional
    ======================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap');
 
 :root {
-  --blue:        #1D4ED8;
-  --blue-dark:   #1E3A8A;
-  --blue-mid:    #2563EB;
-  --blue-light:  #3B82F6;
-  --blue-pale:   #EFF6FF;
-  --blue-border: #BFDBFE;
+  --blue:        #051836;
+  --blue-dark:   #030f1f;
+  --blue-mid:    #051836;
+  --blue-light:  #0a2e5c;
+  --blue-pale:   #e8edf5;
+  --blue-border: #c3d0e3;
 
   --white:   #FFFFFF;
   --bg:      #F8FAFC;
@@ -923,7 +923,7 @@ p  { color:var(--ink-600); margin-bottom:.75rem; }
 
 
 /* ========================================================================
-   MJK Premium Navbar & Footer  2026
+   milad Premium Navbar & Footer  2026
    ======================================================================== */
 
 /* Switch body font to Inter for English layout */
@@ -932,12 +932,12 @@ body {
 }
 
 /*  Top Bar  */
-.mjk-topbar {
+.milad-topbar {
   background: #0F172A;
   border-bottom: 1px solid rgba(255,255,255,.06);
 }
 
-.mjk-social-icon {
+.milad-social-icon {
   width: 28px;
   height: 28px;
   display: inline-flex;
@@ -951,23 +951,23 @@ body {
   text-decoration: none;
 }
 
-.mjk-social-icon:hover {
+.milad-social-icon:hover {
   background: #2563EB;
   color: #fff;
   transform: translateY(-2px);
 }
 
 /*  Main Navbar  */
-.mjk-navbar {
+.milad-navbar {
   background: #fff;
   border-bottom: 1px solid #E2E8F0;
   box-shadow: 0 2px 20px rgba(0,0,0,.06);
   z-index: 1000;
 }
 
-.mjk-brand { text-decoration: none; }
+.milad-brand { text-decoration: none; }
 
-.mjk-logo-img {
+.milad-logo-img {
   height: 46px;
   width: auto;
   max-width: 160px;
@@ -975,7 +975,7 @@ body {
 }
 
 /* Nav Links */
-.mjk-nav-link {
+.milad-nav-link {
   display: inline-flex;
   align-items: center;
   padding: .5rem .9rem;
@@ -989,25 +989,25 @@ body {
   letter-spacing: -.01em;
 }
 
-.mjk-nav-link:hover,
-.mjk-nav-link.active {
+.milad-nav-link:hover,
+.milad-nav-link.active {
   background: #EFF6FF;
   color: #2563EB;
 }
 
-.mjk-nav-link.active { font-weight: 700; }
+.milad-nav-link.active { font-weight: 700; }
 
-.mjk-arrow {
+.milad-arrow {
   font-size: .6rem;
   transition: transform .2s ease;
 }
 
 /* Dropdown */
-.mjk-dropdown { position: relative; }
+.milad-dropdown { position: relative; }
 
-.mjk-dropdown:hover .mjk-arrow { transform: rotate(180deg); }
+.milad-dropdown:hover .milad-arrow { transform: rotate(180deg); }
 
-.mjk-mega-menu {
+.milad-mega-menu {
   position: absolute;
   top: calc(100% + 12px);
   left: 50%;
@@ -1023,19 +1023,19 @@ body {
   z-index: 200;
 }
 
-.mjk-dropdown:hover .mjk-mega-menu {
+.milad-dropdown:hover .milad-mega-menu {
   opacity: 1;
   visibility: visible;
   transform: translateX(-50%) translateY(0);
 }
 
-.mjk-mega-inner {
+.milad-mega-inner {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
 }
 
-.mjk-mega-heading {
+.milad-mega-heading {
   font-size: .8125rem;
   font-weight: 700;
   color: #0F172A;
@@ -1049,9 +1049,9 @@ body {
   gap: .4rem;
 }
 
-.mjk-mega-heading i { color: #2563EB; }
+.milad-mega-heading i { color: #2563EB; }
 
-.mjk-mega-col a {
+.milad-mega-col a {
   display: block;
   padding: .3rem 0;
   color: #475569;
@@ -1060,13 +1060,13 @@ body {
   transition: all .2s ease;
 }
 
-.mjk-mega-col a:hover {
+.milad-mega-col a:hover {
   color: #2563EB;
   padding-left: .375rem;
 }
 
 /* Icon Buttons */
-.mjk-icon-btn {
+.milad-icon-btn {
   width: 40px;
   height: 40px;
   display: inline-flex;
@@ -1083,7 +1083,7 @@ body {
   flex-shrink: 0;
 }
 
-.mjk-icon-btn:hover {
+.milad-icon-btn:hover {
   background: #2563EB;
   color: #fff;
   transform: translateY(-2px);
@@ -1091,7 +1091,7 @@ body {
 }
 
 /* Cart Badge */
-.mjk-cart-badge {
+.milad-cart-badge {
   position: absolute;
   top: -4px;
   right: -4px;
@@ -1109,25 +1109,25 @@ body {
 }
 
 /* Search */
-.mjk-search-wrap {
+.milad-search-wrap {
   overflow: hidden;
   max-width: 0;
   opacity: 0;
   transition: max-width .35s ease, opacity .35s ease;
 }
 
-.mjk-search-wrap.open {
+.milad-search-wrap.open {
   max-width: 260px;
   opacity: 1;
 }
 
-.mjk-search-form {
+.milad-search-form {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.mjk-search-form input {
+.milad-search-form input {
   width: 240px;
   padding: .55rem 2.75rem .55rem 1rem;
   border: 2px solid #E2E8F0;
@@ -1138,14 +1138,14 @@ body {
   transition: all .2s ease;
 }
 
-.mjk-search-form input:focus {
+.milad-search-form input:focus {
   outline: none;
   border-color: #2563EB;
   background: #fff;
   box-shadow: 0 0 0 3px rgba(37,99,235,.1);
 }
 
-.mjk-search-form button {
+.milad-search-form button {
   position: absolute;
   right: .4rem;
   top: 50%;
@@ -1164,10 +1164,10 @@ body {
   transition: background .2s ease;
 }
 
-.mjk-search-form button:hover { background: #1E3A8A; }
+.milad-search-form button:hover { background: #1E3A8A; }
 
 /* Hamburger */
-.mjk-hamburger {
+.milad-hamburger {
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -1182,7 +1182,7 @@ body {
   flex-shrink: 0;
 }
 
-.mjk-hamburger span {
+.milad-hamburger span {
   width: 20px;
   height: 2px;
   background: #334155;
@@ -1192,16 +1192,16 @@ body {
 }
 
 /* Mobile Menu */
-.mjk-mobile-menu {
+.milad-mobile-menu {
   display: none;
   flex-direction: column;
   padding: .75rem 0 1rem;
   border-top: 1px solid #F1F5F9;
 }
 
-.mjk-mobile-menu.open { display: flex; }
+.milad-mobile-menu.open { display: flex; }
 
-.mjk-mobile-link {
+.milad-mobile-link {
   padding: .75rem 1rem;
   color: #334155;
   font-weight: 600;
@@ -1211,29 +1211,29 @@ body {
   transition: all .2s ease;
 }
 
-.mjk-mobile-link:hover,
-.mjk-mobile-link.active {
+.milad-mobile-link:hover,
+.milad-mobile-link.active {
   background: #EFF6FF;
   color: #2563EB;
 }
 
 /*  Footer  */
-.mjk-footer {
+.milad-footer {
   background: #0F172A;
   color: #94A3B8;
   margin-top: 5rem;
 }
 
-.mjk-footer-top { padding: 4rem 0 2.5rem; }
+.milad-footer-top { padding: 4rem 0 2.5rem; }
 
-.mjk-footer-logo {
+.milad-footer-logo {
   height: 44px;
   width: auto;
   object-fit: contain;
   filter: brightness(0) invert(1);
 }
 
-.mjk-footer-heading {
+.milad-footer-heading {
   color: #fff;
   font-weight: 700;
   font-size: .8125rem;
@@ -1242,11 +1242,11 @@ body {
   margin-bottom: 1.25rem;
 }
 
-.mjk-footer-links { margin: 0; padding: 0; }
+.milad-footer-links { margin: 0; padding: 0; }
 
-.mjk-footer-links li { margin-bottom: .625rem; }
+.milad-footer-links li { margin-bottom: .625rem; }
 
-.mjk-footer-links a {
+.milad-footer-links a {
   color: #64748B;
   font-size: .9rem;
   text-decoration: none;
@@ -1256,14 +1256,14 @@ body {
   gap: .375rem;
 }
 
-.mjk-footer-links a:hover {
+.milad-footer-links a:hover {
   color: #3B82F6;
   padding-left: .25rem;
 }
 
-.mjk-footer-contact { margin: 0; padding: 0; }
+.milad-footer-contact { margin: 0; padding: 0; }
 
-.mjk-footer-contact li {
+.milad-footer-contact li {
   display: flex;
   align-items: flex-start;
   gap: .75rem;
@@ -1272,13 +1272,13 @@ body {
   font-size: .9rem;
 }
 
-.mjk-footer-contact li i {
+.milad-footer-contact li i {
   margin-top: .15rem;
   flex-shrink: 0;
   width: 14px;
 }
 
-.mjk-footer-social {
+.milad-footer-social {
   width: 36px;
   height: 36px;
   display: inline-flex;
@@ -1292,20 +1292,20 @@ body {
   transition: all .2s ease;
 }
 
-.mjk-footer-social:hover {
+.milad-footer-social:hover {
   background: #2563EB;
   color: #fff;
   transform: translateY(-3px);
 }
 
-.mjk-newsletter-form {
+.milad-newsletter-form {
   display: flex;
   border-radius: 9999px;
   overflow: hidden;
   border: 1px solid rgba(255,255,255,.12);
 }
 
-.mjk-newsletter-form input {
+.milad-newsletter-form input {
   flex: 1;
   padding: .625rem 1rem;
   background: rgba(255,255,255,.07);
@@ -1316,10 +1316,10 @@ body {
   min-width: 0;
 }
 
-.mjk-newsletter-form input::placeholder { color: rgba(255,255,255,.35); }
-.mjk-newsletter-form input:focus { outline: none; background: rgba(255,255,255,.1); }
+.milad-newsletter-form input::placeholder { color: rgba(255,255,255,.35); }
+.milad-newsletter-form input:focus { outline: none; background: rgba(255,255,255,.1); }
 
-.mjk-newsletter-form button {
+.milad-newsletter-form button {
   padding: .625rem 1.125rem;
   background: #2563EB;
   color: #fff;
@@ -1330,37 +1330,37 @@ body {
   flex-shrink: 0;
 }
 
-.mjk-newsletter-form button:hover { background: #1D4ED8; }
+.milad-newsletter-form button:hover { background: #1D4ED8; }
 
-.mjk-footer-bottom {
+.milad-footer-bottom {
   border-top: 1px solid rgba(255,255,255,.06);
   padding: 1.25rem 0;
 }
 
 /*  Responsive  */
 @media (max-width: 1024px) {
-  .mjk-mega-menu { min-width: 480px; }
-  .mjk-mega-inner { grid-template-columns: repeat(2, 1fr); }
+  .milad-mega-menu { min-width: 480px; }
+  .milad-mega-inner { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 992px) {
-  .mjk-mega-menu { display: none !important; }
+  .milad-mega-menu { display: none !important; }
 }
 
 @media (max-width: 768px) {
-  .mjk-logo-img { height: 38px; }
-  .mjk-footer-top { padding: 2.5rem 0 1.5rem; }
+  .milad-logo-img { height: 38px; }
+  .milad-footer-top { padding: 2.5rem 0 1.5rem; }
 }
 
 /* ── Brand Tagline ── */
-.mjk-brand {
+.milad-brand {
   display: flex;
   flex-direction: column;
   gap: 2px;
   text-decoration: none;
 }
 
-.mjk-tagline {
+.milad-tagline {
   font-size: .65rem;
   font-weight: 600;
   color: #64748B;
@@ -1387,7 +1387,7 @@ body {
 /* ========================================================================
    Bottom Navigation Bar — Mobile Only
    ======================================================================== */
-.mjk-bottom-nav {
+.milad-bottom-nav {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -1407,12 +1407,12 @@ body {
 @media (max-width: 991px) {
   body { padding-bottom: 64px; }
   /* Hide the top hamburger + mobile menu on small screens — bottom nav replaces it */
-  .mjk-hamburger { display: none !important; }
-  .mjk-mobile-menu { display: none !important; }
+  .milad-hamburger { display: none !important; }
+  .milad-mobile-menu { display: none !important; }
 }
 
 /* Regular nav item */
-.mjk-bn-item {
+.milad-bn-item {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -1429,26 +1429,26 @@ body {
   position: relative;
 }
 
-.mjk-bn-item i {
+.milad-bn-item i {
   font-size: 1.25rem;
   transition: transform .2s ease, color .2s ease;
 }
 
-.mjk-bn-item span {
+.milad-bn-item span {
   line-height: 1;
 }
 
-.mjk-bn-item:hover,
-.mjk-bn-item.active {
+.milad-bn-item:hover,
+.milad-bn-item.active {
   color: #2563eb;
 }
 
-.mjk-bn-item.active i {
+.milad-bn-item.active i {
   transform: translateY(-2px);
 }
 
 /* Active indicator dot */
-.mjk-bn-item.active::after {
+.milad-bn-item.active::after {
   content: '';
   position: absolute;
   bottom: 4px;
@@ -1459,7 +1459,7 @@ body {
 }
 
 /* Centre cart bubble */
-.mjk-bn-cart {
+.milad-bn-cart {
   flex: 1;
   display: flex;
   align-items: center;
@@ -1468,7 +1468,7 @@ body {
   padding-bottom: 20px; /* lift it above the bar */
 }
 
-.mjk-bn-cart-bubble {
+.milad-bn-cart-bubble {
   position: relative;
   width: 52px;
   height: 52px;
@@ -1482,18 +1482,18 @@ body {
   border: 3px solid #fff;
 }
 
-.mjk-bn-cart:hover .mjk-bn-cart-bubble,
-.mjk-bn-cart.active .mjk-bn-cart-bubble {
+.milad-bn-cart:hover .milad-bn-cart-bubble,
+.milad-bn-cart.active .milad-bn-cart-bubble {
   transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(37,99,235,.55);
 }
 
-.mjk-bn-cart-bubble i {
+.milad-bn-cart-bubble i {
   font-size: 1.25rem;
   color: #fff;
 }
 
-.mjk-bn-badge {
+.milad-bn-badge {
   position: absolute;
   top: -4px;
   right: -4px;
@@ -1511,7 +1511,7 @@ body {
 }
 
 /* Bottom nav account button (for logged-in user dropdown) */
-.mjk-bn-item-btn {
+.milad-bn-item-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1530,19 +1530,19 @@ body {
   transition: color .2s ease;
 }
 
-.mjk-bn-item-btn i {
+.milad-bn-item-btn i {
   font-size: 1.25rem;
   transition: transform .2s ease, color .2s ease;
 }
 
-.mjk-bn-item-btn:hover,
-.mjk-bn-item.show .mjk-bn-item-btn {
+.milad-bn-item-btn:hover,
+.milad-bn-item.show .milad-bn-item-btn {
   color: #2563eb;
 }
 
 /* Hide top bar on mobile */
 @media (max-width: 991px) {
-  .mjk-topbar { display: none; }
+  .milad-topbar { display: none; }
 }
 
 /* Lift back-to-top above bottom nav on mobile */
@@ -1556,13 +1556,13 @@ html, body {
   padding-top: 0 !important;
 }
 
-.mjk-navbar.sticky-top {
+.milad-navbar.sticky-top {
   top: 0 !important;
   margin-top: 0 !important;
 }
 
 /* ── Language Select ── */
-.mjk-lang-select {
+.milad-lang-select {
   appearance: none;
   -webkit-appearance: none;
   background: #F1F5F9 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2364748b'/%3E%3C/svg%3E") no-repeat right .6rem center / 10px 6px;
@@ -1580,8 +1580,8 @@ html, body {
   font-family: inherit;
 }
 
-.mjk-lang-select:hover,
-.mjk-lang-select:focus {
+.milad-lang-select:hover,
+.milad-lang-select:focus {
   background-color: #2563EB;
   color: #fff;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23ffffff'/%3E%3C/svg%3E");
@@ -1589,7 +1589,7 @@ html, body {
 }
 
 /* Mobile full-width variant */
-.mjk-lang-select.w-100 {
+.milad-lang-select.w-100 {
   border-radius: 10px;
   padding: .6rem 2.25rem .6rem 1rem;
   font-size: .9rem;

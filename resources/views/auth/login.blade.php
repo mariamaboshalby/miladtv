@@ -1,9 +1,9 @@
-@extends('layouts.app')
-@section('title', 'Sign In — MJK')
+﻿@extends('layouts.app')
+@section('title', 'Sign In — ميلاد سامي')
 
 @section('content')
 
-<div style="background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%);padding:2.5rem 0;">
+<div style="background:linear-gradient(135deg,#0f172a 0%,#030f1f 100%);padding:2.5rem 0;">
     <div class="container">
         <h1 class="text-white fw-bold mb-1">Sign In</h1>
         <nav aria-label="breadcrumb">
@@ -29,8 +29,8 @@
                 @endif
 
                 <div class="card border-0 shadow-sm rounded-4 p-4">
-                    <h4 class="fw-bold mb-1 text-center">Welcome back</h4>
-                    <p class="text-secondary text-center small mb-4">Sign in to your MJK account</p>
+                    <h4 class="fw-bold mb-1 text-center">أهلاً بعودتك</h4>
+                    <p class="text-secondary text-center small mb-4">سجّل دخولك لحسابك في ميلاد سامي</p>
 
                     @if($errors->any())
                     <div class="alert alert-danger rounded-3 small">{{ $errors->first() }}</div>

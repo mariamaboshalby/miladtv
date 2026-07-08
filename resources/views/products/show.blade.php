@@ -1,10 +1,10 @@
 ﻿@extends('layouts.app')
 
-@section('title', $product['name'] . ' - MJK')
+@section('title', $product['name'] . ' - ميلاد سامي')
 
 @section('content')
 
-<div style="background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%);padding:2.5rem 0;">
+<div style="background:linear-gradient(135deg,#0f172a 0%,#030f1f 100%);padding:2.5rem 0;">
     <div class="container">
         <h1 class="text-white fw-bold mb-1">{{ Str::limit($product['name'], 60) }}</h1>
         <nav aria-label="breadcrumb">
@@ -237,7 +237,7 @@
 }
 .pd-thumb img { width: 100%; height: 100%; object-fit: cover; }
 .pd-thumb:hover, .pd-thumb.active {
-    border-color: #2563EB;
+    border-color: #051836;
     box-shadow: 0 0 0 3px rgba(37,99,235,.15);
 }
 .pd-main-img-wrap {
@@ -258,7 +258,7 @@
 }
 .pd-brand-row { display: flex; align-items: center; gap: .75rem; margin-bottom: .875rem; }
 .pd-brand {
-    display: inline-block; background: #EFF6FF; color: #2563EB;
+    display: inline-block; background: #e8edf5; color: #051836;
     padding: .35rem 1rem; border-radius: 50px; font-size: .8125rem;
     font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
 }
@@ -272,31 +272,31 @@
     padding: 1rem 1.25rem; background: #F8FAFC; border-radius: 12px;
     border: 1px solid #E2E8F0; margin-bottom: 1.25rem;
 }
-.pd-price { font-size: 2rem; font-weight: 900; color: #2563EB; }
+.pd-price { font-size: 2rem; font-weight: 900; color: #051836; }
 .pd-old-price { font-size: 1.125rem; color: #94A3B8; text-decoration: line-through; }
 .pd-save { background: #FEE2E2; color: #DC2626; padding: .3rem .75rem; border-radius: 50px; font-size: .8125rem; font-weight: 700; }
 .pd-desc { font-size: .9375rem; color: #475569; line-height: 1.8; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #F1F5F9; }
 .pd-specs { margin-bottom: 1.75rem; border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; }
-.pd-specs-title { background: #1E3A8A; color: #fff; padding: .625rem 1rem; font-size: .875rem; font-weight: 700; display: flex; align-items: center; gap: .5rem; }
+.pd-specs-title { background: #030f1f; color: #fff; padding: .625rem 1rem; font-size: .875rem; font-weight: 700; display: flex; align-items: center; gap: .5rem; }
 .pd-specs-table { width: 100%; border-collapse: collapse; }
 .pd-specs-table tr:nth-child(even) { background: #F8FAFC; }
 .pd-specs-table tr:nth-child(odd)  { background: #fff; }
-.pd-specs-table tr:hover { background: #EFF6FF; }
+.pd-specs-table tr:hover { background: #e8edf5; }
 .spec-key { padding: .6rem 1rem; font-size: .875rem; font-weight: 700; color: #334155; width: 40%; border-left: 1px solid #E2E8F0; border-bottom: 1px solid #F1F5F9; }
 .spec-val { padding: .6rem 1rem; font-size: .875rem; color: #475569; border-bottom: 1px solid #F1F5F9; }
 .pd-actions { display: flex; gap: 1rem; align-items: center; margin-bottom: 1.5rem; }
 .qty-box { display: flex; align-items: center; border: 2px solid #E2E8F0; border-radius: 50px; overflow: hidden; flex-shrink: 0; }
 .qty-box button { width: 42px; height: 46px; background: #F1F5F9; color: #334155; font-size: 1.25rem; font-weight: 700; transition: all .2s ease; }
-.qty-box button:hover { background: #2563EB; color: #fff; }
+.qty-box button:hover { background: #051836; color: #fff; }
 .qty-box input { width: 52px; height: 46px; text-align: center; border: none; font-size: 1.0625rem; font-weight: 700; color: #0F172A; }
 .qty-box input:focus { outline: none; }
 .pd-cart-btn { flex: 1; justify-content: center; }
 .pd-guarantees { display: grid; grid-template-columns: repeat(4, 1fr); gap: .75rem; }
-.guar-item { display: flex; flex-direction: column; align-items: center; gap: .375rem; padding: .875rem .5rem; background: #EFF6FF; border-radius: 12px; color: #2563EB; font-size: .8125rem; font-weight: 600; text-align: center; }
+.guar-item { display: flex; flex-direction: column; align-items: center; gap: .375rem; padding: .875rem .5rem; background: #e8edf5; border-radius: 12px; color: #051836; font-size: .8125rem; font-weight: 600; text-align: center; }
 .guar-item i { font-size: 1.375rem; }
 .pd-related { border-top: 2px solid #F1F5F9; padding-top: 3rem; }
 .pd-related-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 1.75rem; display: flex; align-items: center; gap: .625rem; color: #0F172A; }
-.pd-related-title i { color: #2563EB; }
+.pd-related-title i { color: #051836; }
 .related-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
 .product-card { position: relative; background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.06); transition: all .3s ease; border: 1px solid #F1F5F9; }
 .product-card:hover { box-shadow: 0 12px 36px rgba(0,0,0,.12); transform: translateY(-5px); }
@@ -306,10 +306,10 @@
 .product-card:hover .product-image img { transform: scale(1.06); }
 .placeholder-image { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; color: #CBD5E1; }
 .product-info { padding: 1.125rem; }
-.product-brand { font-size: .75rem; font-weight: 700; color: #2563EB; text-transform: uppercase; letter-spacing: 1px; margin-bottom: .375rem; display: block; }
+.product-brand { font-size: .75rem; font-weight: 700; color: #051836; text-transform: uppercase; letter-spacing: 1px; margin-bottom: .375rem; display: block; }
 .product-info h3 { font-size: .9375rem; margin-bottom: .75rem; color: #0F172A; }
 .product-price { display: flex; align-items: center; gap: .5rem; margin-bottom: .875rem; }
-.price-current { font-size: 1.125rem; font-weight: 800; color: #2563EB; }
+.price-current { font-size: 1.125rem; font-weight: 800; color: #051836; }
 .price-old { font-size: .8125rem; color: #94A3B8; text-decoration: line-through; }
 .product-actions { display: grid; grid-template-columns: 1fr auto; gap: .5rem; }
 .product-actions .btn { font-size: .8125rem; padding: .5rem .875rem; }

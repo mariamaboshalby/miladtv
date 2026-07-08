@@ -1,11 +1,11 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
-@section('title', 'Shopping Cart - MJK')
+@section('title', 'سلة التسوق - ميلاد سامي')
 
 @section('content')
 
     {{-- Page Header --}}
-    <div style="background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%);padding:2.5rem 0;">
+    <div style="background:linear-gradient(135deg,#0f172a 0%,#030f1f 100%);padding:2.5rem 0;">
         <div class="container">
             <h1 class="text-white fw-bold mb-1"><i class="fas fa-shopping-cart me-2"></i>{{ __('app.cart_title') }}</h1>
             <nav aria-label="breadcrumb">
@@ -165,25 +165,25 @@
         .empty-icon {
             width: 100px;
             height: 100px;
-            background: #eff6ff;
+            background: #e8edf5;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 2.5rem;
-            color: #2563eb;
+            color: #051836;
         }
 
         .cart-item-icon {
             width: 52px;
             height: 52px;
-            background: #eff6ff;
+            background: #e8edf5;
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.375rem;
-            color: #2563eb;
+            color: #051836;
         }
 
         .cart-item:last-child {
@@ -250,7 +250,7 @@
                         if (data.items && data.items.length > 0) {
                             const expires = new Date();
                             expires.setDate(expires.getDate() + 10);
-                            document.cookie = 'mjk_cart=' + encodeURIComponent(JSON.stringify(
+                            document.cookie = 'milad_cart=' + encodeURIComponent(JSON.stringify(
                                 data.items.reduce((acc, item) => {
                                     acc[item.id] = {
                                         id: item.id,

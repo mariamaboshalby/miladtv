@@ -1,4 +1,4 @@
-@extends('admin.layouts.app')
+﻿@extends('admin.layouts.app')
 
 @section('title', __('app.edit_product') . ': ' . $product->name)
 @section('page-title', __('app.edit_product'))
@@ -236,10 +236,10 @@
     border:2px dashed #CBD5E1; border-radius:14px; padding:1.5rem;
     text-align:center; cursor:pointer; transition:all .25s ease; background:#F8FAFC;
 }
-.multi-upload-zone:hover, .multi-upload-zone.drag-over { border-color:#2563EB; background:#EFF6FF; }
+.multi-upload-zone:hover, .multi-upload-zone.drag-over { border-color:#051836; background:#e8edf5; }
 .multi-upload-zone i { font-size:2rem; color:#94A3B8; display:block; margin-bottom:.5rem; }
 .multi-upload-zone p { font-weight:600; color:#475569; margin:0 0 .25rem; font-size:.9375rem; }
-.multi-upload-zone p span { color:#2563EB; text-decoration:underline; }
+.multi-upload-zone p span { color:#051836; text-decoration:underline; }
 .multi-upload-zone small { color:#94A3B8; font-size:.8125rem; }
 
 .img-gallery { display:grid; grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); gap:.75rem; margin-top:.75rem; }
@@ -247,7 +247,7 @@
     position:relative; border-radius:10px; overflow:hidden;
     aspect-ratio:1; background:#F1F5F9; border:2px solid #E2E8F0;
 }
-.gallery-item.is-main { border-color:#2563EB; }
+.gallery-item.is-main { border-color:#051836; }
 .gallery-item.is-main::after {
     content:'{{ __("app.main_image") }}'; position:absolute; bottom:0; left:0; right:0;
     background:rgba(37,99,235,.85); color:#fff; font-size:.625rem;
@@ -264,7 +264,7 @@
     opacity:0;
 }
 .gallery-item:hover .gallery-item-set-main { opacity:1; }
-.gallery-item-set-main:hover { background:#1D4ED8; transform:translateX(-50%) scale(1.1); }
+.gallery-item-set-main:hover { background:#030f1f; transform:translateX(-50%) scale(1.1); }
 .gallery-item-remove {
     position:absolute; top:.3rem; left:.3rem;
     width:22px; height:22px; background:rgba(239,68,68,.9); color:#fff;

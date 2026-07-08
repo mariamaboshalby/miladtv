@@ -6,9 +6,23 @@ use App\Models\BlogPost;
 
 class BlogController extends Controller
 {
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $posts = BlogPost::active()->latest('published_at')->get();
+        $query = BlogPost::active()->latest('published_at');
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('title_ar', 'like', "%{$search}%")
+                  ->orWhere('excerpt', 'like', "%{$search}%")
+                  ->orWhere('excerpt_ar', 'like', "%{$search}%")
+                  ->orWhere('category', 'like', "%{$search}%")
+                  ->orWhere('author', 'like', "%{$search}%");
+            });
+        }
+
+        $posts = $query->get();
 
         return view('blog.index', compact('posts'));
     }

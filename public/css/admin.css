@@ -1,14 +1,14 @@
 /* ========================================================================
-   MJK Admin — 2026
+   milad Admin — 2026
    ======================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap');
 
 :root {
-  --primary: #2563EB;
-  --primary-dark: #1E3A8A;
-  --primary-light: #3B82F6;
-  --primary-pale: #EFF6FF;
+  --primary: #051836;
+  --primary-dark: #030f1f;
+  --primary-light: #0a2e5c;
+  --primary-pale: #e8edf5;
 
   --sidebar-bg: #111827;
   --sidebar-w: 256px;

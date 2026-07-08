@@ -1,9 +1,9 @@
-@extends('layouts.app')
-@section('title', 'Checkout — MJK')
+﻿@extends('layouts.app')
+@section('title', 'إتمام الطلب — ميلاد سامي')
 
 @section('content')
 
-<div style="background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%);padding:2.5rem 0;">
+<div style="background:linear-gradient(135deg,#0f172a 0%,#030f1f 100%);padding:2.5rem 0;">
     <div class="container">
         <h1 class="text-white fw-bold mb-1">{{ __('app.checkout_title') }}</h1>
         <nav aria-label="breadcrumb">
@@ -97,7 +97,7 @@
                             <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
                                 <div class="d-flex align-items-center gap-2">
                                     <div class="bg-light rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
-                                         style="width:36px;height:36px;font-size:.9rem;color:#2563eb;">
+                                         style="width:36px;height:36px;font-size:.9rem;color:#051836;">
                                         <i class="fas {{ isset($item['icon']) ? $item['icon'] : 'fa-box' }}"></i>
                                     </div>
                                     <div>

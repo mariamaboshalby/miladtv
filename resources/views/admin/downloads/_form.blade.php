@@ -1,4 +1,4 @@
-@php $d = $item ?? null; @endphp
+﻿@php $d = $item ?? null; @endphp
 
 @if($errors->any())
 <div class="adm-alert adm-alert-error mb-3">
@@ -82,7 +82,7 @@
                style="display:none">
         <div id="downloadImagePreview" style="display:none;margin-top:.75rem;position:relative;width:fit-content;">
             <img id="downloadImageThumb" src="" alt="preview"
-                 style="width:120px;height:120px;object-fit:cover;border-radius:10px;border:2px solid #2563EB;">
+                 style="width:120px;height:120px;object-fit:cover;border-radius:10px;border:2px solid #051836;">
             <button type="button" id="downloadImageRemove"
                     style="position:absolute;top:-8px;right:-8px;width:22px;height:22px;background:#EF4444;color:#fff;border:none;border-radius:50%;font-size:.65rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">
                 <i class="fas fa-times"></i>
@@ -113,8 +113,8 @@
     background: #F8FAFC;
 }
 .upload-zone:hover, .upload-zone.drag-over {
-    border-color: #2563EB;
-    background: #EFF6FF;
+    border-color: #051836;
+    background: #e8edf5;
 }
 .upload-zone i {
     font-size: 2rem;
@@ -129,7 +129,7 @@
     font-size: .9375rem;
 }
 .upload-zone p span {
-    color: #2563EB;
+    color: #051836;
     text-decoration: underline;
 }
 .upload-zone small {
@@ -168,7 +168,7 @@
 .upload-progress-icon {
     width: 64px;
     height: 64px;
-    background: linear-gradient(135deg, #2563EB, #60A5FA);
+    background: linear-gradient(135deg, #051836, #60A5FA);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -205,14 +205,14 @@
 .upload-progress-fill {
     height: 100%;
     width: 0%;
-    background: linear-gradient(90deg, #2563EB, #60A5FA);
+    background: linear-gradient(90deg, #051836, #60A5FA);
     border-radius: 99px;
     transition: width .2s ease;
 }
 .upload-progress-pct {
     font-size: 1.5rem;
     font-weight: 800;
-    color: #2563EB;
+    color: #051836;
     line-height: 1;
     margin-bottom: .25rem;
 }

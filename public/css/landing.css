@@ -1,10 +1,10 @@
 /* ==========================================================================
-   MJK Landing Page Styles - Premium Design (Light & Blue)
+   milad Landing Page Styles - Premium Design (Light & Blue)
    ========================================================================== */
 
 :root {
-    --primary-color: #0056b3; /* Dark Blue */
-    --secondary-color: #007bff; /* Primary Blue */
+    --primary-color: #051836; /* Dark Blue */
+    --secondary-color: #0a2e5c; /* Primary Blue */
     --bg-dark: #ffffff; /* White background */
     --bg-darker: #f4f7f6; /* Very light gray/blue for alternating sections */
     --text-light: #1e293b; /* Dark text for readability */
@@ -91,7 +91,7 @@ p { line-height: 1.6; color: var(--text-muted); }
 .btn-block { display: block; width: 100%; }
 
 /* Navbar */
-.mjk-navbar {
+.milad-navbar {
     position: fixed;
     top: 0;
     left: 0;
@@ -101,7 +101,7 @@ p { line-height: 1.6; color: var(--text-muted); }
     transition: var(--transition);
 }
 
-.mjk-navbar.scrolled {
+.milad-navbar.scrolled {
     padding: 1rem 0;
     background: var(--glass-bg);
     backdrop-filter: blur(10px);
@@ -399,7 +399,7 @@ p { line-height: 1.6; color: var(--text-muted); }
 }
 
 /* Footer */
-.mjk-footer {
+.milad-footer {
     text-align: center;
     padding: 2rem;
     background: var(--bg-darker);

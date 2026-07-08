@@ -1,5 +1,5 @@
 /**
- * MJK Landing Page Scripts
+ * milad Landing Page Scripts
  * Utilizes jQuery for DOM manipulation and animations
  */
 
@@ -7,7 +7,7 @@
     'use strict';
 
     // Namespace to prevent collisions
-    const mjkLanding = {
+    const miladLanding = {
         init: function() {
             this.cacheDOM();
             this.bindEvents();
@@ -17,12 +17,12 @@
 
         cacheDOM: function() {
             this.$window = $(window);
-            this.$navbar = $('#mjkNavbar');
+            this.$navbar = $('#miladNavbar');
             this.$mobileToggle = $('#mobileToggle');
             this.$navLinks = $('#navLinks');
             this.$scrollLinks = $('a[href^="#"]');
             this.$revealElements = $('.reveal');
-            this.$contactForm = $('#mjkContactForm');
+            this.$contactForm = $('#miladContactForm');
         },
 
         bindEvents: function() {
@@ -137,7 +137,7 @@
 
     // Initialize when DOM is ready
     $(document).ready(function() {
-        mjkLanding.init();
+        miladLanding.init();
     });
 
 })(jQuery);

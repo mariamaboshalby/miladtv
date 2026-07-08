@@ -78,7 +78,7 @@ class CartController extends Controller
 
         // Persist cart in cookie for 10 days (for guests)
         $cookieMinutes = 60 * 24 * 10;
-        \Cookie::queue('mjk_cart', json_encode($cart), $cookieMinutes);
+        \Cookie::queue('milad_cart', json_encode($cart), $cookieMinutes);
 
         return response()->json([
             'success'    => true,

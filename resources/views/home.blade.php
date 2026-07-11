@@ -225,12 +225,12 @@
                 <div class="col-lg-6 order-2 order-lg-1">
                     <span
                         class="badge text-bg-primary rounded-pill px-3 py-2 mb-3 fs-6">{{ __('app.home_about_badge') }}</span>
-                    <h2 class="fw-bold display-6 mb-3">{{ __('app.home_about_title') }}</h2>
+                    {{-- <h2 class="fw-bold display-6 mb-3">{{ __('app.home_about_title') }}</h2>
                     <p class="text-secondary fs-5 lh-lg">{!! __('app.home_about_p1') !!}</p>
                     <p class="text-secondary fs-5 lh-lg">{{ __('app.home_about_p2') }}</p>
                     <a href="{{ route('about.index') }}" class="btn btn-primary btn-lg mt-2 mb-4">
                         <i class="fas fa-arrow-right me-2"></i> {{ __('app.home_about_btn') }}
-                    </a>
+                    </a> --}}
 
                     {{-- Stats row under the text --}}
                     <div class="row g-3 mt-1">

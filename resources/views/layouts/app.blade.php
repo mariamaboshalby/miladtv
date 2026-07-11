@@ -702,6 +702,14 @@
                 });
             }
         });
+
+        // Fix: Hide overlay when page is restored from bfcache (browser back/forward)
+        window.addEventListener('pageshow', function(event) {
+            const overlay = document.getElementById('page-transition-overlay');
+            if (overlay) {
+                overlay.classList.add('hidden');
+            }
+        });
     </script>
 </body>
 </html>

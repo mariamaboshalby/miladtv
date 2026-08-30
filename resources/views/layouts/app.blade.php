@@ -130,11 +130,13 @@
                             <div class="milad-mega-inner">
                                 @forelse($navCategories as $category)
                                 <div class="milad-mega-col">
-                                    <p class="milad-mega-heading">
-                                        @if($category->icon)
-                                        <i class="{{ $category->icon }}"></i>
+                                    <p class="milad-mega-heading d-flex align-items-center gap-2">
+                                        @if($category->image)
+                                            <img src="{{ asset('storage/' . $category->image) }}" alt="" style="width:22px;height:22px;object-fit:cover;border-radius:4px;">
+                                        @elseif($category->icon)
+                                            <i class="{{ str_starts_with($category->icon, 'fa-') || str_starts_with($category->icon, 'fas') ? $category->icon : 'fas fa-' . $category->icon }}"></i>
                                         @endif
-                                        {{ $isAr ? $category->name_ar : $category->name_en }}
+                                        <span>{{ $isAr ? $category->name_ar : $category->name_en }}</span>
                                     </p>
                                     <a href="{{ route('products.index', ['category' => $category->slug]) }}">{{ $isAr ? $category->name_ar : $category->name_en }}</a>
                                 </div>

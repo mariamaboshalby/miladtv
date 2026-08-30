@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
@@ -26,12 +27,15 @@ class CategoryController extends Controller
             'name_ar'   => 'required|string|max:255',
             'name_en'   => 'required|string|max:255',
             'icon'      => 'nullable|string|max:255',
+            'image'     => 'nullable|image|mimes:jpeg,png,jpg,webp,gif,svg|max:2048',
         ]);
         $validated['is_active'] = $request->boolean('is_active', true);
 
-        Category::create($validated);
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('categories', 'public');
+        }
 
-        $category = Category::where('slug', $validated['slug'])->first();
+        $category = Category::create($validated);
 
         if (request()->expectsJson()) {
             return response()->json($category, 201);
@@ -52,8 +56,23 @@ class CategoryController extends Controller
             'name_ar'   => 'required|string|max:255',
             'name_en'   => 'required|string|max:255',
             'icon'      => 'nullable|string|max:255',
+            'image'     => 'nullable|image|mimes:jpeg,png,jpg,webp,gif,svg|max:2048',
         ]);
         $validated['is_active'] = $request->boolean('is_active');
+
+        if ($request->boolean('remove_image')) {
+            if ($category->image && Storage::disk('public')->exists($category->image)) {
+                Storage::disk('public')->delete($category->image);
+            }
+            $validated['image'] = null;
+        }
+
+        if ($request->hasFile('image')) {
+            if ($category->image && Storage::disk('public')->exists($category->image)) {
+                Storage::disk('public')->delete($category->image);
+            }
+            $validated['image'] = $request->file('image')->store('categories', 'public');
+        }
 
         $category->update($validated);
         return redirect()->route('admin.categories.index')->with('success', 'تم تعديل الفئة بنجاح');
@@ -61,6 +80,10 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
+        if ($category->image && Storage::disk('public')->exists($category->image)) {
+            Storage::disk('public')->delete($category->image);
+        }
+
         $category->delete();
         return redirect()->route('admin.categories.index')->with('success', 'تم حذف الفئة بنجاح');
     }

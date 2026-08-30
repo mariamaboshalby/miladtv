@@ -12,10 +12,10 @@ return new class extends Migration
             $table->id();
             $table->string('order_number')->unique();
             $table->string('customer_name');
-            $table->string('customer_email');
+            $table->string('customer_email')->nullable();
             $table->string('customer_phone');
             $table->text('customer_address');
-            $table->string('city');
+            $table->string('city')->nullable();
             $table->decimal('subtotal', 10, 2);
             $table->decimal('shipping', 10, 2)->default(0);
             $table->decimal('total', 10, 2);

@@ -20,6 +20,7 @@
             <thead>
                 <tr>
                     <th>#</th>
+                    <th>{{ app()->getLocale() === 'ar' ? 'الصورة' : 'Image' }}</th>
                     <th>{{ __('app.name_arabic') }}</th>
                     <th>{{ __('app.name_english') }}</th>
                     <th>{{ __('app.slug_label') }}</th>
@@ -32,10 +33,20 @@
                 @foreach($categories as $category)
                 <tr>
                     <td>{{ ($categories->currentPage() - 1) * $categories->perPage() + $loop->iteration }}</td>
+                    <td>
+                        @if($category->image)
+                            <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name_ar }}"
+                                 style="width:48px;height:48px;object-fit:cover;border-radius:8px;border:1px solid #e2e8f0;box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+                        @else
+                            <div style="width:48px;height:48px;border-radius:8px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:1.25rem;">
+                                <i class="fas fa-{{ $category->icon ?: 'tag' }}"></i>
+                            </div>
+                        @endif
+                    </td>
                     <td><strong>{{ $category->name_ar }}</strong></td>
                     <td>{{ $category->name_en }}</td>
-                    <td>{{ $category->slug }}</td>
-                    <td><i class="fas fa-{{ $category->icon }}"></i> {{ $category->icon }}</td>
+                    <td><code>{{ $category->slug }}</code></td>
+                    <td><i class="fas fa-{{ $category->icon ?: 'tag' }}" style="color:var(--primary);"></i> {{ $category->icon }}</td>
                     <td>
                         <span class="badge {{ $category->is_active ? 'badge-green' : 'badge-red' }}">
                             {{ $category->is_active ? __('app.active') : __('app.inactive') }}
@@ -63,4 +74,3 @@
     </div>
 </div>
 @endsection
-

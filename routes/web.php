@@ -82,6 +82,7 @@ Route::post('/newsletter/subscribe', [SubscriberController::class, 'store'])->na
 // Track Order
 Route::get('/track-order', [OrderController::class, 'track'])->name('track-order');
 Route::post('/track-order', [OrderController::class, 'trackStatus'])->name('track-order.status');
+Route::post('/orders/quick', [OrderController::class, 'quickOrder'])->name('orders.quick');
 
 // ============================================================
 // Admin Dashboard (no auth for now — add middleware later)

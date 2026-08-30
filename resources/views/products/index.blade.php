@@ -1,4 +1,4 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 
 @section('title', __('app.prod_page_title'))
 
@@ -59,8 +59,12 @@
                                 @foreach($dbCategories as $cat)
                                 <a href="{{ route('products.index', ['category' => $cat->slug, 'sort' => $sort]) }}"
                                    class="filter-option d-flex align-items-center gap-2 px-3 py-2 rounded-3 mb-1 text-decoration-none {{ $category === $cat->slug ? 'active' : '' }}">
-                                    <i class="fas fa-{{ $cat->icon ?? 'list' }}"></i>
-                                    {{ app()->getLocale() === 'ar' ? $cat->name_ar : $cat->name_en }}
+                                    @if($cat->image)
+                                        <img src="{{ asset('storage/' . $cat->image) }}" alt="" style="width:20px;height:20px;object-fit:cover;border-radius:4px;flex-shrink:0;">
+                                    @else
+                                        <i class="fas fa-{{ $cat->icon ?? 'list' }}"></i>
+                                    @endif
+                                    <span>{{ app()->getLocale() === 'ar' ? $cat->name_ar : $cat->name_en }}</span>
                                 </a>
                                 @endforeach
                             </div>

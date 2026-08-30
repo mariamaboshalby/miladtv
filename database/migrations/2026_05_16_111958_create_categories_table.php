@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name_ar'); // e.g., 'الطابعات'
             $table->string('name_en'); // e.g., 'Printers'
             $table->string('icon')->nullable(); // e.g., 'print'
+            $table->string('image')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

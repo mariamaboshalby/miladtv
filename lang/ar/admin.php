@@ -57,7 +57,7 @@ return [
     'category' => 'الفئة',
     'select_category' => 'اختر الفئة',
     'price' => 'السعر',
-    'old_price' => 'السعر القديم',
+    'old_price' => 'السعر قبل الخصم',
     'stock' => 'المخزون',
     'rating' => 'التقييم',
     'badge' => 'الشارة',

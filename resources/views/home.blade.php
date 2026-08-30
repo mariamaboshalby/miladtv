@@ -1,4 +1,4 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 @section('title', app()->getLocale() === 'ar' ? 'ميلاد سامي - قطع غيار شاشات التلفزيون' : 'Milad Sami - TV Screen Spare Parts')
 
     @push('styles')
@@ -437,8 +437,14 @@
                     <div class="col-6 col-md-3">
                         <a href="{{ route('products.index', ['category' => $category->slug]) }}" class="text-decoration-none">
                             <div class="card border-0 shadow-sm text-center p-4 rounded-4 h-100">
-                                <div class="mx-auto mb-3 bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width:80px;height:80px;font-size:2rem;">
-                                    <i class="fas fa-{{ $category->icon ?? 'list' }}"></i>
+                                <div class="mx-auto mb-3 rounded-circle d-flex align-items-center justify-content-center overflow-hidden" style="width:80px;height:80px;background:rgba(5,24,54,0.06);">
+                                    @if($category->image)
+                                        <img src="{{ asset('storage/' . $category->image) }}" alt="{{ app()->getLocale() === 'ar' ? $category->name_ar : $category->name_en }}" class="w-100 h-100" style="object-fit:cover;transition:transform .3s ease;">
+                                    @else
+                                        <div class="text-primary" style="font-size:2rem;">
+                                            <i class="fas fa-{{ $category->icon ?? 'list' }}"></i>
+                                        </div>
+                                    @endif
                                 </div>
                                 <h5 class="fw-bold text-dark mb-0">{{ app()->getLocale() === 'ar' ? $category->name_ar : $category->name_en }}</h5>
                             </div>

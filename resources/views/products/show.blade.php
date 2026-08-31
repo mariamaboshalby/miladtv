@@ -52,7 +52,7 @@
                     @foreach($media as $img)
                     <button class="pd-thumb {{ $loop->first ? 'active' : '' }}"
                             onclick="switchImg('{{ $mediaUrl($img, 'card') }}', this)">
-                        <img src="{{ $mediaUrl($img, 'thumb') }}" alt="">
+                        <img src="{{ $mediaUrl($img, 'thumb') }}" alt="" width="80" height="80" loading="lazy" decoding="async">
                     </button>
                     @endforeach
                 </div>
@@ -65,6 +65,8 @@
                              id="mainImg"
                              class="pd-main-img"
                              alt="{{ $product['name'] }}"
+                             width="600" height="600"
+                             fetchpriority="high" decoding="async"
                              onclick="openImgModal(this.src)">
                     @else
                         <div class="pd-no-img">

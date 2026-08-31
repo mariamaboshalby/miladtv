@@ -114,7 +114,8 @@
                             <div class="product-img-area">
                                 @if(!empty($product['image_url']))
                                     <img src="{{ $product['image_url'] }}" alt="{{ $product['name'] }}"
-                                         class="w-100 h-100" style="object-fit:cover;" loading="lazy"
+                                         class="w-100 h-100" style="object-fit:cover;" loading="lazy" decoding="async"
+                                         width="300" height="180"
                                          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                                     <div class="product-placeholder" style="display:none;">
                                         <i class="fas fa-{{ $categoryIconMap[$product['category']] ?? 'box' }}"></i>

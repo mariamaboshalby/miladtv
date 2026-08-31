@@ -297,13 +297,20 @@
     // ========================================================================
     // Back to Top Button
     // ========================================================================
+    let scrollTicking = false;
     function handleScroll() {
-        if (elements.backToTop) {
-            if (window.scrollY > 300) {
-                elements.backToTop.classList.add('visible');
-            } else {
-                elements.backToTop.classList.remove('visible');
-            }
+        if (!scrollTicking) {
+            window.requestAnimationFrame(() => {
+                if (elements.backToTop) {
+                    if (window.scrollY > 300) {
+                        elements.backToTop.classList.add('visible');
+                    } else {
+                        elements.backToTop.classList.remove('visible');
+                    }
+                }
+                scrollTicking = false;
+            });
+            scrollTicking = true;
         }
     }
 
@@ -316,7 +323,7 @@
         });
     }
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
     // ========================================================================
     // Smooth Scroll for Anchor Links

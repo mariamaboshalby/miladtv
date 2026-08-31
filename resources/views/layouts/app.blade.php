@@ -16,9 +16,14 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 
-    <!-- Google Fonts: async load to avoid render-blocking -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Cairo:wght@400;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet"></noscript>
+    <!-- Google Fonts: async load with locale-aware subset and display=swap -->
+    @if($isAr)
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet"></noscript>
+    @else
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet"></noscript>
+    @endif
 
     <!-- Bootstrap 5 — RTL or LTR (critical, keep sync) -->
     @if($isAr)
@@ -248,7 +253,7 @@
 
                     <!-- Brand -->
                     <div class="col-lg-4">
-                        <img src="{{ asset('images/milad_logo.png') }}" alt="ميلاد سامي" class="milad-footer-logo mb-3"
+                        <img src="{{ asset('images/milad-logo.png') }}" alt="ميلاد سامي" class="milad-footer-logo mb-3"
                              width="140" height="40" loading="lazy" decoding="async"
                              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                         <div class="d-none align-items-center gap-2 mb-3">
@@ -454,7 +459,6 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
 
     @stack('scripts')
 

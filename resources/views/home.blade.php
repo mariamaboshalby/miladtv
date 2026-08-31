@@ -2,7 +2,6 @@
 @section('title', app()->getLocale() === 'ar' ? 'ميلاد سامي - قطع غيار شاشات التلفزيون' : 'Milad Sami - TV Screen Spare Parts')
 
     @push('styles')
-    <link rel="stylesheet" href="{{ asset('css/printer-loader.css') }}">
     {{-- Preload the LCP hero image (mobile prioritized) --}}
     <link rel="preload" as="image" href="{{ asset('images/slider-1-mobile.webp') }}" type="image/webp" media="(max-width: 768px)">
     <link rel="preload" as="image" href="{{ asset('images/slider-1.webp') }}" type="image/webp" media="(min-width: 769px)">
@@ -156,14 +155,26 @@
                 opacity: 0;
             }
 
-            /* Carousel Custom Height */
+            /* Carousel Heights & CLS Prevention */
+            #heroCarousel {
+                min-height: 260px;
+                background: #030f1f;
+            }
             .hero-img {
                 height: 850px;
                 object-fit: cover;
+                width: 100%;
             }
             @media (max-width: 991px) {
+                #heroCarousel { min-height: 420px; }
                 .hero-img {
-                    height: 500px; /* Ensure it's not too huge on mobile */
+                    height: 420px;
+                }
+            }
+            @media (max-width: 576px) {
+                #heroCarousel { min-height: 260px; }
+                .hero-img {
+                    height: 260px;
                 }
             }
 
@@ -180,8 +191,8 @@
 @section('content')
 
     {{-- ===== Hero Carousel ===== --}}
-    <div class="container-fluid pt-4 pb-2 px-0">
-        <div class="mx-auto rounded-4 overflow-hidden shadow-lg" style="width: 90%; max-width: none;">
+    <div class="container-fluid pt-3 pb-2 px-0">
+        <div class="mx-auto rounded-4 overflow-hidden shadow-lg" style="width: 92%; max-width: none;">
             <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
                 <div class="carousel-indicators">
             <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"
@@ -197,9 +208,9 @@
                 <picture>
                     <source media="(max-width: 768px)" srcset="{{ asset('images/slider-1-mobile.webp') }}" type="image/webp">
                     <source media="(min-width: 769px)" srcset="{{ asset('images/slider-1.webp') }}" type="image/webp">
-                    <img src="{{ asset('images/slider-1.jpg') }}" class="d-block w-100 hero-img"
+                    <img src="{{ asset('images/slider-1-mobile.webp') }}" class="d-block w-100 hero-img"
                          alt="ميلاد سامي - قطع غيار شاشات التلفزيون"
-                         fetchpriority="high" decoding="sync" width="1479" height="850"
+                         fetchpriority="high" decoding="async" width="1479" height="850"
                          loading="eager">
                 </picture>
             </div>
@@ -207,28 +218,28 @@
                 <picture>
                     <source media="(max-width: 768px)" srcset="{{ asset('images/slider-2-mobile.webp') }}" type="image/webp">
                     <source media="(min-width: 769px)" srcset="{{ asset('images/slider-2.webp') }}" type="image/webp">
-                    <img src="{{ asset('images/slider-2.jpg') }}" class="d-block w-100 hero-img" alt="Slide 2" loading="lazy" decoding="async" width="1600" height="891">
+                    <img src="{{ asset('images/slider-2.webp') }}" class="d-block w-100 hero-img" alt="Slide 2" loading="lazy" decoding="async" width="1600" height="891">
                 </picture>
             </div>
             <div class="carousel-item">
                 <picture>
                     <source media="(max-width: 768px)" srcset="{{ asset('images/slider-3-mobile.webp') }}" type="image/webp">
                     <source media="(min-width: 769px)" srcset="{{ asset('images/slider-3.webp') }}" type="image/webp">
-                    <img src="{{ asset('images/slider-3.jpg') }}" class="d-block w-100 hero-img" alt="Slide 3" loading="lazy" decoding="async" width="810" height="1080">
+                    <img src="{{ asset('images/slider-3.webp') }}" class="d-block w-100 hero-img" alt="Slide 3" loading="lazy" decoding="async" width="810" height="1080">
                 </picture>
             </div>
             <div class="carousel-item">
                 <picture>
                     <source media="(max-width: 768px)" srcset="{{ asset('images/slider-4-mobile.webp') }}" type="image/webp">
                     <source media="(min-width: 769px)" srcset="{{ asset('images/slider-4.webp') }}" type="image/webp">
-                    <img src="{{ asset('images/slider-4.jpg') }}" class="d-block w-100 hero-img" alt="Slide 4" loading="lazy" decoding="async" width="1600" height="743">
+                    <img src="{{ asset('images/slider-4.webp') }}" class="d-block w-100 hero-img" alt="Slide 4" loading="lazy" decoding="async" width="1600" height="743">
                 </picture>
             </div>
             <div class="carousel-item">
                 <picture>
                     <source media="(max-width: 768px)" srcset="{{ asset('images/slider-5-mobile.webp') }}" type="image/webp">
                     <source media="(min-width: 769px)" srcset="{{ asset('images/slider-5.webp') }}" type="image/webp">
-                    <img src="{{ asset('images/slider-5.jpg') }}" class="d-block w-100 hero-img" alt="Slide 5" loading="lazy" decoding="async" width="1024" height="735">
+                    <img src="{{ asset('images/slider-5.webp') }}" class="d-block w-100 hero-img" alt="Slide 5" loading="lazy" decoding="async" width="1024" height="735">
                 </picture>
             </div>
         </div>
@@ -317,7 +328,7 @@
                     <div class="about-img-wrap position-relative">
                         <picture>
                             <source srcset="{{ asset('images/about.webp') }}" type="image/webp">
-                            <img src="{{ asset('images/about.png') }}"
+                            <img src="{{ asset('images/about.webp') }}"
                                 alt="ميلاد سامي - متخصصون في قطع غيار شاشات التلفزيون"
                                 class="img-fluid rounded-4 shadow-lg w-100"
                                 style="object-fit:cover; max-height:480px;"
@@ -418,7 +429,7 @@
                     <a href="{{ route('products.index') }}">
                         <picture>
                             <source srcset="{{ asset('images/gallery-1.webp') }}" type="image/webp">
-                            <img src="{{ asset('images/gallery-1.png') }}" alt="ميلاد سامي" loading="lazy" decoding="async" width="800" height="800">
+                            <img src="{{ asset('images/gallery-1.webp') }}" alt="ميلاد سامي" loading="lazy" decoding="async" width="800" height="800">
                         </picture>
                     </a>
                 </div>
@@ -428,7 +439,7 @@
                     <a href="{{ route('products.index') }}">
                         <picture>
                             <source srcset="{{ asset('images/gallery-2.webp') }}" type="image/webp">
-                            <img src="{{ asset('images/gallery-2.png') }}" alt="ميلاد سامي" loading="lazy" decoding="async" width="800" height="800">
+                            <img src="{{ asset('images/gallery-2.webp') }}" alt="ميلاد سامي" loading="lazy" decoding="async" width="800" height="800">
                         </picture>
                     </a>
                 </div>
@@ -438,7 +449,7 @@
                     <a href="{{ route('products.index') }}">
                         <picture>
                             <source srcset="{{ asset('images/gallery-5.webp') }}" type="image/webp">
-                            <img src="{{ asset('images/gallery-5.png') }}" alt="ميلاد سامي" loading="lazy" decoding="async" width="800" height="800">
+                            <img src="{{ asset('images/gallery-5.webp') }}" alt="ميلاد سامي" loading="lazy" decoding="async" width="800" height="800">
                         </picture>
                     </a>
                 </div>
@@ -448,7 +459,7 @@
                     <a href="{{ route('products.index') }}">
                         <picture>
                             <source srcset="{{ asset('images/gallery-4.webp') }}" type="image/webp">
-                            <img src="{{ asset('images/gallery-4.png') }}" alt="ميلاد سامي" loading="lazy" decoding="async" width="800" height="800">
+                            <img src="{{ asset('images/gallery-4.webp') }}" alt="ميلاد سامي" loading="lazy" decoding="async" width="800" height="800">
                         </picture>
                     </a>
                 </div>
@@ -659,7 +670,12 @@
                 </div>
                 <div class="col-md-6 text-center">
                     @if(!empty($dealProduct['image_url']))
-                        <img src="{{ $dealProduct['image_url'] }}" class="img-fluid rounded-4 shadow-lg" style="max-height: 400px; object-fit: cover;">
+                        <img src="{{ $dealProduct['image_url'] }}"
+                             class="img-fluid rounded-4 shadow-lg"
+                             style="max-height: 400px; object-fit: cover;"
+                             loading="lazy" decoding="async"
+                             width="400" height="400"
+                             alt="{{ $dealProduct['name'] }}">
                     @else
                         <div class="bg-light rounded-4 d-flex align-items-center justify-content-center" style="height: 300px;">
                             <i class="fas fa-box fa-5x text-muted"></i>
@@ -681,7 +697,11 @@
                 <a href="{{ route('products.index', ['brand' => $brand->name]) }}" class="text-decoration-none">
                     <div class="card border-0 shadow-sm rounded-circle d-flex align-items-center justify-content-center bg-white" style="width: 100px; height: 100px; overflow:hidden;">
                         @if($brand->hasMedia('brand-logos'))
-                            <img src="{{ $brand->getFirstMediaUrl('brand-logos') }}" alt="{{ $brand->name }}" class="w-75">
+                            <img src="{{ $brand->getFirstMediaUrl('brand-logos') }}"
+                                 alt="{{ $brand->name }}"
+                                 class="w-75"
+                                 loading="lazy" decoding="async"
+                                 width="75" height="75">
                         @else
                             <span class="fw-bold text-dark">{{ $brand->name }}</span>
                         @endif
@@ -709,7 +729,12 @@
                         <div class="card border-0 shadow-sm h-100 rounded-4">
                             <div style="height: 150px; overflow: hidden; position: relative;">
                                 @if(!empty($product['image_url']))
-                                    <img src="{{ $product['image_url'] }}" class="w-100 h-100" style="object-fit:cover;">
+                                    <img src="{{ $product['image_url'] }}"
+                                         class="w-100 h-100"
+                                         style="object-fit:cover;"
+                                         loading="lazy" decoding="async"
+                                         width="200" height="150"
+                                         alt="{{ $product['name'] }}">
                                 @else
                                     <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light text-muted">
                                         <i class="fas fa-box fa-3x"></i>

@@ -10,20 +10,26 @@
 
     <link rel="icon" href="{{ asset('favicon.ico') }}">
 
-    <!-- Google Fonts: Inter + Cairo (Arabic) -->
+    <!-- Preconnect to external origins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 
-    <!-- Bootstrap 5 — RTL or LTR -->
+    <!-- Google Fonts: async load to avoid render-blocking -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Cairo:wght@400;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet"></noscript>
+
+    <!-- Bootstrap 5 — RTL or LTR (critical, keep sync) -->
     @if($isAr)
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css">
     @else
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     @endif
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Font Awesome — async load (non-render-blocking) -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
 
     <!-- App CSS -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
@@ -65,46 +71,11 @@
 
     <style>
         /* Smooth scrolling for the whole page */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        /* Page Transition Animations */
-        #page-transition-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #ffffff; /* White background */
-            z-index: 999999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            opacity: 1;
-            transition: opacity 0.4s ease, visibility 0.4s ease;
-        }
-        #page-transition-overlay.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-        .loading-icon {
-            font-size: 5rem;
-            color: #051836; /* Primary blue */
-            animation: bounceSpin 1.5s infinite ease-in-out;
-        }
-        @keyframes bounceSpin {
-            0% { transform: scale(0.8) rotate(0deg); opacity: 0.5; }
-            50% { transform: scale(1.1) rotate(180deg); opacity: 1; }
-            100% { transform: scale(0.8) rotate(360deg); opacity: 0.5; }
-        }
+        html { scroll-behavior: smooth; }
     </style>
     @stack('styles')
 </head>
 <body>
-    <!-- Page Transition Overlay -->
-    <div id="page-transition-overlay">
-        <i class="fas fa-tv loading-icon"></i>
-        <div class="mt-4 text-primary fw-bold" style="letter-spacing: 2px; font-size: 1.5rem;">ميلاد سامي</div>
-    </div>
     <!-- ===== MAIN NAVBAR ===== -->
     <nav class="milad-navbar sticky-top " id="miladNavbar" style="z-index: 10000;">
         <div class="container">
@@ -112,6 +83,7 @@
                 <!-- Logo -->
                 <a href="{{ route('home') }}" class="milad-brand flex-shrink-0">
                     <img src="{{ asset('images/milad-logo.png') }}" alt="ميلاد سامي" class="milad-logo-img"
+                         width="140" height="40" fetchpriority="high"
                          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                     <div style="display:none;align-items:center;gap:8px;">
                         <i class="fas fa-tv" style="font-size:1.75rem;color:#051836;"></i>
@@ -277,6 +249,7 @@
                     <!-- Brand -->
                     <div class="col-lg-4">
                         <img src="{{ asset('images/milad_logo.png') }}" alt="ميلاد سامي" class="milad-footer-logo mb-3"
+                             width="140" height="40" loading="lazy" decoding="async"
                              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                         <div class="d-none align-items-center gap-2 mb-3">
                             <i class="fas fa-tv fa-2x text-primary"></i>
@@ -541,19 +514,6 @@
             });
         });
 
-        // Fast Page Transition Overlay Hide
-        const overlay = document.getElementById('page-transition-overlay');
-        if (overlay) {
-            overlay.classList.add('hidden');
-        }
-    });
-
-    // Fix: Hide overlay when page is restored from bfcache (browser back/forward)
-    window.addEventListener('pageshow', function(event) {
-        const overlay = document.getElementById('page-transition-overlay');
-        if (overlay) {
-            overlay.classList.add('hidden');
-        }
     });
     </script>
 </body>

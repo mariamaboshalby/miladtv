@@ -2,7 +2,10 @@
 @section('title', app()->getLocale() === 'ar' ? 'ميلاد سامي - قطع غيار شاشات التلفزيون' : 'Milad Sami - TV Screen Spare Parts')
 
     @push('styles')
-        <link rel="stylesheet" href="{{ asset('css/printer-loader.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/printer-loader.css') }}">
+    {{-- Preload the LCP hero image (mobile prioritized) --}}
+    <link rel="preload" as="image" href="{{ asset('images/slider-1-mobile.webp') }}" type="image/webp" media="(max-width: 768px)">
+    <link rel="preload" as="image" href="{{ asset('images/slider-1.webp') }}" type="image/webp" media="(min-width: 769px)">
     @endpush
     @push('styles')
         <style>
@@ -189,34 +192,42 @@
             <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="4"></button>
         </div>
         <div class="carousel-inner px-1">
-            {{-- First slide: eager LCP image with fetchpriority=high and WebP --}}
+            {{-- First slide: eager LCP image (preloaded above) --}}
             <div class="carousel-item active">
                 <picture>
-                    <source srcset="{{ asset('images/slider-1.webp') }}" type="image/webp">
-                    <img src="{{ asset('images/slider-1.jpg') }}" class="d-block w-100 hero-img" alt="ميلاد سامي - قطع غيار شاشات التلفزيون" fetchpriority="high" decoding="async" width="1479" height="1063">
+                    <source media="(max-width: 768px)" srcset="{{ asset('images/slider-1-mobile.webp') }}" type="image/webp">
+                    <source media="(min-width: 769px)" srcset="{{ asset('images/slider-1.webp') }}" type="image/webp">
+                    <img src="{{ asset('images/slider-1.jpg') }}" class="d-block w-100 hero-img"
+                         alt="ميلاد سامي - قطع غيار شاشات التلفزيون"
+                         fetchpriority="high" decoding="sync" width="1479" height="850"
+                         loading="eager">
                 </picture>
             </div>
             <div class="carousel-item">
                 <picture>
-                    <source srcset="{{ asset('images/slider-2.webp') }}" type="image/webp">
+                    <source media="(max-width: 768px)" srcset="{{ asset('images/slider-2-mobile.webp') }}" type="image/webp">
+                    <source media="(min-width: 769px)" srcset="{{ asset('images/slider-2.webp') }}" type="image/webp">
                     <img src="{{ asset('images/slider-2.jpg') }}" class="d-block w-100 hero-img" alt="Slide 2" loading="lazy" decoding="async" width="1600" height="891">
                 </picture>
             </div>
             <div class="carousel-item">
                 <picture>
-                    <source srcset="{{ asset('images/slider-3.webp') }}" type="image/webp">
+                    <source media="(max-width: 768px)" srcset="{{ asset('images/slider-3-mobile.webp') }}" type="image/webp">
+                    <source media="(min-width: 769px)" srcset="{{ asset('images/slider-3.webp') }}" type="image/webp">
                     <img src="{{ asset('images/slider-3.jpg') }}" class="d-block w-100 hero-img" alt="Slide 3" loading="lazy" decoding="async" width="810" height="1080">
                 </picture>
             </div>
             <div class="carousel-item">
                 <picture>
-                    <source srcset="{{ asset('images/slider-4.webp') }}" type="image/webp">
+                    <source media="(max-width: 768px)" srcset="{{ asset('images/slider-4-mobile.webp') }}" type="image/webp">
+                    <source media="(min-width: 769px)" srcset="{{ asset('images/slider-4.webp') }}" type="image/webp">
                     <img src="{{ asset('images/slider-4.jpg') }}" class="d-block w-100 hero-img" alt="Slide 4" loading="lazy" decoding="async" width="1600" height="743">
                 </picture>
             </div>
             <div class="carousel-item">
                 <picture>
-                    <source srcset="{{ asset('images/slider-5.webp') }}" type="image/webp">
+                    <source media="(max-width: 768px)" srcset="{{ asset('images/slider-5-mobile.webp') }}" type="image/webp">
+                    <source media="(min-width: 769px)" srcset="{{ asset('images/slider-5.webp') }}" type="image/webp">
                     <img src="{{ asset('images/slider-5.jpg') }}" class="d-block w-100 hero-img" alt="Slide 5" loading="lazy" decoding="async" width="1024" height="735">
                 </picture>
             </div>
@@ -468,7 +479,11 @@
                             <div class="card border-0 shadow-sm text-center p-4 rounded-4 h-100">
                                 <div class="mx-auto mb-3 rounded-circle d-flex align-items-center justify-content-center overflow-hidden" style="width:80px;height:80px;background:rgba(5,24,54,0.06);">
                                     @if($category->image)
-                                        <img src="{{ asset('storage/' . $category->image) }}" alt="{{ app()->getLocale() === 'ar' ? $category->name_ar : $category->name_en }}" class="w-100 h-100" style="object-fit:cover;transition:transform .3s ease;">
+                                        <img src="{{ asset('storage/' . $category->image) }}"
+                                             alt="{{ app()->getLocale() === 'ar' ? $category->name_ar : $category->name_en }}"
+                                             class="w-100 h-100"
+                                             style="object-fit:cover;transition:transform .3s ease;"
+                                             loading="lazy" decoding="async" width="80" height="80">
                                     @else
                                         <div class="text-primary" style="font-size:2rem;">
                                             <i class="fas fa-{{ $category->icon ?? 'list' }}"></i>
@@ -499,7 +514,12 @@
                         <div class="card border-0 shadow-sm h-100 rounded-4">
                             <div style="height: 150px; overflow: hidden; position: relative;">
                                 @if(!empty($product['image_url']))
-                                    <img src="{{ $product['image_url'] }}" class="w-100 h-100" style="object-fit:cover;">
+                                    <img src="{{ $product['image_url'] }}"
+                                         class="w-100 h-100"
+                                         style="object-fit:cover;"
+                                         loading="lazy" decoding="async"
+                                         width="200" height="150"
+                                         alt="{{ $product['name'] }}">
                                 @else
                                     <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light text-muted">
                                         <i class="fas fa-box fa-3x"></i>
@@ -533,7 +553,12 @@
                         <div class="card border-0 shadow-sm h-100 rounded-4">
                             <div style="height: 150px; overflow: hidden; position: relative;">
                                 @if(!empty($product['image_url']))
-                                    <img src="{{ $product['image_url'] }}" class="w-100 h-100" style="object-fit:cover;">
+                                    <img src="{{ $product['image_url'] }}"
+                                         class="w-100 h-100"
+                                         style="object-fit:cover;"
+                                         loading="lazy" decoding="async"
+                                         width="200" height="150"
+                                         alt="{{ $product['name'] }}">
                                 @else
                                     <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light text-muted">
                                         <i class="fas fa-box fa-3x"></i>
@@ -567,7 +592,12 @@
                         <div class="card border-0 shadow-sm h-100 rounded-4">
                             <div style="height: 150px; overflow: hidden; position: relative;">
                                 @if(!empty($product['image_url']))
-                                    <img src="{{ $product['image_url'] }}" class="w-100 h-100" style="object-fit:cover;">
+                                    <img src="{{ $product['image_url'] }}"
+                                         class="w-100 h-100"
+                                         style="object-fit:cover;"
+                                         loading="lazy" decoding="async"
+                                         width="200" height="150"
+                                         alt="{{ $product['name'] }}">
                                 @else
                                     <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light text-muted">
                                         <i class="fas fa-box fa-3x"></i>
@@ -1218,30 +1248,22 @@
                 });
             }
 
-            // Parallax Reverse Motion on Carousel
+            // Parallax Reverse Motion on Carousel — desktop only (skip on mobile to save CPU)
             const heroCarousel = document.getElementById('heroCarousel');
-            if (heroCarousel) {
+            if (heroCarousel && window.innerWidth > 992) {
                 heroCarousel.addEventListener('mousemove', function(e) {
                     const rect = heroCarousel.getBoundingClientRect();
-                    
-                    // Calculate mouse position relative to the center of the carousel
                     const x = e.clientX - rect.left - rect.width / 2;
                     const y = e.clientY - rect.top - rect.height / 2;
-                    
-                    // Move the image in the OPPOSITE direction of the mouse
                     const moveX = -(x / 20);
                     const moveY = -(y / 20);
-
-                    // Find the active image
                     const activeImage = heroCarousel.querySelector('.carousel-item.active .hero-img');
                     if (activeImage) {
-                        // Apply transform (scale slightly to avoid showing borders when moving)
                         activeImage.style.transform = `scale(1.05) translate(${moveX}px, ${moveY}px)`;
                         activeImage.style.transition = 'transform 0.1s ease-out';
                     }
                 });
 
-                // Reset position when mouse leaves the carousel
                 heroCarousel.addEventListener('mouseleave', function() {
                     const images = heroCarousel.querySelectorAll('.hero-img');
                     images.forEach(img => {

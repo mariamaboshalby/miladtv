@@ -98,7 +98,7 @@
             <div class="col-lg-9">
                 {{-- Toolbar --}}
                 <div class="d-flex justify-content-between align-items-center mb-4 px-3 py-2 bg-white rounded-3 shadow-sm border">
-                    <span class="text-secondary fw-semibold">{{ __('app.prod_found', ['count' => count($products)]) }}</span>
+                    <span class="text-secondary fw-semibold">{{ __('app.prod_found', ['count' => $products->total()]) }}</span>
                 </div>
 
                 @if(count($products) > 0)
@@ -170,6 +170,13 @@
                     <h5 class="fw-bold text-dark mb-2">{{ __('app.prod_empty_title') }}</h5>
                     <p class="text-secondary mb-4">{{ __('app.prod_empty_sub') }}</p>
                     <a href="{{ route('products.index') }}" class="btn btn-primary px-5">{{ __('app.prod_empty_btn') }}</a>
+                </div>
+                @endif
+
+                {{-- Pagination --}}
+                @if($products->hasPages())
+                <div class="d-flex justify-content-center mt-4">
+                    {{ $products->appends(request()->query())->links() }}
                 </div>
                 @endif
             </div>

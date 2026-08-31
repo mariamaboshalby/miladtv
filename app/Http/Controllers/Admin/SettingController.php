@@ -35,6 +35,9 @@ class SettingController extends Controller
             }
         }
 
+        \App\Services\CacheService::clearSettingsCaches();
+        \Illuminate\Support\Facades\Cache::flush(); // Flush all public caches safely on settings update
+
         return redirect()->back()->with('success', 'Settings updated successfully.');
     }
 }

@@ -81,6 +81,8 @@ class ProductController extends Controller
                     ->toMediaCollection('product-images');
         }
 
+        \App\Services\CacheService::clearProductCaches();
+
         return redirect()->route('admin.products.index')
             ->with('success', 'تم إضافة المنتج بنجاح');
     }
@@ -141,11 +143,13 @@ class ProductController extends Controller
             if (in_array($mainId, $mediaIds, true)) {
                 $orderedIds = array_values(array_merge(
                     [$mainId],
-                    array_values(array_filter($mediaIds, fn ($id) => $id !== $mainId))
+                    array_values(filter: fn ($id) => $id !== $mainId)
                 ));
                 Media::setNewOrder($orderedIds);
             }
         }
+
+        \App\Services\CacheService::clearProductCaches();
 
         return redirect()->route('admin.products.index')
             ->with('success', 'تم تحديث المنتج بنجاح');
@@ -155,6 +159,8 @@ class ProductController extends Controller
     {
         $product->clearMediaCollection('product-images');
         $product->delete();
+
+        \App\Services\CacheService::clearProductCaches();
 
         return redirect()->route('admin.products.index')
             ->with('success', 'تم حذف المنتج بنجاح');

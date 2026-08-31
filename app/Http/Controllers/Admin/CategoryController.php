@@ -36,6 +36,7 @@ class CategoryController extends Controller
         }
 
         $category = Category::create($validated);
+        \App\Services\CacheService::clearCategoryCaches();
 
         if (request()->expectsJson()) {
             return response()->json($category, 201);
@@ -75,6 +76,8 @@ class CategoryController extends Controller
         }
 
         $category->update($validated);
+        \App\Services\CacheService::clearCategoryCaches();
+
         return redirect()->route('admin.categories.index')->with('success', 'تم تعديل الفئة بنجاح');
     }
 
@@ -85,6 +88,8 @@ class CategoryController extends Controller
         }
 
         $category->delete();
+        \App\Services\CacheService::clearCategoryCaches();
+
         return redirect()->route('admin.categories.index')->with('success', 'تم حذف الفئة بنجاح');
     }
 }

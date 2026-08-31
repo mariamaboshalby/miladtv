@@ -13,7 +13,7 @@
     <!-- Google Fonts: Inter + Cairo (Arabic) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Bootstrap 5 — RTL or LTR -->
     @if($isAr)
@@ -479,26 +479,28 @@
     </nav>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
 
     @stack('scripts')
 
     <!-- Newsletter AJAX -->
     <script>
-    (function() {
+    document.addEventListener('DOMContentLoaded', function() {
         const form = document.getElementById('newsletterForm');
         if (!form) return;
         form.addEventListener('submit', function(e) {
             e.preventDefault();
-            const email  = document.getElementById('newsletterEmail').value.trim();
+            const email  = document.getElementById('newsletterEmail')?.value.trim();
             const btn    = document.getElementById('newsletterBtn');
             const msgEl  = document.getElementById('newsletterMsg');
             if (!email) return;
 
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-            btn.disabled  = true;
+            if (btn) {
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                btn.disabled  = true;
+            }
 
             fetch('{{ route('newsletter.subscribe') }}', {
                 method: 'POST',
@@ -511,207 +513,48 @@
             })
             .then(r => r.json())
             .then(data => {
-                msgEl.classList.remove('d-none', 'text-danger', 'text-success');
-                if (data.success) {
-                    msgEl.textContent = data.message;
-                    msgEl.classList.add('text-success');
-                    form.reset();
-                } else {
-                    const msg = data.errors?.email?.[0] || data.message || 'Error';
-                    msgEl.textContent = msg;
-                    msgEl.classList.add('text-danger');
+                if (msgEl) {
+                    msgEl.classList.remove('d-none', 'text-danger', 'text-success');
+                    if (data.success) {
+                        msgEl.textContent = data.message;
+                        msgEl.classList.add('text-success');
+                        form.reset();
+                    } else {
+                        const msg = data.errors?.email?.[0] || data.message || 'Error';
+                        msgEl.textContent = msg;
+                        msgEl.classList.add('text-danger');
+                    }
                 }
             })
             .catch(() => {
-                msgEl.textContent = '{{ app()->getLocale() === 'ar' ? 'حدث خطأ. حاول مرة أخرى.' : 'Something went wrong. Try again.' }}';
-                msgEl.classList.remove('d-none');
-                msgEl.classList.add('text-danger');
+                if (msgEl) {
+                    msgEl.textContent = '{{ app()->getLocale() === 'ar' ? 'حدث خطأ. حاول مرة أخرى.' : 'Something went wrong. Try again.' }}';
+                    msgEl.classList.remove('d-none');
+                    msgEl.classList.add('text-danger');
+                }
             })
             .finally(() => {
-                btn.innerHTML = '<i class="fas fa-paper-plane"></i>';
-                btn.disabled  = false;
+                if (btn) {
+                    btn.innerHTML = '<i class="fas fa-paper-plane"></i>';
+                    btn.disabled  = false;
+                }
             });
         });
-    }());
-    </script>
 
-    <!-- Mouse Interaction Events -->
-    <style>
-        .mouse-follower {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 20px;
-            height: 20px;
-            background-color: rgba(13, 110, 253, 0.4);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 99999;
-            transform: translate(-50%, -50%);
-            transition: transform 0.1s;
+        // Fast Page Transition Overlay Hide
+        const overlay = document.getElementById('page-transition-overlay');
+        if (overlay) {
+            overlay.classList.add('hidden');
         }
-        .mouse-click-effect {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(13, 110, 253, 0.8);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 99998;
-            transform: translate(-50%, -50%) scale(1);
-            opacity: 1;
-            animation: clickRipple 0.5s ease-out forwards;
+    });
+
+    // Fix: Hide overlay when page is restored from bfcache (browser back/forward)
+    window.addEventListener('pageshow', function(event) {
+        const overlay = document.getElementById('page-transition-overlay');
+        if (overlay) {
+            overlay.classList.add('hidden');
         }
-        @keyframes clickRipple {
-            to {
-                transform: translate(-50%, -50%) scale(4);
-                opacity: 0;
-            }
-        }
-    </style>
-    <!-- Floating Dots Background -->
-    @unless(request()->routeIs('products.*'))
-    <style>
-        .floating-dot {
-            position: fixed;
-            bottom: -50px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 99997; /* High enough to be seen but below cursors */
-            box-shadow: 0 0 6px rgba(255,255,255,0.4);
-            animation: floatUp linear forwards;
-        }
-        @keyframes floatUp {
-            0% {
-                transform: translateY(0);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.8;
-            }
-            90% {
-                opacity: 0.8;
-            }
-            100% {
-                transform: translateY(-110vh);
-                opacity: 0;
-            }
-        }
-    </style>
-    @endunless
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- Floating Dots Logic ---
-            @unless(request()->routeIs('products.*'))
-            const createDot = () => {
-                const dot = document.createElement('div');
-                dot.className = 'floating-dot';
-                
-                // Random position from left to right
-                dot.style.left = Math.random() * 100 + 'vw';
-                
-                // Random animation duration (10s to 20s)
-                const duration = Math.random() * 10 + 10;
-                dot.style.animationDuration = duration + 's';
-                
-                // Random size for the dot (2px to 5px)
-                const size = (Math.random() * 3 + 2) + 'px';
-                dot.style.width = size;
-                dot.style.height = size;
-
-                document.body.appendChild(dot);
-
-                // Clean up element after it floats away
-                setTimeout(() => {
-                    dot.remove();
-                }, duration * 1000);
-            };
-
-            // Spawn a new dot frequently
-            setInterval(createDot, 600);
-
-            // Spawn many immediately when page loads
-            for(let i = 0; i < 15; i++) {
-                setTimeout(createDot, i * 200);
-            }
-            @endunless
-
-            // --- Mouse Follower Logic ---
-            const follower = document.createElement('div');
-            follower.className = 'mouse-follower';
-            document.body.appendChild(follower);
-
-            let mouseX = -100, mouseY = -100;
-            let followerX = -100, followerY = -100;
-
-            document.addEventListener('mousemove', (e) => {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-            });
-
-            function animate() {
-                followerX += (mouseX - followerX) * 0.2;
-                followerY += (mouseY - followerY) * 0.2;
-                follower.style.left = followerX + 'px';
-                follower.style.top = followerY + 'px';
-                requestAnimationFrame(animate);
-            }
-            animate();
-
-            document.addEventListener('mousedown', (e) => {
-                follower.style.transform = 'translate(-50%, -50%) scale(0.5)';
-                const ripple = document.createElement('div');
-                ripple.className = 'mouse-click-effect';
-                ripple.style.left = e.clientX + 'px';
-                ripple.style.top = e.clientY + 'px';
-                document.body.appendChild(ripple);
-                setTimeout(() => ripple.remove(), 500);
-            });
-
-            document.addEventListener('mouseup', () => {
-                follower.style.transform = 'translate(-50%, -50%) scale(1)';
-            });
-
-            // Page Transition Logic
-            const overlay = document.getElementById('page-transition-overlay');
-            if (overlay) {
-                // Hide overlay after page loads
-                setTimeout(() => {
-                    overlay.classList.add('hidden');
-                }, 150);
-
-                document.querySelectorAll('a').forEach(anchor => {
-                    anchor.addEventListener('click', function (e) {
-                        if (this.hostname === window.location.hostname && 
-                            !this.hasAttribute('target') && 
-                            this.getAttribute('href') !== '#' && 
-                            !this.getAttribute('href').startsWith('javascript:')) {
-                            
-                            e.preventDefault();
-                            const href = this.getAttribute('href');
-                            
-                            // Show overlay
-                            overlay.classList.remove('hidden');
-                            
-                            setTimeout(() => {
-                                window.location.href = href;
-                            }, 350);
-                        }
-                    });
-                });
-            }
-        });
-
-        // Fix: Hide overlay when page is restored from bfcache (browser back/forward)
-        window.addEventListener('pageshow', function(event) {
-            const overlay = document.getElementById('page-transition-overlay');
-            if (overlay) {
-                overlay.classList.add('hidden');
-            }
-        });
+    });
     </script>
 </body>
 </html>

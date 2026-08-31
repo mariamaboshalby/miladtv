@@ -3,6 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\AboutStat;
+use App\Models\BlogPost;
+use App\Models\Download;
+use App\Models\Testimonial;
+use App\Models\Category;
+use App\Models\Setting;
+use App\Models\Brand;
+use App\Models\Faq;
+use Illuminate\Support\Facades\Cache;
 
 class HomeController extends Controller
 {
@@ -23,123 +32,170 @@ class HomeController extends Controller
             'description' => $p->description,
         ];
 
-        $featuredProducts = Product::active()
-            ->featured()
-            ->with('media')
-            ->latest()
-            ->take(6)
-            ->get()
-            ->map($mapProduct)
-            ->toArray();
-
-        if (empty($featuredProducts)) {
-            $featuredProducts = Product::active()
+        // Featured Products (cached 30 mins)
+        $featuredProducts = Cache::remember('home_featured_products', 1800, function () use ($mapProduct) {
+            $items = Product::active()
+                ->featured()
+                ->select(['id', 'name', 'category', 'price', 'old_price', 'badge', 'badge_color', 'rating', 'reviews', 'description', 'is_active', 'is_featured'])
                 ->with('media')
-                ->latest()
+                ->latest('id')
                 ->take(6)
                 ->get()
                 ->map($mapProduct)
                 ->toArray();
-        }
 
-        $productCount = Product::where('is_active', true)->count();
+            if (empty($items)) {
+                $items = Product::active()
+                    ->select(['id', 'name', 'category', 'price', 'old_price', 'badge', 'badge_color', 'rating', 'reviews', 'description', 'is_active'])
+                    ->with('media')
+                    ->latest('id')
+                    ->take(6)
+                    ->get()
+                    ->map($mapProduct)
+                    ->toArray();
+            }
+            return $items;
+        });
 
-        // Dynamically fetch About Stats
-        $aboutStats = \App\Models\AboutStat::active()->take(4)->get();
-        if ($aboutStats->count() > 0) {
-            $stats = $aboutStats->map(function($stat) {
-                return [
-                    'number' => $stat->number,
-                    'label'  => app()->getLocale() === 'ar' ? $stat->title_ar : $stat->title_en,
-                    'icon'   => $stat->icon,
-                ];
-            })->toArray();
-        } else {
-            $stats = [
-                ['number' => $productCount . '+', 'label' => 'منتج متاح',  'icon' => 'fa-box'],
-                ['number' => '15K+',              'label' => 'عميل سعيد',  'icon' => 'fa-users'],
-                ['number' => '10+',               'label' => 'سنوات خبرة', 'icon' => 'fa-award'],
-                ['number' => '24/7',              'label' => 'دعم فني',    'icon' => 'fa-headset'],
+        // Dynamic Stats (cached 1 hour)
+        $stats = Cache::remember('home_stats_' . app()->getLocale(), 3600, function () {
+            $aboutStats = AboutStat::active()->take(4)->get();
+            if ($aboutStats->count() > 0) {
+                return $aboutStats->map(function($stat) {
+                    return [
+                        'number' => $stat->number,
+                        'label'  => app()->getLocale() === 'ar' ? $stat->title_ar : $stat->title_en,
+                        'icon'   => $stat->icon,
+                    ];
+                })->toArray();
+            }
+
+            $productCount = Product::where('is_active', true)->count();
+            return [
+                ['number' => $productCount . '+', 'label' => app()->getLocale() === 'ar' ? 'منتج متاح' : 'Available Products',  'icon' => 'fa-box'],
+                ['number' => '15K+',              'label' => app()->getLocale() === 'ar' ? 'عميل سعيد' : 'Happy Clients',        'icon' => 'fa-users'],
+                ['number' => '10+',               'label' => app()->getLocale() === 'ar' ? 'سنوات خبرة' : 'Years Experience',    'icon' => 'fa-award'],
+                ['number' => '24/7',              'label' => app()->getLocale() === 'ar' ? 'دعم فني' : 'Technical Support',     'icon' => 'fa-headset'],
             ];
-        }
+        });
 
-        // Dynamically fetch Blog Posts
-        $blogPosts = \App\Models\BlogPost::active()
-            ->latest('published_at')
-            ->take(3)
-            ->get();
+        // Blog Posts (cached 30 mins)
+        $blogPosts = Cache::remember('home_blog_posts', 1800, function () {
+            return BlogPost::active()
+                ->select(['id', 'title', 'title_ar', 'excerpt', 'excerpt_ar', 'category', 'views', 'read_time', 'published_at', 'created_at', 'is_active'])
+                ->latest('published_at')
+                ->take(3)
+                ->get();
+        });
 
-        // Dynamically fetch latest Downloads
-        $downloads = \App\Models\Download::active()
-            ->latest()
-            ->take(4)
-            ->get();
+        // Downloads (cached 1 hour)
+        $downloads = Cache::remember('home_downloads', 3600, function () {
+            return Download::active()
+                ->latest('id')
+                ->take(4)
+                ->get();
+        });
 
-        // Fetch approved testimonials
-        $testimonials = \App\Models\Testimonial::approved()
-            ->latest()
-            ->take(6)
-            ->get();
+        // Testimonials (cached 1 hour)
+        $testimonials = Cache::remember('home_testimonials', 3600, function () {
+            return Testimonial::approved()
+                ->latest('id')
+                ->take(6)
+                ->get();
+        });
 
-        // Fetch Best Selling Products
-        $bestSellingProducts = Product::active()
-            ->with('media')
-            ->orderBy('sales_count', 'desc')
-            ->take(6)
-            ->get()
-            ->map($mapProduct)
-            ->toArray();
+        // Best Selling Products (cached 30 mins)
+        $bestSellingProducts = Cache::remember('home_best_selling_products', 1800, function () use ($mapProduct) {
+            return Product::active()
+                ->select(['id', 'name', 'category', 'price', 'old_price', 'badge', 'badge_color', 'rating', 'reviews', 'description', 'sales_count', 'is_active'])
+                ->with('media')
+                ->orderBy('sales_count', 'desc')
+                ->take(6)
+                ->get()
+                ->map($mapProduct)
+                ->toArray();
+        });
 
-        // Fetch First 4 Categories
-        $topCategories = \App\Models\Category::active()->take(4)->get();
+        // Top 4 Categories (cached 1 hour)
+        $topCategories = Cache::remember('home_top_categories', 3600, function () {
+            return Category::active()
+                ->select(['id', 'slug', 'name_ar', 'name_en', 'icon', 'image', 'is_active'])
+                ->take(4)
+                ->get();
+        });
 
-        // Fetch Most Visited Products
-        $mostVisitedProducts = Product::active()
-            ->with('media')
-            ->orderBy('views_count', 'desc')
-            ->take(6)
-            ->get()
-            ->map($mapProduct)
-            ->toArray();
+        // Most Visited Products (cached 30 mins)
+        $mostVisitedProducts = Cache::remember('home_most_visited_products', 1800, function () use ($mapProduct) {
+            return Product::active()
+                ->select(['id', 'name', 'category', 'price', 'old_price', 'badge', 'badge_color', 'rating', 'reviews', 'description', 'views_count', 'is_active'])
+                ->with('media')
+                ->orderBy('views_count', 'desc')
+                ->take(6)
+                ->get()
+                ->map($mapProduct)
+                ->toArray();
+        });
 
-        // Fetch Latest 5 Products
-        $latestProducts = Product::active()
-            ->with('media')
-            ->latest()
-            ->take(5)
-            ->get()
-            ->map($mapProduct)
-            ->toArray();
+        // Latest Products (cached 30 mins)
+        $latestProducts = Cache::remember('home_latest_products', 1800, function () use ($mapProduct) {
+            return Product::active()
+                ->select(['id', 'name', 'category', 'price', 'old_price', 'badge', 'badge_color', 'rating', 'reviews', 'description', 'is_active'])
+                ->with('media')
+                ->latest('id')
+                ->take(5)
+                ->get()
+                ->map($mapProduct)
+                ->toArray();
+        });
 
-        // Home Settings & New Sections
-        $settings = \App\Models\Setting::pluck('value', 'key')->toArray();
+        // Home Settings (cached 1 hour)
+        $settings = Cache::remember('home_settings_map', 3600, function () {
+            return Setting::pluck('value', 'key')->toArray();
+        });
 
-        // Deal of the Day
+        // Deal of the Day (cached 30 mins)
         $dealProduct = null;
         if (($settings['home_show_deal'] ?? '0') == '1' && !empty($settings['home_deal_product_id'])) {
-            $productModel = Product::with('media')->find($settings['home_deal_product_id']);
-            if ($productModel) {
-                $dealProduct = $mapProduct($productModel);
-                $dealProduct['end_time'] = $settings['home_deal_end_time'] ?? null;
-            }
+            $dealProduct = Cache::remember('home_deal_product_' . $settings['home_deal_product_id'], 1800, function () use ($settings, $mapProduct) {
+                $productModel = Product::with('media')->find($settings['home_deal_product_id']);
+                if ($productModel) {
+                    $deal = $mapProduct($productModel);
+                    $deal['end_time'] = $settings['home_deal_end_time'] ?? null;
+                    return $deal;
+                }
+                return null;
+            });
         }
 
-        // Brands
+        // Brands (cached 1 hour)
         $brands = [];
         if (($settings['home_show_brands'] ?? '0') == '1') {
-            $brands = \App\Models\Brand::active()->get();
+            $brands = Cache::remember('home_brands_list', 3600, function () {
+                return Brand::active()->with('media')->get();
+            });
         }
 
-        // FAQs
+        // FAQs (cached 1 hour)
         $faqs = [];
         if (($settings['home_show_faq'] ?? '0') == '1') {
-            $faqs = \App\Models\Faq::active()->orderBy('sort_order')->get();
+            $faqs = Cache::remember('home_faqs_list', 3600, function () {
+                return Faq::active()->orderBy('sort_order')->get();
+            });
         }
 
-        // Recommended For You (Random for now)
+        // Recommended Products (cached 15 mins)
         $recommendedProducts = [];
         if (($settings['home_show_recommended'] ?? '0') == '1') {
-            $recommendedProducts = Product::active()->with('media')->inRandomOrder()->take(6)->get()->map($mapProduct)->toArray();
+            $recommendedProducts = Cache::remember('home_recommended_products', 900, function () use ($mapProduct) {
+                return Product::active()
+                    ->select(['id', 'name', 'category', 'price', 'old_price', 'badge', 'badge_color', 'rating', 'reviews', 'description', 'is_active'])
+                    ->with('media')
+                    ->inRandomOrder()
+                    ->take(6)
+                    ->get()
+                    ->map($mapProduct)
+                    ->toArray();
+            });
         }
 
         return view('home', compact(

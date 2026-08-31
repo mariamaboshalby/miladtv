@@ -29,19 +29,26 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-        $query    = Product::active();
         $category = $request->get('category', 'all');
         $sort     = $request->get('sort', 'default');
+
+        $query = Product::active()
+            ->select([
+                'id', 'name', 'brand', 'category', 'description',
+                'price', 'old_price', 'badge', 'badge_color',
+                'rating', 'reviews', 'image', 'is_active',
+            ]);
 
         if ($category !== 'all') {
             $query->where('category', $category);
         }
 
         if ($request->filled('search')) {
-            $query->where(function ($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->search . '%')
-                  ->orWhere('brand', 'like', '%' . $request->search . '%')
-                  ->orWhere('description', 'like', '%' . $request->search . '%');
+            $search = trim($request->search);
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('brand', 'like', '%' . $search . '%')
+                  ->orWhere('description', 'like', '%' . $search . '%');
             });
         }
 
@@ -49,13 +56,19 @@ class ProductController extends Controller
             'price_asc'  => $query->orderBy('price', 'asc'),
             'price_desc' => $query->orderBy('price', 'desc'),
             'rating'     => $query->orderBy('rating', 'desc'),
-            default      => $query->latest(),
+            default      => $query->latest('id'),
         };
 
-        $products = $query->with('category')->get()->map(fn ($p) => $this->toArray($p))->toArray();
+        // Paginate to avoid loading all products into memory at once
+        $products = $query->with('media')->paginate(20)->through(fn ($p) => $this->toArray($p));
 
-        $dbCategories = \App\Models\Category::active()->get();
-        $categoryIconMap = $dbCategories->pluck('icon', 'slug')->toArray();
+        $dbCategories = \Illuminate\Support\Facades\Cache::remember('active_categories_list', 3600, function () {
+            return \App\Models\Category::active()->select(['id', 'slug', 'name_ar', 'name_en', 'icon', 'image'])->get();
+        });
+
+        $categoryIconMap = \Illuminate\Support\Facades\Cache::remember('category_icon_map', 3600, function () use ($dbCategories) {
+            return $dbCategories->pluck('icon', 'slug')->toArray();
+        });
 
         return view('products.index', compact('products', 'category', 'sort', 'dbCategories', 'categoryIconMap'));
     }
@@ -67,11 +80,20 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        $product = Product::active()->findOrFail($id);
+        $product = Product::active()
+            ->with(['media', 'category'])
+            ->findOrFail($id);
 
         $related = Product::active()
+            ->select([
+                'id', 'name', 'brand', 'category', 'description',
+                'price', 'old_price', 'badge', 'badge_color',
+                'rating', 'reviews', 'image', 'is_active'
+            ])
+            ->with('media')
             ->where('category', $product->getRawOriginal('category'))
             ->where('id', '!=', $product->id)
+            ->latest('id')
             ->take(4)
             ->get()
             ->map(fn($p) => $this->toArray($p))

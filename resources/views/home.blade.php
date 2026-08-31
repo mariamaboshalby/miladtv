@@ -188,21 +188,37 @@
             <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="3"></button>
             <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="4"></button>
         </div>
-        <div class="carousel-inner">
+        <div class="carousel-inner px-1">
+            {{-- First slide: eager LCP image with fetchpriority=high and WebP --}}
             <div class="carousel-item active">
-                <img src="{{ asset('images/slider-1.jpg') }}" class="d-block w-100 hero-img" alt="Slide 1">
+                <picture>
+                    <source srcset="{{ asset('images/slider-1.webp') }}" type="image/webp">
+                    <img src="{{ asset('images/slider-1.jpg') }}" class="d-block w-100 hero-img" alt="ميلاد سامي - قطع غيار شاشات التلفزيون" fetchpriority="high" decoding="async" width="1479" height="1063">
+                </picture>
             </div>
             <div class="carousel-item">
-                <img src="{{ asset('images/slider-2.jpg') }}" class="d-block w-100 hero-img" alt="Slide 2">
+                <picture>
+                    <source srcset="{{ asset('images/slider-2.webp') }}" type="image/webp">
+                    <img src="{{ asset('images/slider-2.jpg') }}" class="d-block w-100 hero-img" alt="Slide 2" loading="lazy" decoding="async" width="1600" height="891">
+                </picture>
             </div>
             <div class="carousel-item">
-                <img src="{{ asset('images/slider-3.jpg') }}" class="d-block w-100 hero-img" alt="Slide 3">
+                <picture>
+                    <source srcset="{{ asset('images/slider-3.webp') }}" type="image/webp">
+                    <img src="{{ asset('images/slider-3.jpg') }}" class="d-block w-100 hero-img" alt="Slide 3" loading="lazy" decoding="async" width="810" height="1080">
+                </picture>
             </div>
             <div class="carousel-item">
-                <img src="{{ asset('images/slider-4.jpg') }}" class="d-block w-100 hero-img" alt="Slide 4">
+                <picture>
+                    <source srcset="{{ asset('images/slider-4.webp') }}" type="image/webp">
+                    <img src="{{ asset('images/slider-4.jpg') }}" class="d-block w-100 hero-img" alt="Slide 4" loading="lazy" decoding="async" width="1600" height="743">
+                </picture>
             </div>
             <div class="carousel-item">
-                <img src="{{ asset('images/slider-5.jpg') }}" class="d-block w-100 hero-img" alt="Slide 5">
+                <picture>
+                    <source srcset="{{ asset('images/slider-5.webp') }}" type="image/webp">
+                    <img src="{{ asset('images/slider-5.jpg') }}" class="d-block w-100 hero-img" alt="Slide 5" loading="lazy" decoding="async" width="1024" height="735">
+                </picture>
             </div>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
@@ -288,9 +304,14 @@
                 {{-- Store Image --}}
                 <div class="col-lg-6 order-1 order-lg-2">
                     <div class="about-img-wrap position-relative">
-                        <img src="{{ asset('images/about.png') }}"
-                            alt="ميلاد سامي - متخصصون في قطع غيار شاشات التلفزيون"
-                            class="img-fluid rounded-4 shadow-lg w-100" style="object-fit:cover; max-height:480px;">
+                        <picture>
+                            <source srcset="{{ asset('images/about.webp') }}" type="image/webp">
+                            <img src="{{ asset('images/about.png') }}"
+                                alt="ميلاد سامي - متخصصون في قطع غيار شاشات التلفزيون"
+                                class="img-fluid rounded-4 shadow-lg w-100"
+                                style="object-fit:cover; max-height:480px;"
+                                loading="lazy" decoding="async" width="800" height="730">
+                        </picture>
                         {{-- Floating badge --}}
                         <div
                             class="position-absolute bottom-0 start-0 m-3 bg-white rounded-4 shadow px-3 py-2 d-flex align-items-center gap-2">
@@ -384,32 +405,40 @@
                 {{-- Big left --}}
                 <div class="milad-gallery-item milad-gallery-tall">
                     <a href="{{ route('products.index') }}">
-                        <img src="{{ asset('images/gallery-1.png') }}" alt="ميلاد سامي">
-                    
+                        <picture>
+                            <source srcset="{{ asset('images/gallery-1.webp') }}" type="image/webp">
+                            <img src="{{ asset('images/gallery-1.png') }}" alt="ميلاد سامي" loading="lazy" decoding="async" width="800" height="800">
+                        </picture>
                     </a>
                 </div>
 
                 {{-- Top right --}}
                 <div class="milad-gallery-item">
                     <a href="{{ route('products.index') }}">
-                        <img src="{{ asset('images/gallery-2.png') }}" alt="ميلاد سامي">
-                    
+                        <picture>
+                            <source srcset="{{ asset('images/gallery-2.webp') }}" type="image/webp">
+                            <img src="{{ asset('images/gallery-2.png') }}" alt="ميلاد سامي" loading="lazy" decoding="async" width="800" height="800">
+                        </picture>
                     </a>
                 </div>
 
                 {{-- Bottom right top --}}
                 <div class="milad-gallery-item">
                     <a href="{{ route('products.index') }}">
-                        <img src="{{ asset('images/gallery-5.png') }}" alt="ميلاد سامي">
-                        
+                        <picture>
+                            <source srcset="{{ asset('images/gallery-5.webp') }}" type="image/webp">
+                            <img src="{{ asset('images/gallery-5.png') }}" alt="ميلاد سامي" loading="lazy" decoding="async" width="800" height="800">
+                        </picture>
                     </a>
                 </div>
 
                 {{-- Wide bottom --}}
                 <div class="milad-gallery-item milad-gallery-wide">
                     <a href="{{ route('products.index') }}">
-                        <img src="{{ asset('images/gallery-4.png') }}" alt="ميلاد سامي">
-                      
+                        <picture>
+                            <source srcset="{{ asset('images/gallery-4.webp') }}" type="image/webp">
+                            <img src="{{ asset('images/gallery-4.png') }}" alt="ميلاد سامي" loading="lazy" decoding="async" width="800" height="800">
+                        </picture>
                     </a>
                 </div>
 

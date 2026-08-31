@@ -522,7 +522,16 @@
             <div class="row g-4">
                 @foreach($bestSellingProducts as $product)
                     <div class="col-6 col-md-4 col-lg-2">
-                        <div class="card border-0 shadow-sm h-100 rounded-4">
+                        <div class="card border-0 shadow-sm h-100 rounded-4 position-relative overflow-hidden">
+                            @if(empty($product['image_url']))
+                                <span class="badge bg-secondary bg-opacity-75 text-white position-absolute top-0 end-0 m-2 px-2 py-1" style="font-size: 0.65rem; z-index: 3; border-radius: 6px;">
+                                    <i class="fas fa-image-slash me-1"></i>{{ app()->getLocale() === 'ar' ? 'بدون صورة' : 'No Image' }}
+                                </span>
+                            @elseif(!empty($product['badge']))
+                                <span class="badge badge-{{ $product['badge_color'] ?? 'danger' }} position-absolute top-0 end-0 m-2 px-2 py-1" style="font-size: 0.65rem; z-index: 3; border-radius: 6px;">
+                                    {{ $product['badge'] }}
+                                </span>
+                            @endif
                             <div style="height: 150px; overflow: hidden; position: relative;">
                                 @if(!empty($product['image_url']))
                                     <img src="{{ $product['image_url'] }}"
@@ -532,8 +541,8 @@
                                          width="200" height="150"
                                          alt="{{ $product['name'] }}">
                                 @else
-                                    <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light text-muted">
-                                        <i class="fas fa-box fa-3x"></i>
+                                    <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center bg-light text-muted">
+                                        <i class="fas fa-box fa-3x text-secondary opacity-50"></i>
                                     </div>
                                 @endif
                             </div>
@@ -561,7 +570,16 @@
             <div class="row g-4">
                 @foreach($mostVisitedProducts as $product)
                     <div class="col-6 col-md-4 col-lg-2">
-                        <div class="card border-0 shadow-sm h-100 rounded-4">
+                        <div class="card border-0 shadow-sm h-100 rounded-4 position-relative overflow-hidden">
+                            @if(empty($product['image_url']))
+                                <span class="badge bg-secondary bg-opacity-75 text-white position-absolute top-0 end-0 m-2 px-2 py-1" style="font-size: 0.65rem; z-index: 3; border-radius: 6px;">
+                                    <i class="fas fa-image-slash me-1"></i>{{ app()->getLocale() === 'ar' ? 'بدون صورة' : 'No Image' }}
+                                </span>
+                            @elseif(!empty($product['badge']))
+                                <span class="badge badge-{{ $product['badge_color'] ?? 'warning' }} position-absolute top-0 end-0 m-2 px-2 py-1" style="font-size: 0.65rem; z-index: 3; border-radius: 6px;">
+                                    {{ $product['badge'] }}
+                                </span>
+                            @endif
                             <div style="height: 150px; overflow: hidden; position: relative;">
                                 @if(!empty($product['image_url']))
                                     <img src="{{ $product['image_url'] }}"
@@ -571,8 +589,8 @@
                                          width="200" height="150"
                                          alt="{{ $product['name'] }}">
                                 @else
-                                    <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light text-muted">
-                                        <i class="fas fa-box fa-3x"></i>
+                                    <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center bg-light text-muted">
+                                        <i class="fas fa-box fa-3x text-secondary opacity-50"></i>
                                     </div>
                                 @endif
                             </div>
@@ -600,7 +618,16 @@
             <div class="row g-4 justify-content-center">
                 @foreach($latestProducts as $product)
                     <div class="col-6 col-md-4 col-lg-2">
-                        <div class="card border-0 shadow-sm h-100 rounded-4">
+                        <div class="card border-0 shadow-sm h-100 rounded-4 position-relative overflow-hidden">
+                            @if(empty($product['image_url']))
+                                <span class="badge bg-secondary bg-opacity-75 text-white position-absolute top-0 end-0 m-2 px-2 py-1" style="font-size: 0.65rem; z-index: 3; border-radius: 6px;">
+                                    <i class="fas fa-image-slash me-1"></i>{{ app()->getLocale() === 'ar' ? 'بدون صورة' : 'No Image' }}
+                                </span>
+                            @elseif(!empty($product['badge']))
+                                <span class="badge badge-{{ $product['badge_color'] ?? 'success' }} position-absolute top-0 end-0 m-2 px-2 py-1" style="font-size: 0.65rem; z-index: 3; border-radius: 6px;">
+                                    {{ $product['badge'] }}
+                                </span>
+                            @endif
                             <div style="height: 150px; overflow: hidden; position: relative;">
                                 @if(!empty($product['image_url']))
                                     <img src="{{ $product['image_url'] }}"
@@ -610,8 +637,8 @@
                                          width="200" height="150"
                                          alt="{{ $product['name'] }}">
                                 @else
-                                    <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light text-muted">
-                                        <i class="fas fa-box fa-3x"></i>
+                                    <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center bg-light text-muted">
+                                        <i class="fas fa-box fa-3x text-secondary opacity-50"></i>
                                     </div>
                                 @endif
                             </div>
@@ -668,7 +695,7 @@
                         <i class="fas fa-shopping-cart me-2"></i> {{ __('app.prod_add_cart') }}
                     </a>
                 </div>
-                <div class="col-md-6 text-center">
+                <div class="col-md-6 text-center position-relative">
                     @if(!empty($dealProduct['image_url']))
                         <img src="{{ $dealProduct['image_url'] }}"
                              class="img-fluid rounded-4 shadow-lg"
@@ -677,8 +704,11 @@
                              width="400" height="400"
                              alt="{{ $dealProduct['name'] }}">
                     @else
-                        <div class="bg-light rounded-4 d-flex align-items-center justify-content-center" style="height: 300px;">
-                            <i class="fas fa-box fa-5x text-muted"></i>
+                        <div class="bg-light rounded-4 d-flex flex-column align-items-center justify-content-center position-relative" style="height: 300px;">
+                            <span class="badge bg-secondary bg-opacity-75 text-white position-absolute top-0 end-0 m-3 px-3 py-2" style="font-size: 0.75rem; border-radius: 8px;">
+                                <i class="fas fa-image-slash me-1"></i>{{ app()->getLocale() === 'ar' ? 'بدون صورة' : 'No Image' }}
+                            </span>
+                            <i class="fas fa-box fa-5x text-secondary opacity-50"></i>
                         </div>
                     @endif
                 </div>
@@ -726,7 +756,16 @@
             <div class="row g-4 justify-content-center">
                 @foreach($recommendedProducts as $product)
                     <div class="col-6 col-md-4 col-lg-2">
-                        <div class="card border-0 shadow-sm h-100 rounded-4">
+                        <div class="card border-0 shadow-sm h-100 rounded-4 position-relative overflow-hidden">
+                            @if(empty($product['image_url']))
+                                <span class="badge bg-secondary bg-opacity-75 text-white position-absolute top-0 end-0 m-2 px-2 py-1" style="font-size: 0.65rem; z-index: 3; border-radius: 6px;">
+                                    <i class="fas fa-image-slash me-1"></i>{{ app()->getLocale() === 'ar' ? 'بدون صورة' : 'No Image' }}
+                                </span>
+                            @elseif(!empty($product['badge']))
+                                <span class="badge badge-{{ $product['badge_color'] ?? 'primary' }} position-absolute top-0 end-0 m-2 px-2 py-1" style="font-size: 0.65rem; z-index: 3; border-radius: 6px;">
+                                    {{ $product['badge'] }}
+                                </span>
+                            @endif
                             <div style="height: 150px; overflow: hidden; position: relative;">
                                 @if(!empty($product['image_url']))
                                     <img src="{{ $product['image_url'] }}"
@@ -736,8 +775,8 @@
                                          width="200" height="150"
                                          alt="{{ $product['name'] }}">
                                 @else
-                                    <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light text-muted">
-                                        <i class="fas fa-box fa-3x"></i>
+                                    <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center bg-light text-muted">
+                                        <i class="fas fa-box fa-3x text-secondary opacity-50"></i>
                                     </div>
                                 @endif
                             </div>

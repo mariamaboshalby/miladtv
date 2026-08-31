@@ -62,8 +62,11 @@ class Product extends Model implements HasMedia
             return '';
         }
 
-        $relativePath = $media->getPathRelativeToRoot($conversion);
-        return '/storage/' . ltrim($relativePath, '/');
+        if ($conversion && file_exists($media->getPath($conversion))) {
+            return '/storage/' . ltrim($media->getPathRelativeToRoot($conversion), '/');
+        }
+
+        return '/storage/' . ltrim($media->getPathRelativeToRoot(''), '/');
     }
 
     /* ── Scopes ── */

@@ -85,9 +85,9 @@ Route::post('/track-order', [OrderController::class, 'trackStatus'])->name('trac
 Route::post('/orders/quick', [OrderController::class, 'quickOrder'])->name('orders.quick');
 
 // ============================================================
-// Admin Dashboard (no auth for now — add middleware later)
+// Admin Dashboard (URL prefix: /tvad)
 // ============================================================
-Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
+Route::prefix('tvad')->name('admin.')->middleware('admin')->group(function () {
 
     // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');

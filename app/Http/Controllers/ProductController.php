@@ -19,7 +19,7 @@ class ProductController extends Controller
             'badge'       => $p->badge,
             'badge_color' => $p->badge_color,
             'image_url'   => $p->getMainImageUrl('card'),
-            'image'       => $p->image ?? 'product-1',
+            'image'       => $p->getMainImageUrl('card') ?: ($p->image ?? 'product-1'),
             'rating'      => $p->rating,
             'reviews'     => $p->reviews,
             'description' => $p->description,

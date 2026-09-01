@@ -3,12 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class ProductController extends Controller
 {
-    private function toArray(Product $p): array
+    /**
+     * Map a Product model to a plain array for the view.
+     * Uses the pre-loaded 'thumb' conversion URL (computed once per product).
+     */
+    private function toArray(Product $p, string $conversion = 'card'): array
     {
+        // getMainImageUrl already handles fallback; re-use cached media relation
+        $imageUrl = $p->getMainImageUrl($conversion);
+
         return [
             'id'          => $p->id,
             'name'        => $p->name,
@@ -18,8 +27,8 @@ class ProductController extends Controller
             'old_price'   => $p->old_price,
             'badge'       => $p->badge,
             'badge_color' => $p->badge_color,
-            'image_url'   => $p->getMainImageUrl('card'),
-            'image'       => $p->getMainImageUrl('card') ?: ($p->image ?? 'product-1'),
+            'image_url'   => $imageUrl,
+            'image'       => $imageUrl ?: ($p->image ?? ''),
             'rating'      => $p->rating,
             'reviews'     => $p->reviews,
             'description' => $p->description,
@@ -31,20 +40,77 @@ class ProductController extends Controller
     {
         $category = $request->get('category', 'all');
         $sort     = $request->get('sort', 'default');
+        $search   = $request->filled('search') ? trim($request->search) : null;
+        $page     = (int) $request->get('page', 1);
 
+        // Build a stable cache key so filtered/sorted pages are cached independently.
+        // Do NOT cache search results (they're dynamic and rarely repeated).
+        // Uses a version counter so CacheService::clearProductsListingCaches() invalidates all pages at once.
+        $cacheKey = null;
+        if (! $search) {
+            $listingVersion = Cache::get('products_listing_version', 1);
+            $cacheKey = "products_listing_v{$listingVersion}:{$category}:{$sort}:page:{$page}";
+        }
+
+        // Fetch products — use cache for non-search pages
+        if ($cacheKey) {
+            $products = Cache::remember($cacheKey, 300, function () use ($category, $sort, $search) {
+                return $this->buildProductQuery($category, $sort, $search)->paginate(20);
+            });
+            // Restore paginator path (lost during serialization) and map to arrays
+            $products->setPath(url()->current());
+            $products->appends($request->query());
+            $mappedProducts = $products->through(fn($p) => $this->toArray($p, 'thumb'));
+        } else {
+            $mappedProducts = $this->buildProductQuery($category, $sort, $search)
+                ->paginate(20)
+                ->through(fn($p) => $this->toArray($p, 'thumb'));
+        }
+
+        // Categories cached in AppServiceProvider; also cache for sidebar
+        $dbCategories = Cache::remember('active_categories_list', 3600, function () {
+            return Category::active()
+                ->select(['id', 'slug', 'name_ar', 'name_en', 'icon', 'image'])
+                ->get();
+        });
+
+        // Build icon map from already-fetched categories (no extra query)
+        $categoryIconMap = $dbCategories->pluck('icon', 'slug')->toArray();
+
+        return view('products.index', [
+            'products'       => $mappedProducts,
+            'category'       => $category,
+            'sort'           => $sort,
+            'dbCategories'   => $dbCategories,
+            'categoryIconMap'=> $categoryIconMap,
+        ]);
+    }
+
+    /**
+     * Reusable query builder for the product listing.
+     * Only selects columns needed for the card — no SELECT *.
+     */
+    private function buildProductQuery(string $category, string $sort, ?string $search)
+    {
         $query = Product::active()
             ->select([
-                'id', 'name', 'brand', 'category', 'description',
+                'id', 'name', 'brand', 'category',
                 'price', 'old_price', 'badge', 'badge_color',
-                'rating', 'reviews', 'image', 'is_active',
-            ]);
+                'rating', 'reviews', 'image', 'description',
+                'is_active',
+            ])
+            ->with(['media' => fn($q) => $q->select([
+                'id', 'model_id', 'model_type', 'uuid', 'collection_name',
+                'name', 'file_name', 'mime_type', 'disk', 'conversions_disk',
+                'size', 'generated_conversions', 'custom_properties',
+                'order_column',
+            ])->where('collection_name', 'product-images')->orderBy('order_column')]);
 
         if ($category !== 'all') {
             $query->where('category', $category);
         }
 
-        if ($request->filled('search')) {
-            $search = trim($request->search);
+        if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', '%' . $search . '%')
                   ->orWhere('brand', 'like', '%' . $search . '%')
@@ -59,49 +125,72 @@ class ProductController extends Controller
             default      => $query->latest('id'),
         };
 
-        // Paginate to avoid loading all products into memory at once
-        $products = $query->with('media')->paginate(20)->through(fn ($p) => $this->toArray($p));
-
-        $dbCategories = \Illuminate\Support\Facades\Cache::remember('active_categories_list', 3600, function () {
-            return \App\Models\Category::active()->select(['id', 'slug', 'name_ar', 'name_en', 'icon', 'image'])->get();
-        });
-
-        $categoryIconMap = \Illuminate\Support\Facades\Cache::remember('category_icon_map', 3600, function () use ($dbCategories) {
-            return $dbCategories->pluck('icon', 'slug')->toArray();
-        });
-
-        return view('products.index', compact('products', 'category', 'sort', 'dbCategories', 'categoryIconMap'));
+        return $query;
     }
 
-    public function category($category)
+    public function category(string $category)
     {
         return redirect()->route('products.index', ['category' => $category]);
     }
 
-    public function show($id)
+    public function show(int $id)
     {
-        $product = Product::active()
-            ->with(['media', 'category'])
-            ->findOrFail($id);
+        // Cache individual product data (5 min TTL — invalidated on update/delete)
+        $productData = Cache::remember("product_show:{$id}", 300, function () use ($id) {
+            $product = Product::active()
+                ->select([
+                    'id', 'name', 'brand', 'category', 'description',
+                    'price', 'old_price', 'badge', 'badge_color',
+                    'rating', 'reviews', 'image', 'specs',
+                    'is_active',
+                ])
+                ->with(['media' => fn($q) => $q
+                    ->select([
+                        'id', 'model_id', 'model_type', 'uuid', 'collection_name',
+                        'name', 'file_name', 'mime_type', 'disk', 'conversions_disk',
+                        'size', 'generated_conversions', 'custom_properties',
+                        'order_column',
+                    ])
+                    ->where('collection_name', 'product-images')
+                    ->orderBy('order_column')
+                ])
+                ->findOrFail($id);
 
-        $related = Product::active()
-            ->select([
-                'id', 'name', 'brand', 'category', 'description',
-                'price', 'old_price', 'badge', 'badge_color',
-                'rating', 'reviews', 'image', 'is_active'
-            ])
-            ->with('media')
-            ->where('category', $product->getRawOriginal('category'))
-            ->where('id', '!=', $product->id)
-            ->latest('id')
-            ->take(4)
-            ->get()
-            ->map(fn($p) => $this->toArray($p))
-            ->toArray();
+            $categorySlug = $product->getRawOriginal('category');
+
+            $related = Product::active()
+                ->select([
+                    'id', 'name', 'brand', 'category',
+                    'price', 'old_price', 'badge', 'badge_color',
+                    'rating', 'reviews', 'image', 'description',
+                    'is_active',
+                ])
+                ->with(['media' => fn($q) => $q
+                    ->select([
+                        'id', 'model_id', 'model_type', 'uuid', 'collection_name',
+                        'name', 'file_name', 'mime_type', 'disk', 'conversions_disk',
+                        'size', 'generated_conversions', 'custom_properties',
+                        'order_column',
+                    ])
+                    ->where('collection_name', 'product-images')
+                    ->orderBy('order_column')
+                ])
+                ->where('category', $categorySlug)
+                ->where('id', '!=', $id)
+                ->latest('id')
+                ->take(4)
+                ->get();
+
+            return [
+                'product' => $product,
+                'related' => $related,
+            ];
+        });
 
         return view('products.show', [
-            'product' => $this->toArray($product),
-            'related' => $related,
+            'product' => $this->toArray($productData['product'], 'card'),
+            'related' => $productData['related']->map(fn($p) => $this->toArray($p, 'card'))->toArray(),
+            'mediaItems' => $productData['product']->getMedia('product-images'),
         ]);
     }
 

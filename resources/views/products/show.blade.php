@@ -29,17 +29,15 @@
 
             {{-- ── Gallery ── --}}
             @php
-                $product_model = \App\Models\Product::find($product['id']);
-                $media = $product_model ? $product_model->getMedia('product-images') : collect();
-                $catIcon = $product['category'] === 'printers' ? 'print'
-                         : ($product['category'] === 'mice' ? 'mouse'
-                         : ($product['category'] === 'headphones' ? 'headphones' : 'usb'));
-
-                // Helper: return conversion URL if file exists, else fallback to original
+                // $mediaItems is passed directly from the controller (no extra query needed)
+                $media = $mediaItems ?? collect();
+                // Return conversion URL using generated_conversions metadata (no file_exists() disk hit)
                 $mediaUrl = function($img, $conversion) {
-                    $path = $img->getPath($conversion);
-                    if ($conversion && file_exists($path)) {
-                        return '/storage/' . ltrim($img->getPathRelativeToRoot($conversion), '/');
+                    if ($conversion) {
+                        $generated = $img->generated_conversions ?? [];
+                        if (! empty($generated[$conversion])) {
+                            return '/storage/' . ltrim($img->getPathRelativeToRoot($conversion), '/');
+                        }
                     }
                     return '/storage/' . ltrim($img->getPathRelativeToRoot(''), '/');
                 };

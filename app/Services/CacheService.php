@@ -16,6 +16,33 @@ class CacheService
         Cache::forget('home_most_visited_products');
         Cache::forget('home_latest_products');
         Cache::forget('home_recommended_products');
+
+        // Clear products listing page cache (all categories + sort combos)
+        static::clearProductsListingCaches();
+    }
+
+    /**
+     * Clear all products listing page caches.
+     * We use a cache tag pattern via a version key: bump the version
+     * and all old keys become unreachable (lazy invalidation).
+     *
+     * Since we may not have Redis tags, we use a version counter approach.
+     */
+    public static function clearProductsListingCaches(): void
+    {
+        // Bump the products listing version — all cached pages will miss
+        Cache::increment('products_listing_version');
+
+        // Also clear common individual product show pages
+        // (product IDs are unknown here, so we rely on the 5-min TTL for show pages)
+    }
+
+    /**
+     * Clear cache for a specific product show page.
+     */
+    public static function clearProductShowCache(int $productId): void
+    {
+        Cache::forget("product_show:{$productId}");
     }
 
     /**

@@ -150,6 +150,7 @@ class ProductController extends Controller
         }
 
         \App\Services\CacheService::clearProductCaches();
+        \App\Services\CacheService::clearProductShowCache($product->id);
 
         return redirect()->route('admin.products.index')
             ->with('success', 'تم تحديث المنتج بنجاح');
@@ -158,9 +159,11 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $product->clearMediaCollection('product-images');
+        $productId = $product->id;
         $product->delete();
 
         \App\Services\CacheService::clearProductCaches();
+        \App\Services\CacheService::clearProductShowCache($productId);
 
         return redirect()->route('admin.products.index')
             ->with('success', 'تم حذف المنتج بنجاح');

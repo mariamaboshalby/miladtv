@@ -103,7 +103,7 @@
 
                 @if(count($products) > 0)
                 <div class="row g-3">
-                    @foreach($products as $product)
+                    @foreach($products as $index => $product)
                     <div class="col-md-6 col-xl-4">
                         <div class="product-card card border-0 shadow-sm h-100">
                             @if($product['badge'])
@@ -113,8 +113,12 @@
                             {{-- Image --}}
                             <div class="product-img-area">
                                 @if(!empty($product['image_url']))
+                                    {{-- First product image is likely the LCP element; load it eagerly --}}
                                     <img src="{{ $product['image_url'] }}" alt="{{ $product['name'] }}"
-                                         class="w-100 h-100" style="object-fit:cover;" loading="lazy" decoding="async"
+                                         class="w-100 h-100" style="object-fit:cover;"
+                                         loading="{{ $index < 3 ? 'eager' : 'lazy' }}"
+                                         {{ $index === 0 ? 'fetchpriority="high"' : '' }}
+                                         decoding="{{ $index < 3 ? 'sync' : 'async' }}"
                                          width="300" height="180"
                                          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                                     <div class="product-placeholder" style="display:none;">
@@ -134,9 +138,12 @@
 
                                 {{-- Stars --}}
                                 <div class="d-flex align-items-center gap-1 mb-2">
-                                    @for($i = 0; $i < 5; $i++)
-                                    <i class="fas fa-star" style="font-size:.7rem;color:{{ $i < $product['rating'] ? '#f59e0b' : '#d1d5db' }};"></i>
-                                    @endfor
+                                    @php
+                                        $r = (int)$product['rating'];
+                                        $stars = str_repeat('<i class="fas fa-star" style="font-size:.7rem;color:#f59e0b;"></i>', $r)
+                                               . str_repeat('<i class="fas fa-star" style="font-size:.7rem;color:#d1d5db;"></i>', 5 - $r);
+                                    @endphp
+                                    {!! $stars !!}
                                     <span class="text-muted ms-1" style="font-size:.75rem;">({{ $product['reviews'] }})</span>
                                 </div>
 

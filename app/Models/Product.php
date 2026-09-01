@@ -43,15 +43,21 @@ class Product extends Model implements HasMedia
 
     public function registerMediaConversions(?Media $media = null): void
     {
+        // 'thumb': used in product listing cards (small, fast-loading)
         $this->addMediaConversion('thumb')
-             ->width(400)
-             ->height(400)
-             ->sharpen(5);
+             ->width(300)
+             ->height(240)
+             ->sharpen(5)
+             ->optimize()
+             ->performOnCollections('product-images');
 
+        // 'card': used in product detail page main image
         $this->addMediaConversion('card')
-             ->width(800)
-             ->height(800)
-             ->sharpen(5);
+             ->width(600)
+             ->height(600)
+             ->sharpen(5)
+             ->optimize()
+             ->performOnCollections('product-images');
     }
 
     /* ── Helpers ── */
@@ -62,8 +68,12 @@ class Product extends Model implements HasMedia
             return '';
         }
 
-        if ($conversion && file_exists($media->getPath($conversion))) {
-            return '/storage/' . ltrim($media->getPathRelativeToRoot($conversion), '/');
+        // Use generated_conversions to check availability without file_exists() disk hit.
+        if ($conversion) {
+            $generated = $media->generated_conversions ?? [];
+            if (! empty($generated[$conversion])) {
+                return '/storage/' . ltrim($media->getPathRelativeToRoot($conversion), '/');
+            }
         }
 
         return '/storage/' . ltrim($media->getPathRelativeToRoot(''), '/');

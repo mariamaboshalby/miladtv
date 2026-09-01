@@ -1,11 +1,11 @@
 @extends('layouts.app')
 @section('title', app()->getLocale() === 'ar' ? 'ميلاد سامي - قطع غيار شاشات التلفزيون' : 'Milad Sami - TV Screen Spare Parts')
 
-@section('head_preloads')
-    {{-- LCP hero image — preloaded as early as possible in <head> --}}
-    <link rel="preload" as="image" href="{{ asset('images/slider-1-mobile.webp') }}" type="image/webp" media="(max-width: 768px)" fetchpriority="high">
-    <link rel="preload" as="image" href="{{ asset('images/slider-1.webp') }}" type="image/webp" media="(min-width: 769px)" fetchpriority="high">
-@endsection
+    @push('styles')
+    {{-- Preload the LCP hero image --}}
+    <link rel="preload" as="image" href="{{ asset('images/slider-1-mobile.webp') }}" type="image/webp" media="(max-width: 768px)">
+    <link rel="preload" as="image" href="{{ asset('images/slider-1.webp') }}" type="image/webp" media="(min-width: 769px)">
+    @endpush
     @push('styles')
         <style>
             /* ── Gallery Grid ── */

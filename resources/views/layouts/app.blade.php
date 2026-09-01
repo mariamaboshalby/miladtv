@@ -10,36 +10,35 @@
 
     <link rel="icon" href="{{ asset('favicon.ico') }}">
 
-    <!-- Page-specific preloads (LCP images etc) — injected early for max priority -->
-    @yield('head_preloads')
-
-    <!-- Google Fonts — preconnect only (async loaded below) -->
+    <!-- Preconnect to external origins -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 
-    <!-- Google Fonts: 2 weights only, async non-blocking -->
+    <!-- Google Fonts: async load with locale-aware subset and display=swap -->
     @if($isAr)
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet"></noscript>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet"></noscript>
     @else
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet"></noscript>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet"></noscript>
     @endif
 
-    <!-- Bootstrap 5 LOCAL — sync, no CDN round-trip, eliminates render-blocking network delay -->
+    <!-- Bootstrap 5 — RTL or LTR (sync) -->
     @if($isAr)
-    <link rel="stylesheet" href="{{ asset('css/bootstrap.rtl.min.css') }}?v=5.3.3">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css">
     @else
-    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}?v=5.3.3">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     @endif
 
-    <!-- Font Awesome LOCAL — async (icons not render-critical) -->
-    <link rel="preload" href="{{ asset('css/fontawesome.min.css') }}?v=6.5.0" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="{{ asset('css/fontawesome.min.css') }}?v=6.5.0"></noscript>
+    <!-- Font Awesome — async load (non-render-blocking) -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
 
-    <!-- App CSS — minified -->
-    <link rel="stylesheet" href="{{ asset('css/app.min.css') }}?v={{ filemtime(public_path('css/app.min.css')) }}">
-    <link rel="stylesheet" href="{{ asset('css/custom-colors.min.css') }}?v={{ filemtime(public_path('css/custom-colors.min.css')) }}">
+    <!-- App CSS -->
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/custom-colors.css') }}">
 
     @if($isAr)
     <style>
@@ -444,9 +443,9 @@
         @endauth
     </nav>
 
-    <!-- Scripts — deferred, local (no CDN) -->
-    <script src="{{ asset('js/app.min.js') }}?v={{ filemtime(public_path('js/app.min.js')) }}" defer></script>
-    <script src="{{ asset('js/bootstrap.bundle.min.js') }}?v=5.3.3" defer></script>
+    <!-- Scripts — deferred -->
+    <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
 
     @stack('scripts')
 

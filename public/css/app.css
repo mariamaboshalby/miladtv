@@ -1593,3 +1593,58 @@ html, body {
   font-size: .9rem;
   height: auto;
 }
+
+/* ========================================================================
+   Mobile Performance Optimizations
+   ======================================================================== */
+
+/* 1. Disable hover effects on touch devices (saves INP/TBT on mobile) */
+@media (hover: none) {
+  .card:hover { transform: none !important; box-shadow: var(--sh-sm) !important; }
+  .btn:hover  { transform: none !important; }
+  .btn-primary:hover { box-shadow: var(--sh-blue) !important; }
+  .milad-nav-link:hover { background: transparent !important; }
+  a:hover { color: inherit; }
+}
+
+/* 2. Reduce/disable heavy animations on low-end mobile (prefers-reduced-motion) */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal { opacity: 1 !important; transform: none !important; }
+}
+
+/* 3. Promote GPU layers only where needed (not globally) */
+.hero-img {
+  will-change: transform;
+}
+.milad-navbar {
+  will-change: auto;
+}
+.back-to-top {
+  will-change: opacity, transform;
+}
+
+/* 4. Optimize cart sidebar for mobile — contain paint */
+.cart-sidebar {
+  contain: layout style paint;
+}
+
+/* 5. Reduce Mobile-specific font rendering overhead */
+@media (max-width: 768px) {
+  body { -webkit-font-smoothing: antialiased; text-rendering: optimizeSpeed; }
+  /* Disable expensive box-shadows on cards for mobile */
+  .card { box-shadow: 0 1px 4px rgba(0,0,0,.08) !important; }
+  /* Reduce transition costs on mobile */
+  .card { transition: none !important; }
+  /* Simplify gallery hover on mobile */
+  .milad-gallery-item img { transition: none !important; }
+}
+
+/* 6. Image aspect ratio boxes to prevent CLS */
+.hero-img-wrap { aspect-ratio: 16/9; background: #030f1f; }
+@media (max-width: 576px) { .hero-img-wrap { aspect-ratio: 4/3; } }

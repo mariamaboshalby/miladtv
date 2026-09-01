@@ -6,23 +6,31 @@ use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
+    private function getCartData(array $cart): array
+    {
+        $total = 0;
+        $items = [];
+        foreach ($cart as $id => $item) {
+            $qty = (int)($item['quantity'] ?? $item['qty'] ?? 1);
+            $price = (float)($item['price'] ?? 0);
+            $total += $price * $qty;
+            $items[] = [
+                'id'       => $item['id'] ?? $id,
+                'name'     => $item['name'] ?? '',
+                'price'    => $price,
+                'quantity' => $qty,
+                'image'    => $item['image'] ?? '',
+            ];
+        }
+        return ['items' => $items, 'total' => $total, 'cart_count' => count($cart)];
+    }
+
     public function items()
     {
         $cart  = session()->get('cart', []);
-        $total = 0;
+        $data  = $this->getCartData($cart);
 
-        $items = array_values(array_map(function ($item) use (&$total) {
-            $total += $item['price'] * $item['quantity'];
-            return [
-                'id'       => $item['id'],
-                'name'     => $item['name'],
-                'price'    => $item['price'],
-                'quantity' => $item['quantity'],
-                'image'    => $item['image'] ?? '',
-            ];
-        }, $cart));
-
-        return response()->json(['items' => $items, 'total' => $total]);
+        return response()->json($data);
     }
 
     public function index()
@@ -57,7 +65,7 @@ class CartController extends Controller
         $productName = $request->input('product_name');
         $productPrice= $request->input('product_price');
         $productImage= $request->input('product_image');
-        $quantity    = $request->input('quantity', 1);
+        $quantity    = (int)$request->input('quantity', 1);
 
         if (isset($cart[$productId])) {
             $cart[$productId]['quantity'] += $quantity;
@@ -80,10 +88,14 @@ class CartController extends Controller
         $cookieMinutes = 60 * 24 * 10;
         \Cookie::queue('milad_cart', json_encode($cart), $cookieMinutes);
 
+        $data = $this->getCartData($cart);
+
         return response()->json([
             'success'    => true,
             'message'    => 'Product added to cart!',
-            'cart_count' => count($cart),
+            'cart_count' => $data['cart_count'],
+            'items'      => $data['items'],
+            'total'      => $data['total'],
         ]);
     }
 
@@ -97,10 +109,14 @@ class CartController extends Controller
             session()->put('cart', $cart);
         }
 
+        $data = $this->getCartData($cart);
+
         return response()->json([
-            'success' => true,
-            'message' => 'تم حذف المنتج من السلة',
-            'cart_count' => count($cart),
+            'success'    => true,
+            'message'    => 'تم حذف المنتج من السلة',
+            'cart_count' => $data['cart_count'],
+            'items'      => $data['items'],
+            'total'      => $data['total'],
         ]);
     }
 
@@ -108,7 +124,7 @@ class CartController extends Controller
     {
         $cart = session()->get('cart', []);
         $productId = $request->input('product_id');
-        $quantity = $request->input('quantity', 1);
+        $quantity = (int)$request->input('quantity', 1);
 
         if (isset($cart[$productId])) {
             if ($quantity <= 0) {
@@ -120,10 +136,14 @@ class CartController extends Controller
             session()->put('cart', $cart);
         }
 
+        $data = $this->getCartData($cart);
+
         return response()->json([
-            'success' => true,
-            'message' => 'تم تحديث الكمية',
-            'count' => count($cart),
+            'success'    => true,
+            'message'    => 'تم تحديث الكمية',
+            'cart_count' => $data['cart_count'],
+            'items'      => $data['items'],
+            'total'      => $data['total'],
         ]);
     }
 

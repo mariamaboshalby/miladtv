@@ -70,7 +70,7 @@
                              onclick="openImgModal(this.src)">
                     @else
                         <div class="pd-no-img">
-                            <i class="fas fa-{{ $catIcon }}"></i>
+                            <i class="fas fa-image"></i>
                         </div>
                     @endif
                 </div>
@@ -176,11 +176,11 @@
                             <img src="{{ $item['image_url'] }}" alt="{{ $item['name'] }}"
                                  onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                             <div class="placeholder-image" style="display:none">
-                                <i class="fas fa-{{ $rIcon }}"></i>
+                                <i class="fas fa-image"></i>
                             </div>
                         @else
                             <div class="placeholder-image">
-                                <i class="fas fa-{{ $rIcon }}"></i>
+                                <i class="fas fa-image"></i>
                             </div>
                         @endif
                     </div>

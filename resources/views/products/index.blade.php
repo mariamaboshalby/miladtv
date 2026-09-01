@@ -118,11 +118,11 @@
                                          width="300" height="180"
                                          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
                                     <div class="product-placeholder" style="display:none;">
-                                        <i class="fas fa-{{ $categoryIconMap[$product['category']] ?? 'box' }}"></i>
+                                        <i class="fas fa-image"></i>
                                     </div>
                                 @else
                                     <div class="product-placeholder">
-                                        <i class="fas fa-{{ $categoryIconMap[$product['category']] ?? 'box' }}"></i>
+                                        <i class="fas fa-image"></i>
                                     </div>
                                 @endif
                             </div>

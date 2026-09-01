@@ -32,12 +32,14 @@ class HomeController extends Controller
             'description' => $p->description,
         ];
 
+        $selectCols = ['id', 'name', 'category', 'price', 'old_price', 'badge', 'badge_color', 'rating', 'reviews', 'description', 'is_active'];
+
         // Featured Products (cached 30 mins)
-        $featuredProducts = Cache::remember('home_featured_products', 1800, function () use ($mapProduct) {
+        $featuredProducts = Cache::remember('home_featured_products', 1800, function () use ($mapProduct, $selectCols) {
             $items = Product::active()
                 ->featured()
-                ->select(['id', 'name', 'category', 'price', 'old_price', 'badge', 'badge_color', 'rating', 'reviews', 'description', 'is_active', 'is_featured'])
-                ->with('media')
+                ->select(array_merge($selectCols, ['is_featured']))
+                ->with(['media' => fn($q) => $q->where('collection_name', 'product-images')])
                 ->latest('id')
                 ->take(6)
                 ->get()
@@ -46,8 +48,8 @@ class HomeController extends Controller
 
             if (empty($items)) {
                 $items = Product::active()
-                    ->select(['id', 'name', 'category', 'price', 'old_price', 'badge', 'badge_color', 'rating', 'reviews', 'description', 'is_active'])
-                    ->with('media')
+                    ->select($selectCols)
+                    ->with(['media' => fn($q) => $q->where('collection_name', 'product-images')])
                     ->latest('id')
                     ->take(6)
                     ->get()
@@ -105,10 +107,10 @@ class HomeController extends Controller
         });
 
         // Best Selling Products (cached 30 mins)
-        $bestSellingProducts = Cache::remember('home_best_selling_products', 1800, function () use ($mapProduct) {
+        $bestSellingProducts = Cache::remember('home_best_selling_products', 1800, function () use ($mapProduct, $selectCols) {
             return Product::active()
-                ->select(['id', 'name', 'category', 'price', 'old_price', 'badge', 'badge_color', 'rating', 'reviews', 'description', 'sales_count', 'is_active'])
-                ->with('media')
+                ->select(array_merge($selectCols, ['sales_count']))
+                ->with(['media' => fn($q) => $q->where('collection_name', 'product-images')])
                 ->orderBy('sales_count', 'desc')
                 ->take(6)
                 ->get()
@@ -125,10 +127,10 @@ class HomeController extends Controller
         });
 
         // Most Visited Products (cached 30 mins)
-        $mostVisitedProducts = Cache::remember('home_most_visited_products', 1800, function () use ($mapProduct) {
+        $mostVisitedProducts = Cache::remember('home_most_visited_products', 1800, function () use ($mapProduct, $selectCols) {
             return Product::active()
-                ->select(['id', 'name', 'category', 'price', 'old_price', 'badge', 'badge_color', 'rating', 'reviews', 'description', 'views_count', 'is_active'])
-                ->with('media')
+                ->select(array_merge($selectCols, ['views_count']))
+                ->with(['media' => fn($q) => $q->where('collection_name', 'product-images')])
                 ->orderBy('views_count', 'desc')
                 ->take(6)
                 ->get()
@@ -137,10 +139,10 @@ class HomeController extends Controller
         });
 
         // Latest Products (cached 30 mins)
-        $latestProducts = Cache::remember('home_latest_products', 1800, function () use ($mapProduct) {
+        $latestProducts = Cache::remember('home_latest_products', 1800, function () use ($mapProduct, $selectCols) {
             return Product::active()
-                ->select(['id', 'name', 'category', 'price', 'old_price', 'badge', 'badge_color', 'rating', 'reviews', 'description', 'is_active'])
-                ->with('media')
+                ->select($selectCols)
+                ->with(['media' => fn($q) => $q->where('collection_name', 'product-images')])
                 ->latest('id')
                 ->take(5)
                 ->get()
@@ -157,7 +159,7 @@ class HomeController extends Controller
         $dealProduct = null;
         if (($settings['home_show_deal'] ?? '0') == '1' && !empty($settings['home_deal_product_id'])) {
             $dealProduct = Cache::remember('home_deal_product_' . $settings['home_deal_product_id'], 1800, function () use ($settings, $mapProduct) {
-                $productModel = Product::with('media')->find($settings['home_deal_product_id']);
+                $productModel = Product::with(['media' => fn($q) => $q->where('collection_name', 'product-images')])->find($settings['home_deal_product_id']);
                 if ($productModel) {
                     $deal = $mapProduct($productModel);
                     $deal['end_time'] = $settings['home_deal_end_time'] ?? null;
@@ -171,7 +173,7 @@ class HomeController extends Controller
         $brands = [];
         if (($settings['home_show_brands'] ?? '0') == '1') {
             $brands = Cache::remember('home_brands_list', 3600, function () {
-                return Brand::active()->with('media')->get();
+                return Brand::active()->with(['media' => fn($q) => $q->where('collection_name', 'brand-logos')])->get();
             });
         }
 
@@ -186,10 +188,10 @@ class HomeController extends Controller
         // Recommended Products (cached 15 mins)
         $recommendedProducts = [];
         if (($settings['home_show_recommended'] ?? '0') == '1') {
-            $recommendedProducts = Cache::remember('home_recommended_products', 900, function () use ($mapProduct) {
+            $recommendedProducts = Cache::remember('home_recommended_products', 900, function () use ($mapProduct, $selectCols) {
                 return Product::active()
-                    ->select(['id', 'name', 'category', 'price', 'old_price', 'badge', 'badge_color', 'rating', 'reviews', 'description', 'is_active'])
-                    ->with('media')
+                    ->select($selectCols)
+                    ->with(['media' => fn($q) => $q->where('collection_name', 'product-images')])
                     ->inRandomOrder()
                     ->take(6)
                     ->get()

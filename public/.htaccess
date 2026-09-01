@@ -25,6 +25,16 @@
 </IfModule>
 
 # ==============================================================================
+# BROTLI COMPRESSION (if available — better than gzip for text)
+# ==============================================================================
+<IfModule mod_brotli.c>
+    AddOutputFilterByType BROTLI_COMPRESS text/html text/css text/plain text/xml text/javascript
+    AddOutputFilterByType BROTLI_COMPRESS application/javascript application/x-javascript application/json
+    AddOutputFilterByType BROTLI_COMPRESS application/xml application/xhtml+xml application/rss+xml
+    AddOutputFilterByType BROTLI_COMPRESS image/svg+xml font/ttf font/otf font/woff font/woff2
+</IfModule>
+
+# ==============================================================================
 # GZIP / DEFLATE COMPRESSION (Speed up text, css, js, json, svg)
 # ==============================================================================
 <IfModule mod_deflate.c>
@@ -55,24 +65,53 @@
     ExpiresActive On
     ExpiresDefault "access plus 1 month"
 
-    # CSS / JavaScript
+    # HTML — short TTL so updates are seen quickly
+    ExpiresByType text/html "access plus 0 seconds"
+
+    # CSS / JavaScript — long TTL (Vite hashes filenames)
     ExpiresByType text/css "access plus 1 year"
     ExpiresByType application/javascript "access plus 1 year"
     ExpiresByType text/javascript "access plus 1 year"
 
-    # Images
+    # Images — long TTL
     ExpiresByType image/jpg "access plus 1 year"
     ExpiresByType image/jpeg "access plus 1 year"
     ExpiresByType image/png "access plus 1 year"
     ExpiresByType image/gif "access plus 1 year"
     ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/avif "access plus 1 year"
     ExpiresByType image/svg+xml "access plus 1 year"
     ExpiresByType image/x-icon "access plus 1 year"
 
-    # Fonts
+    # Fonts — long TTL
     ExpiresByType font/ttf "access plus 1 year"
     ExpiresByType font/otf "access plus 1 year"
     ExpiresByType font/woff "access plus 1 year"
     ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+
+# ==============================================================================
+# CACHE-CONTROL HEADERS — explicit headers for better browser/CDN caching
+# ==============================================================================
+<IfModule mod_headers.c>
+    # Static assets — immutable (hashed by Vite)
+    <FilesMatch "\.(css|js|woff2?|ttf|otf)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+
+    # Images — cacheable for 1 year
+    <FilesMatch "\.(webp|avif|jpg|jpeg|png|gif|svg|ico)$">
+        Header set Cache-Control "public, max-age=31536000"
+    </FilesMatch>
+
+    # HTML — no-cache to always get fresh pages
+    <FilesMatch "\.html$">
+        Header set Cache-Control "no-cache, must-revalidate"
+    </FilesMatch>
+
+    # Security headers (bonus)
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
 </IfModule>
 

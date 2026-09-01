@@ -150,9 +150,15 @@
                 transform: scale(1.03);
             }
 
-            /* Scroll Reveal Animation */
+            /* Scroll Reveal Animation — uses IntersectionObserver, no JS polling */
             .reveal {
                 opacity: 0;
+                transform: translateY(20px);
+                transition: opacity 0.5s ease, transform 0.5s ease;
+            }
+            .reveal.revealed {
+                opacity: 1;
+                transform: translateY(0);
             }
 
             /* Carousel Heights & CLS Prevention */
@@ -218,28 +224,28 @@
                 <picture>
                     <source media="(max-width: 768px)" srcset="{{ asset('images/slider-2-mobile.webp') }}" type="image/webp">
                     <source media="(min-width: 769px)" srcset="{{ asset('images/slider-2.webp') }}" type="image/webp">
-                    <img src="{{ asset('images/slider-2.webp') }}" class="d-block w-100 hero-img" alt="Slide 2" loading="lazy" decoding="async" width="1600" height="891">
+                    <img src="{{ asset('images/slider-2-mobile.webp') }}" class="d-block w-100 hero-img" alt="Slide 2" loading="lazy" decoding="async" width="1600" height="891">
                 </picture>
             </div>
             <div class="carousel-item">
                 <picture>
                     <source media="(max-width: 768px)" srcset="{{ asset('images/slider-3-mobile.webp') }}" type="image/webp">
                     <source media="(min-width: 769px)" srcset="{{ asset('images/slider-3.webp') }}" type="image/webp">
-                    <img src="{{ asset('images/slider-3.webp') }}" class="d-block w-100 hero-img" alt="Slide 3" loading="lazy" decoding="async" width="810" height="1080">
+                    <img src="{{ asset('images/slider-3-mobile.webp') }}" class="d-block w-100 hero-img" alt="Slide 3" loading="lazy" decoding="async" width="810" height="1080">
                 </picture>
             </div>
             <div class="carousel-item">
                 <picture>
                     <source media="(max-width: 768px)" srcset="{{ asset('images/slider-4-mobile.webp') }}" type="image/webp">
                     <source media="(min-width: 769px)" srcset="{{ asset('images/slider-4.webp') }}" type="image/webp">
-                    <img src="{{ asset('images/slider-4.webp') }}" class="d-block w-100 hero-img" alt="Slide 4" loading="lazy" decoding="async" width="1600" height="743">
+                    <img src="{{ asset('images/slider-4-mobile.webp') }}" class="d-block w-100 hero-img" alt="Slide 4" loading="lazy" decoding="async" width="1600" height="743">
                 </picture>
             </div>
             <div class="carousel-item">
                 <picture>
                     <source media="(max-width: 768px)" srcset="{{ asset('images/slider-5-mobile.webp') }}" type="image/webp">
                     <source media="(min-width: 769px)" srcset="{{ asset('images/slider-5.webp') }}" type="image/webp">
-                    <img src="{{ asset('images/slider-5.webp') }}" class="d-block w-100 hero-img" alt="Slide 5" loading="lazy" decoding="async" width="1024" height="735">
+                    <img src="{{ asset('images/slider-5-mobile.webp') }}" class="d-block w-100 hero-img" alt="Slide 5" loading="lazy" decoding="async" width="1024" height="735">
                 </picture>
             </div>
         </div>
@@ -532,7 +538,7 @@
                                     {{ $product['badge'] }}
                                 </span>
                             @endif
-                            <div style="height: 150px; overflow: hidden; position: relative;">
+                            <a href="{{ route('products.show', $product['id']) }}" class="d-block" style="height: 150px; overflow: hidden; position: relative;">
                                 @if(!empty($product['image_url']))
                                     <img src="{{ $product['image_url'] }}"
                                          class="w-100 h-100"
@@ -542,14 +548,20 @@
                                          alt="{{ $product['name'] }}">
                                 @else
                                     <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center bg-light text-muted">
-                                        <i class="fas fa-box fa-3x text-secondary opacity-50"></i>
+                                        <i class="fas fa-image fa-3x text-secondary opacity-50"></i>
                                     </div>
                                 @endif
-                            </div>
+                            </a>
                             <div class="card-body p-3 text-center d-flex flex-column">
-                                <h6 class="fw-bold mb-1" style="font-size:0.9rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ $product['name'] }}</h6>
+                                <a href="{{ route('products.show', $product['id']) }}" class="text-decoration-none text-dark">
+                                    <h6 class="fw-bold mb-1" style="font-size:0.9rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ $product['name'] }}</h6>
+                                </a>
                                 <p class="text-primary fw-bold mb-0 mt-auto">{{ number_format($product['price']) }} EGP</p>
-                                <a href="{{ route('products.show', $product['id']) }}" class="btn btn-outline-primary btn-sm w-100 mt-2 rounded-pill">{{ __('app.prod_add_cart') }}</a>
+                                <button type="button"
+                                        class="btn btn-outline-primary btn-sm w-100 mt-2 rounded-pill"
+                                        onclick="addToCart({{ $product['id'] }}, '{{ addslashes($product['name']) }}', {{ $product['price'] }}, '{{ $product['image_url'] ?? '' }}')">
+                                    <i class="fas fa-shopping-cart me-1"></i>{{ __('app.prod_add_cart') }}
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -580,7 +592,7 @@
                                     {{ $product['badge'] }}
                                 </span>
                             @endif
-                            <div style="height: 150px; overflow: hidden; position: relative;">
+                            <a href="{{ route('products.show', $product['id']) }}" class="d-block" style="height: 150px; overflow: hidden; position: relative;">
                                 @if(!empty($product['image_url']))
                                     <img src="{{ $product['image_url'] }}"
                                          class="w-100 h-100"
@@ -590,14 +602,20 @@
                                          alt="{{ $product['name'] }}">
                                 @else
                                     <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center bg-light text-muted">
-                                        <i class="fas fa-box fa-3x text-secondary opacity-50"></i>
+                                        <i class="fas fa-image fa-3x text-secondary opacity-50"></i>
                                     </div>
                                 @endif
-                            </div>
+                            </a>
                             <div class="card-body p-3 text-center d-flex flex-column">
-                                <h6 class="fw-bold mb-1" style="font-size:0.9rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ $product['name'] }}</h6>
+                                <a href="{{ route('products.show', $product['id']) }}" class="text-decoration-none text-dark">
+                                    <h6 class="fw-bold mb-1" style="font-size:0.9rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ $product['name'] }}</h6>
+                                </a>
                                 <p class="text-primary fw-bold mb-0 mt-auto">{{ number_format($product['price']) }} EGP</p>
-                                <a href="{{ route('products.show', $product['id']) }}" class="btn btn-outline-primary btn-sm w-100 mt-2 rounded-pill">{{ __('app.prod_add_cart') }}</a>
+                                <button type="button"
+                                        class="btn btn-outline-primary btn-sm w-100 mt-2 rounded-pill"
+                                        onclick="addToCart({{ $product['id'] }}, '{{ addslashes($product['name']) }}', {{ $product['price'] }}, '{{ $product['image_url'] ?? '' }}')">
+                                    <i class="fas fa-shopping-cart me-1"></i>{{ __('app.prod_add_cart') }}
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -628,7 +646,7 @@
                                     {{ $product['badge'] }}
                                 </span>
                             @endif
-                            <div style="height: 150px; overflow: hidden; position: relative;">
+                            <a href="{{ route('products.show', $product['id']) }}" class="d-block" style="height: 150px; overflow: hidden; position: relative;">
                                 @if(!empty($product['image_url']))
                                     <img src="{{ $product['image_url'] }}"
                                          class="w-100 h-100"
@@ -638,14 +656,20 @@
                                          alt="{{ $product['name'] }}">
                                 @else
                                     <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center bg-light text-muted">
-                                        <i class="fas fa-box fa-3x text-secondary opacity-50"></i>
+                                        <i class="fas fa-image fa-3x text-secondary opacity-50"></i>
                                     </div>
                                 @endif
-                            </div>
+                            </a>
                             <div class="card-body p-3 text-center d-flex flex-column">
-                                <h6 class="fw-bold mb-1" style="font-size:0.9rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ $product['name'] }}</h6>
+                                <a href="{{ route('products.show', $product['id']) }}" class="text-decoration-none text-dark">
+                                    <h6 class="fw-bold mb-1" style="font-size:0.9rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ $product['name'] }}</h6>
+                                </a>
                                 <p class="text-primary fw-bold mb-0 mt-auto">{{ number_format($product['price']) }} EGP</p>
-                                <a href="{{ route('products.show', $product['id']) }}" class="btn btn-outline-primary btn-sm w-100 mt-2 rounded-pill">{{ __('app.prod_add_cart') }}</a>
+                                <button type="button"
+                                        class="btn btn-outline-primary btn-sm w-100 mt-2 rounded-pill"
+                                        onclick="addToCart({{ $product['id'] }}, '{{ addslashes($product['name']) }}', {{ $product['price'] }}, '{{ $product['image_url'] ?? '' }}')">
+                                    <i class="fas fa-shopping-cart me-1"></i>{{ __('app.prod_add_cart') }}
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -691,9 +715,11 @@
                     </div>
                     @endif
 
-                    <a href="{{ route('products.show', $dealProduct['id']) }}" class="btn btn-light btn-lg px-5 rounded-pill text-primary fw-bold">
+                    <button type="button"
+                            onclick="addToCart({{ $dealProduct['id'] }}, '{{ addslashes($dealProduct['name']) }}', {{ $dealProduct['price'] }}, '{{ $dealProduct['image_url'] ?? '' }}')"
+                            class="btn btn-light btn-lg px-5 rounded-pill text-primary fw-bold">
                         <i class="fas fa-shopping-cart me-2"></i> {{ __('app.prod_add_cart') }}
-                    </a>
+                    </button>
                 </div>
                 <div class="col-md-6 text-center position-relative">
                     @if(!empty($dealProduct['image_url']))
@@ -708,7 +734,7 @@
                             <span class="badge bg-secondary bg-opacity-75 text-white position-absolute top-0 end-0 m-3 px-3 py-2" style="font-size: 0.75rem; border-radius: 8px;">
                                 <i class="fas fa-image-slash me-1"></i>{{ app()->getLocale() === 'ar' ? 'بدون صورة' : 'No Image' }}
                             </span>
-                            <i class="fas fa-box fa-5x text-secondary opacity-50"></i>
+                            <i class="fas fa-image fa-5x text-secondary opacity-50"></i>
                         </div>
                     @endif
                 </div>
@@ -766,7 +792,7 @@
                                     {{ $product['badge'] }}
                                 </span>
                             @endif
-                            <div style="height: 150px; overflow: hidden; position: relative;">
+                            <a href="{{ route('products.show', $product['id']) }}" class="d-block" style="height: 150px; overflow: hidden; position: relative;">
                                 @if(!empty($product['image_url']))
                                     <img src="{{ $product['image_url'] }}"
                                          class="w-100 h-100"
@@ -776,14 +802,20 @@
                                          alt="{{ $product['name'] }}">
                                 @else
                                     <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center bg-light text-muted">
-                                        <i class="fas fa-box fa-3x text-secondary opacity-50"></i>
+                                        <i class="fas fa-image fa-3x text-secondary opacity-50"></i>
                                     </div>
                                 @endif
-                            </div>
+                            </a>
                             <div class="card-body p-3 text-center d-flex flex-column">
-                                <h6 class="fw-bold mb-1" style="font-size:0.9rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ $product['name'] }}</h6>
+                                <a href="{{ route('products.show', $product['id']) }}" class="text-decoration-none text-dark">
+                                    <h6 class="fw-bold mb-1" style="font-size:0.9rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">{{ $product['name'] }}</h6>
+                                </a>
                                 <p class="text-primary fw-bold mb-0 mt-auto">{{ number_format($product['price']) }} EGP</p>
-                                <a href="{{ route('products.show', $product['id']) }}" class="btn btn-outline-primary btn-sm w-100 mt-2 rounded-pill">{{ __('app.prod_add_cart') }}</a>
+                                <button type="button"
+                                        class="btn btn-outline-primary btn-sm w-100 mt-2 rounded-pill"
+                                        onclick="addToCart({{ $product['id'] }}, '{{ addslashes($product['name']) }}', {{ $product['price'] }}, '{{ $product['image_url'] ?? '' }}')">
+                                    <i class="fas fa-shopping-cart me-1"></i>{{ __('app.prod_add_cart') }}
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -1109,16 +1141,23 @@
                     </div>
                 </div>
 
-                {{-- Right: Google Map --}}
+                {{-- Right: Google Map — lazy loaded on click to avoid heavy third-party JS blocking TBT --}}
                 <div class="col-lg-7" style="min-height:500px;">
-                    <div class="rounded-4 overflow-hidden shadow-sm m-2">
-                        <iframe
-                                            src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d792.201006963661!2d31.307853230395082!3d30.088475194083156!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2s!5e0!3m2!1sen!2seg!4v1779698431846!5m2!1sen!2seg"
-                            width="100%" height="100%" style="border:0; min-height:400px; display:block;"
-                            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                    <div class="rounded-4 overflow-hidden shadow-sm m-2" style="min-height:400px;">
+                        <div id="mapPlaceholder" 
+                             style="min-height:400px;background:#e8edf5;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;border-radius:1rem;"
+                             onclick="loadMap()" role="button" tabindex="0" aria-label="{{ app()->getLocale() === 'ar' ? 'اضغط لتحميل الخريطة' : 'Click to load map' }}"
+                             onkeydown="if(event.key==='Enter'||event.key===' ')loadMap()">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#051836" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            <p style="margin-top:.75rem;color:#051836;font-weight:700;">{{ app()->getLocale() === 'ar' ? 'اضغط لعرض الخريطة' : 'Click to show map' }}</p>
+                            <p style="font-size:.8rem;color:#475569;margin:0;">{{ app()->getLocale() === 'ar' ? 'المنصورة، مصر' : 'Mansoura, Egypt' }}</p>
+                        </div>
+                        <iframe id="googleMap"
+                            data-src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d792.201006963661!2d31.307853230395082!3d30.088475194083156!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2s!5e0!3m2!1sen!2seg!4v1779698431846!5m2!1sen!2seg"
+                            width="100%" height="100%" style="border:0;min-height:400px;display:none;"
+                            allowfullscreen="" referrerpolicy="no-referrer-when-downgrade"
                             title="ميلاد سامي - المنصورة، مصر"></iframe>
                     </div>
-                    
                 </div>
 
             </div>
@@ -1312,7 +1351,18 @@
                 });
             }
 
-            // Parallax Reverse Motion on Carousel — desktop only (skip on mobile to save CPU)
+            // Google Maps — click-to-load (avoids heavy third-party JS on initial load)
+            window.loadMap = function() {
+                const placeholder = document.getElementById('mapPlaceholder');
+                const iframe = document.getElementById('googleMap');
+                if (placeholder && iframe && iframe.dataset.src) {
+                    iframe.src = iframe.dataset.src;
+                    iframe.style.display = 'block';
+                    placeholder.style.display = 'none';
+                }
+            };
+
+            // Parallax Reverse Motion on Carousel — desktop only (skip on mobile to save CPU/battery)
             const heroCarousel = document.getElementById('heroCarousel');
             if (heroCarousel && window.innerWidth > 992) {
                 heroCarousel.addEventListener('mousemove', function(e) {
@@ -1334,6 +1384,27 @@
                         img.style.transform = 'scale(1) translate(0px, 0px)';
                         img.style.transition = 'transform 0.5s ease-out';
                     });
+                });
+            }
+
+            // Scroll Reveal — IntersectionObserver (GPU-accelerated, no layout thrashing)
+            if ('IntersectionObserver' in window) {
+                const revealObserver = new IntersectionObserver(function(entries) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('revealed');
+                            revealObserver.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+
+                document.querySelectorAll('.reveal').forEach(function(el) {
+                    revealObserver.observe(el);
+                });
+            } else {
+                // Fallback: show all immediately for older browsers
+                document.querySelectorAll('.reveal').forEach(function(el) {
+                    el.classList.add('revealed');
                 });
             }
         </script>

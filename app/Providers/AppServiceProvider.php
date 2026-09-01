@@ -28,11 +28,13 @@ class AppServiceProvider extends ServiceProvider
         }
 
         // Share active categories with views using a composer to avoid querying during application boot, and cache it.
-        // Uses 'navCategories' to avoid colliding with controller-passed 'categories' variables.
-        View::composer('*', function ($view) {
+        // Only share with frontend views (not admin) to avoid unnecessary overhead.
+        View::composer(['layouts.app', 'home', 'products.*', 'blog.*', 'about.*', 'news.*', 'contact.*', 'cart.*', 'checkout.*', 'auth.*', 'downloads.*', 'testimonials.*'], function ($view) {
             try {
                 $navCategories = \Illuminate\Support\Facades\Cache::remember('active_categories', 3600, function () {
-                    return Category::active()->get();
+                    return Category::active()
+                        ->select(['id', 'slug', 'name_ar', 'name_en', 'icon', 'image', 'is_active'])
+                        ->get();
                 });
                 $view->with('navCategories', $navCategories);
             } catch (\Exception $e) {

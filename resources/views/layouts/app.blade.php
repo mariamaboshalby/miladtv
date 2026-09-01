@@ -10,31 +10,53 @@
 
     <link rel="icon" href="{{ asset('favicon.ico') }}">
 
-    <!-- Preconnect to external origins -->
+    <!-- Preconnect to external origins — dns-prefetch as fallback -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 
-    <!-- Google Fonts: async load with locale-aware subset and display=swap -->
+    <!-- Google Fonts: reduced weights (only 2 used: regular + bold) -->
     @if($isAr)
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet"></noscript>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet"></noscript>
     @else
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet"></noscript>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet"></noscript>
     @endif
 
-    <!-- Bootstrap 5 — RTL or LTR (critical, keep sync) -->
+    <!-- Bootstrap 5 — async non-render-blocking (critical styles inlined below) -->
     @if($isAr)
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css"></noscript>
     @else
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"></noscript>
     @endif
 
     <!-- Font Awesome — async load (non-render-blocking) -->
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
+
+    <!-- Critical Bootstrap utilities — inline to prevent FOUC while async CSS loads -->
+    <style>
+    .d-none{display:none!important}.d-flex{display:flex!important}.d-block{display:block!important}
+    .container{width:100%;padding-right:.75rem;padding-left:.75rem;margin-right:auto;margin-left:auto}
+    @media(min-width:992px){.container{max-width:960px}.d-lg-none{display:none!important}.d-lg-flex{display:flex!important}.d-lg-block{display:block!important}}
+    @media(min-width:1200px){.container{max-width:1140px}}
+    @media(min-width:1400px){.container{max-width:1320px}}
+    @media(max-width:991.98px){.d-lg-none{display:block!important}}
+    .sticky-top{position:sticky;top:0;z-index:1020}
+    .position-relative{position:relative!important}.position-absolute{position:absolute!important}
+    .overflow-hidden{overflow:hidden!important}
+    .w-100{width:100%!important}.h-100{height:100%!important}
+    .d-flex{display:flex!important}.align-items-center{align-items:center!important}
+    .justify-content-between{justify-content:space-between!important}
+    .justify-content-center{justify-content:center!important}
+    .gap-2{gap:.5rem!important}.gap-3{gap:1rem!important}
+    .py-2{padding-top:.5rem!important;padding-bottom:.5rem!important}
+    .flex-shrink-0{flex-shrink:0!important}
+    </style>
 
     <!-- App CSS -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
@@ -42,42 +64,29 @@
 
     @if($isAr)
     <style>
-        /* Arabic: apply Cairo only to text elements, never to icon fonts */
-        body,
-        p, span, a, h1, h2, h3, h4, h5, h6,
+        /* Arabic: Cairo — 2 weights only */
+        body, p, span, a, h1, h2, h3, h4, h5, h6,
         li, td, th, label, input, textarea, select, button,
         .milad-nav-link, .milad-mobile-link, .milad-footer-heading,
         .milad-footer-links a, .milad-footer-contact li,
         .milad-bn-item span, .cart-sidebar-header h3 {
-            font-family: 'Cairo', sans-serif !important;
+            font-family: 'Cairo', system-ui, sans-serif !important;
         }
         /* RTL mega-menu alignment fix */
-        .milad-mega-menu {
-            left: auto !important;
-            right: 0 !important;
-            transform: translateX(0) translateY(8px) !important;
-        }
-        .milad-dropdown:hover .milad-mega-menu {
-            transform: translateX(0) translateY(0) !important;
-        }
+        .milad-mega-menu { left: auto !important; right: 0 !important; transform: translateX(0) translateY(8px) !important; }
+        .milad-dropdown:hover .milad-mega-menu { transform: translateX(0) translateY(0) !important; }
     </style>
     @else
     <style>
-        body,
-        p, span, a, h1, h2, h3, h4, h5, h6,
+        body, p, span, a, h1, h2, h3, h4, h5, h6,
         li, td, th, label, input, textarea, select, button,
         .milad-nav-link, .milad-mobile-link, .milad-footer-heading,
         .milad-footer-links a, .milad-footer-contact li,
         .milad-bn-item span, .cart-sidebar-header h3 {
-            font-family: 'Inter', sans-serif !important;
+            font-family: 'Inter', system-ui, sans-serif !important;
         }
     </style>
     @endif
-
-    <style>
-        /* Smooth scrolling for the whole page */
-        html { scroll-behavior: smooth; }
-    </style>
     @stack('styles')
 </head>
 <body>
@@ -456,7 +465,7 @@
         @endauth
     </nav>
 
-    <!-- Scripts -->
+    <!-- Scripts — deferred, non-blocking -->
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
 

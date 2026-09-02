@@ -105,15 +105,27 @@
                 <div class="row g-3">
                     @foreach($products as $index => $product)
                     <div class="col-md-6 col-xl-4">
-                        <div class="product-card card border-0 shadow-sm h-100">
+                        <a href="{{ route('products.show', $product['id']) }}"
+                           class="product-card card border-0 shadow-sm h-100 text-decoration-none">
+
                             @if($product['badge'])
-                            <span class="badge bg-danger position-absolute top-0 end-0 m-2 px-2 py-1" style="z-index:2;border-radius:8px;">{{ $product['badge'] }}</span>
+                            <span class="badge bg-danger position-absolute top-0 m-2 px-2 py-1" style="z-index:2;border-radius:8px;left:8px;">{{ $product['badge'] }}</span>
                             @endif
+
+                            {{-- Fav button --}}
+                            <button class="fav-btn"
+                                    data-id="{{ $product['id'] }}"
+                                    data-name="{{ $product['name'] }}"
+                                    data-price="{{ $product['price'] }}"
+                                    data-img="{{ $product['image_url'] }}"
+                                    aria-label="Add to favourites"
+                                    onclick="event.preventDefault();event.stopPropagation();toggleFav(this)">
+                                <i class="fas fa-heart"></i>
+                            </button>
 
                             {{-- Image --}}
                             <div class="product-img-area">
                                 @if(!empty($product['image_url']))
-                                    {{-- First product image is likely the LCP element; load it eagerly --}}
                                     <img src="{{ $product['image_url'] }}" alt="{{ $product['name'] }}"
                                          class="w-100 h-100" style="object-fit:cover;"
                                          loading="{{ $index < 3 ? 'eager' : 'lazy' }}"
@@ -158,15 +170,16 @@
                                 {{-- Actions --}}
                                 <div class="d-grid gap-2" style="grid-template-columns:1fr auto;">
                                     <button class="btn btn-primary btn-sm fw-semibold"
-                                            onclick="addToCart({{ $product['id'] }}, '{{ addslashes($product['name']) }}', {{ $product['price'] }}, '{{ $product['image'] }}')">
+                                            onclick="event.preventDefault();event.stopPropagation();addToCart({{ $product['id'] }}, '{{ addslashes($product['name']) }}', {{ $product['price'] }}, '{{ $product['image'] }}')">
                                         <i class="fas fa-shopping-cart me-1"></i>{{ __('app.prod_add_cart') }}
                                     </button>
-                                    <a href="{{ route('products.show', $product['id']) }}" class="btn btn-outline-secondary btn-sm">
+                                    <button class="btn btn-outline-secondary btn-sm"
+                                            onclick="event.preventDefault();event.stopPropagation();window.location='{{ route('products.show', $product['id']) }}'">
                                         <i class="fas fa-eye"></i>
-                                    </a>
+                                    </button>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                     @endforeach
                 </div>
@@ -248,7 +261,46 @@
     line-height: 1.6;
 }
 .d-grid { display: grid; }
-</style>
+
+/* ── Fav button ── */
+.fav-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    left: auto;
+    z-index: 3;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,.92);
+    backdrop-filter: blur(4px);
+    color: #cbd5e1;
+    font-size: .95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,.12);
+    transition: color .2s ease, transform .2s ease, background .2s ease;
+}
+.fav-btn:hover {
+    background: #fff;
+    color: #f43f5e;
+    transform: scale(1.12);
+}
+.fav-btn.active {
+    color: #f43f5e;
+    background: #fff0f3;
+}
+.fav-btn.pop {
+    animation: fav-pop .3s ease;
+}
+@keyframes fav-pop {
+    0%   { transform: scale(1);    }
+    50%  { transform: scale(1.35); }
+    100% { transform: scale(1);    }
+}</style>
 @endpush
 
 @push('scripts')

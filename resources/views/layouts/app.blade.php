@@ -136,6 +136,12 @@
                         @endif
                     </a>
 
+                    {{-- Favourites --}}
+                    <button class="milad-icon-btn position-relative" id="navFavBtn" aria-label="Favourites" onclick="openFavDrawer()" title="{{ app()->getLocale() === 'ar' ? 'المفضلة' : 'Favourites' }}">
+                        <i class="fas fa-heart"></i>
+                        <span class="milad-cart-badge d-none" id="navFavBadge" style="background:#f43f5e;">0</span>
+                    </button>
+
                     {{-- Language Toggle --}}
                     <select
                         onchange="window.location='/lang/'+this.value"
@@ -363,6 +369,393 @@
             <a href="{{ route('cart.index') }}" class="btn-primary-full">{{ __('app.view_full_cart') }}</a>
         </div>
     </div>
+
+    {{-- ── Favourites Drawer ── --}}
+    <div class="fav-overlay" id="favOverlay" onclick="closeFavDrawer()"></div>
+    <div class="fav-drawer" id="favDrawer" aria-label="Favourites drawer">
+        <div class="fav-drawer-header">
+            <h3><i class="fas fa-heart me-2" style="color:#f43f5e;"></i>{{ app()->getLocale() === 'ar' ? 'المفضلة' : 'Favourites' }}</h3>
+            <button class="fav-drawer-close" onclick="closeFavDrawer()" aria-label="Close"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="fav-drawer-body" id="favDrawerBody">
+            <div class="fav-empty" id="favEmpty">
+                <i class="fas fa-heart-broken"></i>
+                <p>{{ app()->getLocale() === 'ar' ? 'لا توجد منتجات في المفضلة' : 'No favourites yet' }}</p>
+            </div>
+        </div>
+    </div>
+
+    <style>
+    /* ── Fav Drawer ── */
+    .fav-overlay {
+        position: fixed; inset: 0; background: rgba(0,0,0,.45);
+        z-index: 10998; opacity: 0; pointer-events: none;
+        transition: opacity .3s ease;
+    }
+    .fav-overlay.show { opacity: 1; pointer-events: auto; }
+
+    /* Default (LTR): slides in from the RIGHT */
+    .fav-drawer {
+        position: fixed; top: 0; right: -400px; left: auto;
+        width: 360px; max-width: 92vw;
+        height: 100%; background: #fff; z-index: 10999;
+        display: flex; flex-direction: column;
+        box-shadow: -4px 0 32px rgba(0,0,0,.15);
+        transition: right .32s cubic-bezier(.4,0,.2,1);
+    }
+    .fav-drawer.show { right: 0; }
+
+    /* RTL override: slides in from the LEFT */
+    html[dir="rtl"] .fav-drawer {
+        right: auto; left: -400px;
+        box-shadow: 4px 0 32px rgba(0,0,0,.15);
+        transition: left .32s cubic-bezier(.4,0,.2,1);
+    }
+    html[dir="rtl"] .fav-drawer.show { left: 0; right: auto; }
+
+    .fav-drawer-header {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 1.1rem 1.25rem; border-bottom: 1px solid #f1f5f9;
+        background: #fff; flex-shrink: 0;
+    }
+    .fav-drawer-header h3 { font-size: 1.05rem; font-weight: 700; margin: 0; color: #0f172a; }
+    .fav-drawer-close {
+        width: 34px; height: 34px; border-radius: 50%; border: none;
+        background: #f1f5f9; color: #64748b; font-size: 1rem;
+        display: flex; align-items: center; justify-content: center; cursor: pointer;
+        transition: background .2s, color .2s;
+    }
+    .fav-drawer-close:hover { background: #fee2e2; color: #dc2626; }
+
+    .fav-drawer-body { flex: 1; overflow-y: auto; padding: 1rem; }
+
+    .fav-empty { text-align: center; padding: 3rem 1rem; color: #94a3b8; }
+    .fav-empty i { font-size: 3rem; margin-bottom: .75rem; display: block; }
+    .fav-empty p { font-size: .95rem; }
+
+    .fav-item {
+        display: flex; align-items: center; gap: .875rem;
+        padding: .75rem; border-radius: 12px; border: 1px solid #f1f5f9;
+        margin-bottom: .625rem; background: #fff; transition: box-shadow .2s;
+    }
+    .fav-item:hover { box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+    .fav-item-img {
+        width: 64px; height: 64px; border-radius: 8px; object-fit: cover;
+        background: #f8fafc; flex-shrink: 0; border: 1px solid #e2e8f0;
+    }
+    .fav-item-img-placeholder {
+        width: 64px; height: 64px; border-radius: 8px;
+        background: #f1f5f9; display: flex; align-items: center;
+        justify-content: center; color: #cbd5e1; font-size: 1.5rem; flex-shrink: 0;
+    }
+    .fav-item-info { flex: 1; min-width: 0; }
+    .fav-item-name { font-size: .875rem; font-weight: 600; color: #0f172a; margin-bottom: .2rem;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .fav-item-price { font-size: .9rem; font-weight: 700; color: #051836; }
+    .fav-item-remove {
+        width: 28px; height: 28px; border-radius: 50%; border: none;
+        background: #fef2f2; color: #f43f5e; font-size: .8rem;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer; flex-shrink: 0; transition: background .2s;
+    }
+    .fav-item-remove:hover { background: #fee2e2; }
+    .fav-item-cart {
+        width: 28px; height: 28px; border-radius: 50%; border: none;
+        background: #eff6ff; color: #2563eb; font-size: .8rem;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer; flex-shrink: 0; transition: background .2s, color .2s;
+    }
+    .fav-item-cart:hover { background: #2563eb; color: #fff; }
+    .fav-item-actions { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
+    #navFavBtn.has-favs .fa-heart { color: #f43f5e; }
+
+    /* ── Fly-to-heart animation ── */
+    .fav-fly {
+        position: fixed;
+        z-index: 99999;
+        pointer-events: none;
+        color: #f43f5e;
+        font-size: 1.75rem;
+        line-height: 1;
+        will-change: transform, opacity;
+    }
+    </style>
+
+    <script>
+    /* ═══════════════════════════════════════════════════
+       WISHLIST SYSTEM
+       - Guest  : localStorage
+       - Logged : AJAX → DB  (+ sync on login)
+    ═══════════════════════════════════════════════════ */
+    (function () {
+        var CSRF     = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+        var IS_AUTH  = {{ Auth::check() ? 'true' : 'false' }};
+        var SYNC_NOW = {{ session('wishlist_sync') ? 'true' : 'false' }};
+
+        /* ── localStorage keys (guest fallback) ── */
+        var LS_IDS  = 'milad_favs';
+        var LS_DATA = 'milad_favs_data';
+
+        function lsGetIds()  { try { return JSON.parse(localStorage.getItem(LS_IDS)  || '[]'); } catch(e){return[];} }
+        function lsGetData() { try { return JSON.parse(localStorage.getItem(LS_DATA) || '{}'); } catch(e){return{};} }
+        function lsSaveIds(a)  { localStorage.setItem(LS_IDS,  JSON.stringify(a)); }
+        function lsSaveData(o) { localStorage.setItem(LS_DATA, JSON.stringify(o)); }
+        function lsClear()     { localStorage.removeItem(LS_IDS); localStorage.removeItem(LS_DATA); }
+
+        /* ── in-memory state (filled from DB or LS) ── */
+        var _ids  = [];   // array of int
+        var _data = {};   // { "id": {id,name,price,img} }
+
+        /* ── helpers ── */
+        function ajax(method, url, body) {
+            return fetch(url, {
+                method:  method,
+                headers: {
+                    'Content-Type':  'application/json',
+                    'X-CSRF-TOKEN':  CSRF,
+                    'Accept':        'application/json',
+                },
+                body: body ? JSON.stringify(body) : undefined,
+            }).then(function(r){ return r.json(); });
+        }
+
+        /* ── badge ── */
+        function updateBadge() {
+            var btn   = document.getElementById('navFavBtn');
+            var badge = document.getElementById('navFavBadge');
+            if (!btn) return;
+            var count = _ids.length;
+            badge.textContent = count;
+            if (count > 0) {
+                badge.classList.remove('d-none');
+                btn.classList.add('has-favs');
+            } else {
+                badge.classList.add('d-none');
+                btn.classList.remove('has-favs');
+            }
+        }
+
+        /* ── mark active fav buttons on page ── */
+        function markButtons() {
+            document.querySelectorAll('.fav-btn[data-id]').forEach(function(btn) {
+                btn.classList.toggle('active', _ids.includes(parseInt(btn.dataset.id)));
+            });
+        }
+
+        /* ── load state ── */
+        function loadState() {
+            if (IS_AUTH) {
+                // fetch from DB
+                ajax('GET', '/wishlist').then(function(res) {
+                    _ids  = (res.ids  || []).map(Number);
+                    _data = {};
+                    (res.items || []).forEach(function(p){ _data[String(p.id)] = p; });
+                    updateBadge();
+                    markButtons();
+                }).catch(function(){});
+            } else {
+                // from localStorage
+                _ids  = lsGetIds().map(Number);
+                _data = lsGetData();
+                updateBadge();
+                markButtons();
+            }
+        }
+
+        /* ── sync localStorage → DB after login ── */
+        function syncLocalToDb() {
+            var guestIds = lsGetIds();
+            if (guestIds.length === 0) { lsClear(); return; }
+            ajax('POST', '/wishlist/sync', { ids: guestIds }).then(function() {
+                lsClear();
+                loadState();
+            }).catch(function(){ lsClear(); });
+        }
+
+        /* ── fly-to-heart animation ── */
+        function flyHeart(fromEl) {
+            var target = document.getElementById('navFavBtn');
+            if (!target || !fromEl) return;
+
+            var srcRect = fromEl.getBoundingClientRect();
+            var dstRect = target.getBoundingClientRect();
+
+            // create flying element
+            var el = document.createElement('i');
+            el.className = 'fas fa-heart fav-fly';
+            el.style.left = (srcRect.left + srcRect.width  / 2 - 14) + 'px';
+            el.style.top  = (srcRect.top  + srcRect.height / 2 - 14) + 'px';
+            document.body.appendChild(el);
+
+            // calc delta to target center
+            var dx = (dstRect.left + dstRect.width  / 2) - (srcRect.left + srcRect.width  / 2);
+            var dy = (dstRect.top  + dstRect.height / 2) - (srcRect.top  + srcRect.height / 2);
+
+            el.style.setProperty('--dx', dx + 'px');
+            el.style.setProperty('--dy', dy + 'px');
+
+            // override animation to actually travel to target
+            el.style.animation = 'none';
+            el.style.transition = 'transform .65s cubic-bezier(.2,.8,.3,1), opacity .65s ease';
+            el.style.transform  = 'scale(1)';
+            el.style.opacity    = '1';
+
+            requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                    el.style.transform = 'translate(' + dx + 'px,' + dy + 'px) scale(.25)';
+                    el.style.opacity   = '0';
+                });
+            });
+
+            // pulse the nav icon when it arrives
+            setTimeout(function() {
+                el.remove();
+                var icon = target.querySelector('.fa-heart');
+                if (icon) {
+                    icon.style.transition = 'transform .2s ease';
+                    icon.style.transform  = 'scale(1.6)';
+                    setTimeout(function(){ icon.style.transform = 'scale(1)'; }, 200);
+                }
+            }, 650);
+        }
+
+        /* ── toggle (public) ── */
+        window.toggleFav = function(btn) {
+            var id    = parseInt(btn.dataset.id);
+            var name  = btn.dataset.name  || '';
+            var price = parseFloat(btn.dataset.price) || 0;
+            var img   = btn.dataset.img   || '';
+
+            // optimistic UI
+            var isAdding = !_ids.includes(id);
+            if (isAdding) {
+                _ids.push(id);
+                _data[String(id)] = { id: id, name: name, price: price, img: img };
+                btn.classList.add('active');
+                flyHeart(btn);   // ← fly animation on add only
+            } else {
+                _ids = _ids.filter(function(i){ return i !== id; });
+                delete _data[String(id)];
+                btn.classList.remove('active');
+            }
+            btn.classList.remove('pop'); void btn.offsetWidth; btn.classList.add('pop');
+            updateBadge();
+
+            if (IS_AUTH) {
+                // AJAX
+                ajax('POST', '/wishlist/toggle/' + id).then(function(res) {
+                    // server is source of truth — update count
+                    var badge = document.getElementById('navFavBadge');
+                    if (badge && res.count !== undefined) {
+                        badge.textContent = res.count;
+                        document.getElementById('navFavBtn').classList.toggle('has-favs', res.count > 0);
+                        badge.classList.toggle('d-none', res.count === 0);
+                    }
+                }).catch(function() {
+                    // rollback on error
+                    if (isAdding) {
+                        _ids = _ids.filter(function(i){ return i !== id; });
+                        delete _data[String(id)];
+                        btn.classList.remove('active');
+                    } else {
+                        _ids.push(id);
+                        _data[String(id)] = { id: id, name: name, price: price, img: img };
+                        btn.classList.add('active');
+                    }
+                    updateBadge();
+                });
+            } else {
+                // localStorage
+                lsSaveIds(_ids);
+                lsSaveData(_data);
+            }
+        };
+
+        /* ── open drawer ── */
+        window.openFavDrawer = function() {
+            if (IS_AUTH) {
+                // re-fetch fresh data
+                ajax('GET', '/wishlist').then(function(res) {
+                    _ids  = (res.ids  || []).map(Number);
+                    _data = {};
+                    (res.items || []).forEach(function(p){ _data[String(p.id)] = p; });
+                    updateBadge();
+                    markButtons();
+                    renderDrawer();
+                }).catch(function(){ renderDrawer(); });
+            } else {
+                renderDrawer();
+            }
+            document.getElementById('favDrawer').classList.add('show');
+            document.getElementById('favOverlay').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        };
+
+        /* ── close drawer ── */
+        window.closeFavDrawer = function() {
+            document.getElementById('favDrawer').classList.remove('show');
+            document.getElementById('favOverlay').classList.remove('show');
+            document.body.style.overflow = '';
+        };
+
+        /* ── remove from drawer ── */
+        window.removeFav = function(id) {
+            id = parseInt(id);
+            _ids = _ids.filter(function(i){ return i !== id; });
+            delete _data[String(id)];
+            updateBadge();
+            var cardBtn = document.querySelector('.fav-btn[data-id="' + id + '"]');
+            if (cardBtn) cardBtn.classList.remove('active');
+
+            if (IS_AUTH) {
+                ajax('DELETE', '/wishlist/' + id).catch(function(){});
+            } else {
+                lsSaveIds(_ids);
+                lsSaveData(_data);
+            }
+            renderDrawer();
+        };
+
+        /* ── render drawer ── */
+        function renderDrawer() {
+            var body  = document.getElementById('favDrawerBody');
+            var empty = document.getElementById('favEmpty');
+            if (!body) return;
+            body.querySelectorAll('.fav-item').forEach(function(el){ el.remove(); });
+
+            if (_ids.length === 0) { empty.style.display = 'block'; return; }
+            empty.style.display = 'none';
+
+            _ids.forEach(function(id) {
+                var p  = _data[String(id)] || {};
+                var el = document.createElement('div');
+                el.className = 'fav-item';
+                el.innerHTML =
+                    (p.img
+                        ? '<img class="fav-item-img" src="' + p.img + '" alt="' + (p.name||'').replace(/"/g,'&quot;') + '" loading="lazy">'
+                        : '<div class="fav-item-img-placeholder"><i class="fas fa-image"></i></div>') +
+                    '<div class="fav-item-info">' +
+                        '<div class="fav-item-name">' + (p.name || '') + '</div>' +
+                        '<div class="fav-item-price">' + (p.price ? Number(p.price).toLocaleString() + ' EGP' : '') + '</div>' +
+                    '</div>' +
+                    '<div class="fav-item-actions">' +
+                        '<button class="fav-item-cart" onclick="addToCart(' + id + ',\'' + (p.name||'').replace(/'/g,"\\'") + '\',' + (p.price||0) + ',\'' + (p.img||'') + '\')" aria-label="Add to cart" title="أضف للسلة"><i class="fas fa-shopping-cart"></i></button>' +
+                        '<button class="fav-item-remove" onclick="removeFav(' + id + ')" aria-label="Remove" title="إزالة"><i class="fas fa-times"></i></button>' +
+                    '</div>';
+                body.insertBefore(el, empty);
+            });
+        }
+
+        /* ── init ── */
+        document.addEventListener('DOMContentLoaded', function() {
+            if (IS_AUTH && SYNC_NOW) {
+                syncLocalToDb();   // sync guest favs after login
+            } else {
+                loadState();
+            }
+        });
+    }());
+    </script>
 
     <!-- Toast -->
     <div class="toast-container" id="toastContainer"></div>

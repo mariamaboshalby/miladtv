@@ -27,6 +27,8 @@ use App\Http\Controllers\SubscriberController;
 use App\Http\Controllers\OrderController;
 
 
+use App\Http\Controllers\WishlistController;
+
 // ── Auth ──────────────────────────────────────────────────────────────────
 Route::middleware('guest')->group(function () {
     Route::get('/login',     [AuthController::class, 'loginForm'])->name('login');
@@ -78,6 +80,16 @@ Route::post('/testimonials', [TestimonialController::class, 'store'])->name('tes
 
 // Newsletter
 Route::post('/newsletter/subscribe', [SubscriberController::class, 'store'])->name('newsletter.subscribe');
+
+// ── Wishlist ──────────────────────────────────────────────────────────────
+// Sync: works for guests too (after login, JS calls this)
+Route::post('/wishlist/sync', [WishlistController::class, 'sync'])->name('wishlist.sync')->middleware('auth');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/wishlist',                    [WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('/wishlist/toggle/{product}',  [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+    Route::delete('/wishlist/{product}',       [WishlistController::class, 'destroy'])->name('wishlist.destroy');
+});
 
 // Track Order
 Route::get('/track-order', [OrderController::class, 'track'])->name('track-order');

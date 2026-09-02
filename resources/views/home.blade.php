@@ -8,6 +8,32 @@
     @endpush
     @push('styles')
         <style>
+            /* ── Home product card fav button ── */
+            .home-fav-btn {
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                left: auto;
+                z-index: 3;
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                border: none;
+                background: rgba(255,255,255,.9);
+                backdrop-filter: blur(3px);
+                color: #cbd5e1;
+                font-size: .8rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                box-shadow: 0 2px 6px rgba(0,0,0,.12);
+                transition: color .2s, transform .2s;
+                padding: 0;
+            }
+            .home-fav-btn:hover  { color: #f43f5e; transform: scale(1.15); }
+            .home-fav-btn.active { color: #f43f5e; background: #fff0f3; }
+
             /* ── Gallery Grid ── */
             .milad-gallery {
                 display: grid;
@@ -538,6 +564,16 @@
                                     {{ $product['badge'] }}
                                 </span>
                             @endif
+                            {{-- Fav button --}}
+                            <button class="home-fav-btn fav-btn"
+                                    data-id="{{ $product['id'] }}"
+                                    data-name="{{ $product['name'] }}"
+                                    data-price="{{ $product['price'] }}"
+                                    data-img="{{ $product['image_url'] ?? '' }}"
+                                    aria-label="Add to favourites"
+                                    onclick="event.preventDefault();event.stopPropagation();toggleFav(this)">
+                                <i class="fas fa-heart"></i>
+                            </button>
                             <a href="{{ route('products.show', $product['id']) }}" class="d-block" style="height: 150px; overflow: hidden; position: relative;">
                                 @if(!empty($product['image_url']))
                                     <img src="{{ $product['image_url'] }}"
@@ -547,8 +583,8 @@
                                          width="200" height="150"
                                          alt="{{ $product['name'] }}">
                                 @else
-                                    <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center bg-light text-muted">
-                                        <i class="fas fa-image fa-3x text-secondary opacity-50"></i>
+                                    <div class="product-placeholder w-100 h-100" style="display:flex;align-items:center;justify-content:center;background:#f8fafc;">
+                                        <i class="fas fa-image" style="font-size:3.5rem;color:#cbd5e1;"></i>
                                     </div>
                                 @endif
                             </a>
@@ -559,7 +595,7 @@
                                 <p class="text-primary fw-bold mb-0 mt-auto">{{ number_format($product['price']) }} EGP</p>
                                 <button type="button"
                                         class="btn btn-outline-primary btn-sm w-100 mt-2 rounded-pill"
-                                        onclick="addToCart({{ $product['id'] }}, '{{ addslashes($product['name']) }}', {{ $product['price'] }}, '{{ $product['image_url'] ?? '' }}')">
+                                        onclick="event.stopPropagation();addToCart({{ $product['id'] }}, '{{ addslashes($product['name']) }}', {{ $product['price'] }}, '{{ $product['image_url'] ?? '' }}')">
                                     <i class="fas fa-shopping-cart me-1"></i>{{ __('app.prod_add_cart') }}
                                 </button>
                             </div>
@@ -592,6 +628,16 @@
                                     {{ $product['badge'] }}
                                 </span>
                             @endif
+                            {{-- Fav button --}}
+                            <button class="home-fav-btn fav-btn"
+                                    data-id="{{ $product['id'] }}"
+                                    data-name="{{ $product['name'] }}"
+                                    data-price="{{ $product['price'] }}"
+                                    data-img="{{ $product['image_url'] ?? '' }}"
+                                    aria-label="Add to favourites"
+                                    onclick="event.preventDefault();event.stopPropagation();toggleFav(this)">
+                                <i class="fas fa-heart"></i>
+                            </button>
                             <a href="{{ route('products.show', $product['id']) }}" class="d-block" style="height: 150px; overflow: hidden; position: relative;">
                                 @if(!empty($product['image_url']))
                                     <img src="{{ $product['image_url'] }}"
@@ -601,8 +647,8 @@
                                          width="200" height="150"
                                          alt="{{ $product['name'] }}">
                                 @else
-                                    <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center bg-light text-muted">
-                                        <i class="fas fa-image fa-3x text-secondary opacity-50"></i>
+                                    <div class="product-placeholder w-100 h-100" style="display:flex;align-items:center;justify-content:center;background:#f8fafc;">
+                                        <i class="fas fa-image" style="font-size:3.5rem;color:#cbd5e1;"></i>
                                     </div>
                                 @endif
                             </a>
@@ -613,7 +659,7 @@
                                 <p class="text-primary fw-bold mb-0 mt-auto">{{ number_format($product['price']) }} EGP</p>
                                 <button type="button"
                                         class="btn btn-outline-primary btn-sm w-100 mt-2 rounded-pill"
-                                        onclick="addToCart({{ $product['id'] }}, '{{ addslashes($product['name']) }}', {{ $product['price'] }}, '{{ $product['image_url'] ?? '' }}')">
+                                        onclick="event.stopPropagation();addToCart({{ $product['id'] }}, '{{ addslashes($product['name']) }}', {{ $product['price'] }}, '{{ $product['image_url'] ?? '' }}')">
                                     <i class="fas fa-shopping-cart me-1"></i>{{ __('app.prod_add_cart') }}
                                 </button>
                             </div>
@@ -646,6 +692,16 @@
                                     {{ $product['badge'] }}
                                 </span>
                             @endif
+                            {{-- Fav button --}}
+                            <button class="home-fav-btn fav-btn"
+                                    data-id="{{ $product['id'] }}"
+                                    data-name="{{ $product['name'] }}"
+                                    data-price="{{ $product['price'] }}"
+                                    data-img="{{ $product['image_url'] ?? '' }}"
+                                    aria-label="Add to favourites"
+                                    onclick="event.preventDefault();event.stopPropagation();toggleFav(this)">
+                                <i class="fas fa-heart"></i>
+                            </button>
                             <a href="{{ route('products.show', $product['id']) }}" class="d-block" style="height: 150px; overflow: hidden; position: relative;">
                                 @if(!empty($product['image_url']))
                                     <img src="{{ $product['image_url'] }}"
@@ -655,8 +711,8 @@
                                          width="200" height="150"
                                          alt="{{ $product['name'] }}">
                                 @else
-                                    <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center bg-light text-muted">
-                                        <i class="fas fa-image fa-3x text-secondary opacity-50"></i>
+                                    <div class="product-placeholder w-100 h-100" style="display:flex;align-items:center;justify-content:center;background:#f8fafc;">
+                                        <i class="fas fa-image" style="font-size:3.5rem;color:#cbd5e1;"></i>
                                     </div>
                                 @endif
                             </a>
@@ -667,7 +723,7 @@
                                 <p class="text-primary fw-bold mb-0 mt-auto">{{ number_format($product['price']) }} EGP</p>
                                 <button type="button"
                                         class="btn btn-outline-primary btn-sm w-100 mt-2 rounded-pill"
-                                        onclick="addToCart({{ $product['id'] }}, '{{ addslashes($product['name']) }}', {{ $product['price'] }}, '{{ $product['image_url'] ?? '' }}')">
+                                        onclick="event.stopPropagation();addToCart({{ $product['id'] }}, '{{ addslashes($product['name']) }}', {{ $product['price'] }}, '{{ $product['image_url'] ?? '' }}')">
                                     <i class="fas fa-shopping-cart me-1"></i>{{ __('app.prod_add_cart') }}
                                 </button>
                             </div>
@@ -792,6 +848,16 @@
                                     {{ $product['badge'] }}
                                 </span>
                             @endif
+                            {{-- Fav button --}}
+                            <button class="home-fav-btn fav-btn"
+                                    data-id="{{ $product['id'] }}"
+                                    data-name="{{ $product['name'] }}"
+                                    data-price="{{ $product['price'] }}"
+                                    data-img="{{ $product['image_url'] ?? '' }}"
+                                    aria-label="Add to favourites"
+                                    onclick="event.preventDefault();event.stopPropagation();toggleFav(this)">
+                                <i class="fas fa-heart"></i>
+                            </button>
                             <a href="{{ route('products.show', $product['id']) }}" class="d-block" style="height: 150px; overflow: hidden; position: relative;">
                                 @if(!empty($product['image_url']))
                                     <img src="{{ $product['image_url'] }}"
@@ -801,8 +867,8 @@
                                          width="200" height="150"
                                          alt="{{ $product['name'] }}">
                                 @else
-                                    <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center bg-light text-muted">
-                                        <i class="fas fa-image fa-3x text-secondary opacity-50"></i>
+                                    <div class="product-placeholder w-100 h-100" style="display:flex;align-items:center;justify-content:center;background:#f8fafc;">
+                                        <i class="fas fa-image" style="font-size:3.5rem;color:#cbd5e1;"></i>
                                     </div>
                                 @endif
                             </a>
@@ -813,7 +879,7 @@
                                 <p class="text-primary fw-bold mb-0 mt-auto">{{ number_format($product['price']) }} EGP</p>
                                 <button type="button"
                                         class="btn btn-outline-primary btn-sm w-100 mt-2 rounded-pill"
-                                        onclick="addToCart({{ $product['id'] }}, '{{ addslashes($product['name']) }}', {{ $product['price'] }}, '{{ $product['image_url'] ?? '' }}')">
+                                        onclick="event.stopPropagation();addToCart({{ $product['id'] }}, '{{ addslashes($product['name']) }}', {{ $product['price'] }}, '{{ $product['image_url'] ?? '' }}')">
                                     <i class="fas fa-shopping-cart me-1"></i>{{ __('app.prod_add_cart') }}
                                 </button>
                             </div>

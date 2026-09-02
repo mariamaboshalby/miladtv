@@ -35,7 +35,9 @@ class AuthController extends Controller
             // Restore cart from cookie if session cart is empty
             $this->restoreCartFromCookie($request);
 
-            // Redirect admin to dashboard, regular users to intended or home
+            // Flag JS to sync localStorage wishlist on next page load
+            session()->flash('wishlist_sync', true);
+
             if (Auth::user()->role === 'admin') {
                 return redirect()->intended(route('admin.dashboard'));
             }
@@ -85,6 +87,9 @@ class AuthController extends Controller
 
         // Restore cart from cookie
         $this->restoreCartFromCookie($request);
+
+        // Flag JS to sync localStorage wishlist on next page load
+        session()->flash('wishlist_sync', true);
 
         return redirect()->route('checkout.index');
     }

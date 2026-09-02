@@ -62,4 +62,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(\App\Models\Order::class, 'customer_email', 'email');
     }
+
+    public function wishlists()
+    {
+        return $this->hasMany(\App\Models\Wishlist::class);
+    }
+
+    public function wishlistProductIds(): array
+    {
+        return $this->wishlists()->pluck('product_id')->map(fn($id) => (int)$id)->toArray();
+    }
 }

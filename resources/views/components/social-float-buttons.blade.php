@@ -1,207 +1,197 @@
-{{-- Floating Social Buttons --}}
-<div class="social-float-buttons">
-    {{-- WhatsApp --}}
-    <a href="https://wa.me/201093803270" 
-       target="_blank" 
-       rel="noopener noreferrer"
-       class="social-float-btn whatsapp-btn"
-       aria-label="WhatsApp"
-       title="{{ app()->getLocale() === 'ar' ? 'تواصل معنا عبر WhatsApp' : 'Contact us on WhatsApp' }}">
+@php $isAr = app()->getLocale() === 'ar'; @endphp
+
+{{-- Floating Social Buttons — collapsed into one toggle --}}
+<div class="sfb-wrap" id="sfbWrap">
+
+    {{-- Child buttons — absolutely stacked above toggle --}}
+    <a href="https://wa.me/201093803270"
+       target="_blank" rel="noopener noreferrer"
+       class="sfb-btn sfb-whatsapp"
+       aria-label="WhatsApp">
         <i class="fab fa-whatsapp"></i>
-        <span class="social-float-text">WhatsApp</span>
+        <span class="sfb-label">WhatsApp</span>
     </a>
 
-    {{-- Phone --}}
-    <a href="tel:+201093803270" 
-       class="social-float-btn phone-btn"
-       aria-label="Phone"
-       title="{{ app()->getLocale() === 'ar' ? 'اتصل بنا' : 'Call us' }}">
+    <a href="tel:+201093803270"
+       class="sfb-btn sfb-phone"
+       aria-label="{{ $isAr ? 'اتصل بنا' : 'Call us' }}">
         <i class="fas fa-phone-alt"></i>
-        <span class="social-float-text">{{ app()->getLocale() === 'ar' ? 'اتصل' : 'Call' }}</span>
+        <span class="sfb-label">{{ $isAr ? 'اتصل' : 'Call' }}</span>
     </a>
 
-    {{-- Facebook Messenger --}}
-    <a href="https://m.me/181WTrqgHu" 
-       target="_blank" 
-       rel="noopener noreferrer"
-       class="social-float-btn messenger-btn"
-       aria-label="Facebook Messenger"
-       title="{{ app()->getLocale() === 'ar' ? 'راسلنا على Messenger' : 'Message us on Messenger' }}">
+    <a href="https://m.me/181WTrqgHu"
+       target="_blank" rel="noopener noreferrer"
+       class="sfb-btn sfb-messenger"
+       aria-label="Messenger">
         <i class="fab fa-facebook-messenger"></i>
-        <span class="social-float-text">Messenger</span>
+        <span class="sfb-label">Messenger</span>
     </a>
+
+    {{-- Toggle button — anchors the whole widget --}}
+    <button class="sfb-toggle" id="sfbToggle" aria-label="{{ $isAr ? 'تواصل معنا' : 'Contact us' }}" aria-expanded="false">
+        <i class="fas fa-headset sfb-icon-open"></i>
+        <i class="fas fa-times  sfb-icon-close"></i>
+    </button>
 </div>
 
 <style>
-.social-float-buttons {
+/* ─── Wrapper: only as big as the toggle button ─── */
+.sfb-wrap {
     position: fixed;
-    bottom: 100px;
-    left: 20px;
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    animation: slideInLeft 0.5s ease-out;
-}
-
-[dir="rtl"] .social-float-buttons {
-    left: auto;
+    bottom: 24px;
+    {{ $isAr ? 'right' : 'right' }}: 20px;
     right: 20px;
+    z-index: 9999;
+    width: 56px;   /* exactly toggle size — no extra height */
+    height: 56px;
 }
 
-.social-float-btn {
-    position: relative;
+/* ─── Toggle button ─── */
+.sfb-toggle {
+    position: absolute;
+    bottom: 0;
+    right: 0;
     width: 56px;
     height: 56px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(135deg, #051836 0%, #1e3a8a 100%);
+    color: #fff;
+    font-size: 1.375rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,.28);
+    transition: transform .3s ease, box-shadow .3s ease, background .3s ease;
+    z-index: 2;
+}
+.sfb-toggle:hover {
+    transform: scale(1.08);
+    box-shadow: 0 6px 28px rgba(0,0,0,.38);
+}
+
+/* pulse ring */
+.sfb-toggle::before {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    background: rgba(30,58,138,.35);
+    animation: sfb-pulse 2s infinite;
+    z-index: -1;
+}
+@keyframes sfb-pulse {
+    0%,100% { transform: scale(.92); opacity:.6; }
+    50%      { transform: scale(1.12); opacity:.2; }
+}
+
+/* icon swap */
+.sfb-icon-close { display: none; }
+.sfb-wrap.is-open .sfb-icon-open  { display: none; }
+.sfb-wrap.is-open .sfb-icon-close { display: block; }
+.sfb-wrap.is-open .sfb-toggle {
+    background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+}
+
+/* ─── Child buttons — absolutely positioned above toggle ─── */
+.sfb-btn {
+    position: absolute;
+    bottom: 0;           /* start at same position as toggle */
+    right: 2px;          /* slight inset for alignment */
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
-    font-size: 1.5rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    font-size: 1.375rem;
     text-decoration: none;
-    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,.22);
+    opacity: 0;
+    transform: translateY(0) scale(.5);
+    pointer-events: none;
+    transition: opacity .22s ease, transform .22s ease, box-shadow .22s ease;
+    z-index: 1;
 }
 
-.social-float-btn:hover {
-    transform: scale(1.1) translateX(5px);
-    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3);
+/* stack upward: each button offset by 66px from toggle bottom */
+.sfb-btn:nth-child(1) { --sfb-offset: 198px; }   /* top:    WhatsApp  */
+.sfb-btn:nth-child(2) { --sfb-offset: 132px; }   /* middle: Phone     */
+.sfb-btn:nth-child(3) { --sfb-offset: 66px;  }   /* bottom: Messenger */
+
+.sfb-wrap.is-open .sfb-btn {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+    bottom: var(--sfb-offset);
+}
+
+/* stagger: bottom button appears first */
+.sfb-wrap.is-open .sfb-btn:nth-child(3) { transition-delay: .00s; }
+.sfb-wrap.is-open .sfb-btn:nth-child(2) { transition-delay: .06s; }
+.sfb-wrap.is-open .sfb-btn:nth-child(1) { transition-delay: .12s; }
+
+.sfb-btn:hover {
+    transform: scale(1.12) !important;
+    box-shadow: 0 6px 24px rgba(0,0,0,.32);
     color: #fff;
 }
 
-[dir="rtl"] .social-float-btn:hover {
-    transform: scale(1.1) translateX(-5px);
-}
+/* Colors */
+.sfb-whatsapp  { background: linear-gradient(135deg,#25D366,#128C7E); }
+.sfb-phone     { background: linear-gradient(135deg,#051836,#0a2e5c); }
+.sfb-messenger { background: linear-gradient(135deg,#0084FF,#0066CC); }
 
-.social-float-text {
+/* ─── Tooltip label ─── */
+.sfb-label {
     position: absolute;
-    right: 64px;
-    background: inherit;
-    padding: 8px 16px;
-    border-radius: 25px;
-    font-size: 0.875rem;
+    right: calc(100% + 10px);
+    top: 50%;
+    transform: translateY(-50%);
+    background: #1e293b;
+    color: #fff;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: .8rem;
     font-weight: 600;
     white-space: nowrap;
     opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    pointer-events: none;
+    transition: opacity .2s ease;
 }
+.sfb-btn:hover .sfb-label { opacity: 1; }
 
-[dir="rtl"] .social-float-text {
-    right: auto;
-    left: 64px;
-}
-
-.social-float-btn:hover .social-float-text {
-    opacity: 1;
-    visibility: visible;
-    right: 74px;
-}
-
-[dir="rtl"] .social-float-btn:hover .social-float-text {
-    right: auto;
-    left: 74px;
-}
-
-/* WhatsApp Button */
-.whatsapp-btn {
-    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-}
-
-.whatsapp-btn:hover {
-    background: linear-gradient(135deg, #128C7E 0%, #075E54 100%);
-}
-
-/* Phone Button */
-.phone-btn {
-    background: linear-gradient(135deg, #051836 0%, #0a2e5c 100%);
-}
-
-.phone-btn:hover {
-    background: linear-gradient(135deg, #030f1f 0%, #051836 100%);
-}
-
-/* Messenger Button */
-.messenger-btn {
-    background: linear-gradient(135deg, #0084FF 0%, #0066CC 100%);
-}
-
-.messenger-btn:hover {
-    background: linear-gradient(135deg, #0066CC 0%, #004C99 100%);
-}
-
-/* Pulse Animation */
-.social-float-btn::before {
-    content: '';
-    position: absolute;
-    inset: -4px;
-    border-radius: 50%;
-    background: inherit;
-    opacity: 0.6;
-    animation: pulse 2s infinite;
-    z-index: -1;
-}
-
-@keyframes pulse {
-    0%, 100% {
-        transform: scale(0.95);
-        opacity: 0.6;
-    }
-    50% {
-        transform: scale(1.05);
-        opacity: 0.3;
-    }
-}
-
-@keyframes slideInLeft {
-    from {
-        transform: translateX(-100px);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-/* Mobile Adjustments */
+/* ─── Mobile ─── */
 @media (max-width: 768px) {
-    .social-float-buttons {
-        bottom: 80px;
-        left: 15px;
-        gap: 10px;
-    }
-    
-    [dir="rtl"] .social-float-buttons {
-        left: auto;
-        right: 15px;
-    }
-    
-    .social-float-btn {
-        width: 50px;
-        height: 50px;
-        font-size: 1.25rem;
-    }
-    
-    .social-float-text {
-        font-size: 0.75rem;
-        padding: 6px 12px;
-    }
-}
-
-/* Hide on very small screens */
-@media (max-width: 480px) {
-    .social-float-text {
-        display: none;
-    }
-    
-    .social-float-btn {
-        width: 48px;
-        height: 48px;
-        font-size: 1.125rem;
-    }
+    .sfb-wrap { bottom: 80px; right: 14px; width: 50px; height: 50px; }
+    .sfb-toggle { width: 50px; height: 50px; font-size: 1.2rem; }
+    .sfb-btn    { width: 46px; height: 46px; font-size: 1.15rem; right: 2px; }
+    .sfb-btn:nth-child(1) { --sfb-offset: 180px; }
+    .sfb-btn:nth-child(2) { --sfb-offset: 120px; }
+    .sfb-btn:nth-child(3) { --sfb-offset: 60px;  }
+    .sfb-label { display: none; }
 }
 </style>
+
+<script>
+(function () {
+    var wrap   = document.getElementById('sfbWrap');
+    var toggle = document.getElementById('sfbToggle');
+    if (!wrap || !toggle) return;
+
+    toggle.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var isOpen = wrap.classList.toggle('is-open');
+        toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    document.addEventListener('click', function (e) {
+        if (!wrap.contains(e.target)) {
+            wrap.classList.remove('is-open');
+            toggle.setAttribute('aria-expanded', 'false');
+        }
+    });
+}());
+</script>

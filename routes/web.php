@@ -94,6 +94,7 @@ Route::middleware('auth')->group(function () {
 // Track Order
 Route::get('/track-order', [OrderController::class, 'track'])->name('track-order');
 Route::post('/track-order', [OrderController::class, 'trackStatus'])->name('track-order.status');
+Route::get('/orders/{order}/detail', [OrderController::class, 'detail'])->name('orders.detail')->middleware('auth');
 Route::post('/orders/quick', [OrderController::class, 'quickOrder'])->name('orders.quick');
 
 // ============================================================

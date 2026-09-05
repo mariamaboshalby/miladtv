@@ -9,7 +9,30 @@ class OrderController extends Controller
 {
     public function track()
     {
-        return view('orders.track');
+        $orders = null;
+        $guestOrders = null;
+
+        if (auth()->check()) {
+            $user = auth()->user();
+            $orders = Order::with('items')
+                ->where(function ($q) use ($user) {
+                    $q->where('user_id', $user->id)
+                      ->orWhere('customer_email', $user->email);
+                })
+                ->latest()
+                ->get();
+        } else {
+            // Load guest orders from cookie
+            $cookieNumbers = json_decode(request()->cookie('guest_orders', '[]'), true) ?: [];
+            if (! empty($cookieNumbers)) {
+                $guestOrders = Order::with('items')
+                    ->whereIn('order_number', $cookieNumbers)
+                    ->latest()
+                    ->get();
+            }
+        }
+
+        return view('orders.track', compact('orders', 'guestOrders'));
     }
 
     public function trackStatus(Request $request)
@@ -33,6 +56,7 @@ class OrderController extends Controller
 
         return response()->json([
             'success'        => true,
+            'order_id'       => $order->id,
             'order_number'   => $order->order_number,
             'status'         => $order->status,
             'status_label'   => $order->status_label,
@@ -45,6 +69,55 @@ class OrderController extends Controller
             'items_count'    => $order->items->sum('quantity'),
             'current_step'   => $currentStep,
             'steps'          => $steps,
+        ]);
+    }
+
+    public function detail(Order $order)
+    {
+        // Only allow owner or admin
+        if (auth()->check()) {
+            $user = auth()->user();
+            $allowed = $order->user_id === $user->id
+                || $order->customer_email === $user->email;
+            if (! $allowed) {
+                return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+            }
+        } else {
+            return response()->json(['success' => false, 'message' => 'Unauthenticated'], 401);
+        }
+
+        $order->load('items');
+
+        $paymentMethodLabels = [
+            'cash'     => app()->getLocale() === 'ar' ? 'كاش' : 'Cash',
+            'card'     => app()->getLocale() === 'ar' ? 'بطاقة' : 'Card',
+            'transfer' => app()->getLocale() === 'ar' ? 'تحويل' : 'Transfer',
+        ];
+
+        return response()->json([
+            'success' => true,
+            'order'   => [
+                'order_number'       => $order->order_number,
+                'status'             => $order->status,
+                'status_label'       => $order->status_label,
+                'payment_status'     => $order->payment_status,
+                'payment_method'     => $order->payment_method,
+                'payment_method_label' => $paymentMethodLabels[$order->payment_method] ?? $order->payment_method,
+                'customer_name'      => $order->customer_name,
+                'customer_phone'     => $order->customer_phone,
+                'customer_address'   => $order->customer_address,
+                'city'               => $order->city,
+                'subtotal'           => $order->subtotal,
+                'shipping'           => $order->shipping,
+                'total'              => $order->total,
+                'created_at'         => $order->created_at->format('d M Y, H:i'),
+                'items'              => $order->items->map(fn($i) => [
+                    'product_name' => $i->product_name,
+                    'quantity'     => $i->quantity,
+                    'price'        => $i->price,
+                    'total'        => $i->total,
+                ]),
+            ],
         ]);
     }
 
@@ -72,6 +145,7 @@ class OrderController extends Controller
         $user = \Illuminate\Support\Facades\Auth::user();
 
         $order = Order::create([
+            'user_id'          => $user?->id,
             'order_number'     => Order::generateOrderNumber(),
             'customer_name'    => $validated['customer_name'],
             'customer_email'   => $user?->email,
@@ -104,7 +178,7 @@ class OrderController extends Controller
         // Increment sales count
         $product->increment('sales_count', $quantity);
 
-        return response()->json([
+        $response = response()->json([
             'success'      => true,
             'order_number' => $order->order_number,
             'total'        => number_format($totalPrice, 2),
@@ -112,5 +186,16 @@ class OrderController extends Controller
                 ? 'تم استلام طلبك بنجاح! رقم الطلب الخاص بك: ' . $order->order_number 
                 : 'Your order has been placed successfully! Order #: ' . $order->order_number,
         ]);
+
+        // Store order number in cookie for guest users so they can track it later
+        if (! auth()->check()) {
+            $existing = json_decode(request()->cookie('guest_orders', '[]'), true) ?: [];
+            $existing[] = $order->order_number;
+            // Keep last 10 orders, expire in 90 days
+            $existing = array_slice(array_unique($existing), -10);
+            $response->withCookie(cookie('guest_orders', json_encode($existing), 60 * 24 * 90));
+        }
+
+        return $response;
     }
 }

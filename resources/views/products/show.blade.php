@@ -221,7 +221,7 @@
                         <i class="fas fa-bolt text-warning"></i>
                     </div>
                     <div>
-                        <h5 class="modal-title fw-bold mb-0 text-white" id="quickOrderModalLabel">{{ app()->getLocale() === 'ar' ? 'اشتر الآنالسريع' : 'Quick Checkout' }}</h5>
+                        <h5 class="modal-title fw-bold mb-0 text-white" id="quickOrderModalLabel">{{ app()->getLocale() === 'ar' ? 'اشتر الآن' : 'Quick Checkout' }}</h5>
                         <small class="text-white-50">{{ app()->getLocale() === 'ar' ? 'أدخل بياناتك وسيتم تسجيل طلبك فوراً' : 'Fill your details to place order instantly' }}</small>
                     </div>
                 </div>
@@ -281,7 +281,7 @@
                         </div>
                     </div>
 
-                    <div class="mb-3">
+                    {{-- <div class="mb-3">
                         <label class="form-label fw-bold small text-dark mb-1">{{ app()->getLocale() === 'ar' ? 'المحافظة / المدينة' : 'City / Governorate' }} <span class="text-muted small">({{ app()->getLocale() === 'ar' ? 'اختياري' : 'optional' }})</span></label>
                         <input type="text" name="city" class="form-control" value="{{ auth()->user()?->city }}" placeholder="{{ app()->getLocale() === 'ar' ? 'مثال: القاهرة، الجيزة، الإسكندرية...' : 'e.g. Cairo, Giza, Alexandria...' }}">
                     </div>
@@ -289,7 +289,7 @@
                     <div class="mb-3">
                         <label class="form-label fw-bold small text-dark mb-1">{{ app()->getLocale() === 'ar' ? 'ملاحظات إضافية' : 'Order Notes' }} <span class="text-muted small">({{ app()->getLocale() === 'ar' ? 'اختياري' : 'optional' }})</span></label>
                         <textarea name="notes" rows="2" class="form-control" placeholder="{{ app()->getLocale() === 'ar' ? 'أي تعليمات خاصة بالطلب أو موعد التسليم...' : 'Special instructions...' }}"></textarea>
-                    </div>
+                    </div> --}}
 
                     {{-- Payment badge --}}
                     <div class="d-flex align-items-center gap-2 p-2 px-3 rounded-3 mb-4" style="background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; font-size: .875rem;">
@@ -609,6 +609,24 @@ function submitQuickOrder(e) {
             form.classList.add('d-none');
             successState.classList.remove('d-none');
             if (successOrderNumber) successOrderNumber.textContent = data.order_number;
+
+            // Store order number in cookie for guest tracking (client-side)
+            @guest
+            try {
+                const cookieName = 'guest_orders';
+                const existing = JSON.parse(decodeURIComponent(
+                    document.cookie.split(';').find(c => c.trim().startsWith(cookieName + '='))
+                    ?.split('=').slice(1).join('=') || '[]'
+                ) || '[]');
+                if (!existing.includes(data.order_number)) {
+                    existing.push(data.order_number);
+                    // Keep last 10, expire in 90 days
+                    const keep = existing.slice(-10);
+                    const expires = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toUTCString();
+                    document.cookie = `${cookieName}=${encodeURIComponent(JSON.stringify(keep))};expires=${expires};path=/;SameSite=Lax`;
+                }
+            } catch(e) {}
+            @endguest
         } else {
             let msg = data.message || (document.dir === 'rtl' ? 'حدث خطأ، يرجى المحاولة مرة أخرى' : 'An error occurred, please try again.');
             if (data.errors) {

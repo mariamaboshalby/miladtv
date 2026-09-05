@@ -37,6 +37,7 @@ class CheckoutController extends Controller
     private function autoPlaceOrder($user, array $cart, float $total)
     {
         $order = Order::create([
+            'user_id'          => $user->id,
             'order_number'     => Order::generateOrderNumber(),
             'customer_name'    => $user->name,
             'customer_email'   => $user->email,
@@ -96,6 +97,7 @@ class CheckoutController extends Controller
         );
 
         $order = Order::create([
+            'user_id'          => Auth::id(),
             'order_number'     => Order::generateOrderNumber(),
             'customer_name'    => $validated['name'],
             'customer_email'   => $validated['email'],

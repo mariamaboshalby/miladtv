@@ -116,6 +116,9 @@
                     <a href="{{ route('news.index') }}"      class="milad-nav-link {{ request()->routeIs('news.*')      ? 'active' : '' }}">{{ __('app.nav_news') }}</a>
                     <a href="{{ route('blog.index') }}"      class="milad-nav-link {{ request()->routeIs('blog.*')      ? 'active' : '' }}">{{ __('app.nav_blog') }}</a>
                     <a href="{{ route('about.index') }}"     class="milad-nav-link {{ request()->routeIs('about.*')     ? 'active' : '' }}">{{ __('app.nav_about') }}</a>
+                    <a href="{{ route('track-order') }}"     class="milad-nav-link {{ request()->routeIs('track-order*') ? 'active' : '' }}">
+                        <i class="fas fa-shipping-fast me-1"></i>{{ __('app.track_order') }}
+                    </a>
                 </div>
 
                 <!-- Actions -->
@@ -197,6 +200,7 @@
                 <a href="{{ route('news.index') }}"   class="milad-mobile-link {{ request()->routeIs('news.*')      ? 'active' : '' }}">{{ __('app.nav_news') }}</a>
                 <a href="{{ route('blog.index') }}"   class="milad-mobile-link {{ request()->routeIs('blog.*')      ? 'active' : '' }}">{{ __('app.nav_blog') }}</a>
                 <a href="{{ route('about.index') }}"  class="milad-mobile-link {{ request()->routeIs('about.*')     ? 'active' : '' }}">{{ __('app.nav_about') }}</a>
+                <a href="{{ route('track-order') }}"  class="milad-mobile-link {{ request()->routeIs('track-order*') ? 'active' : '' }}"><i class="fas fa-shipping-fast me-2"></i>{{ __('app.track_order') }}</a>
 
                 {{-- Language Switch (mobile) --}}
                 <div class="px-3 py-2">

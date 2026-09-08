@@ -194,64 +194,70 @@
 
 @push('scripts')
     <script>
-        $(document).ready(function() {
-            // Remove item
-            $(document).on('click', '.cart-item-remove', function() {
-                const id = $(this).data('id');
-                $.post('{{ route('cart.remove') }}', {
-                    _token: '{{ csrf_token() }}',
-                    product_id: id
-                }, function() {
-                    location.reload();
-                });
+        var CSRF = '{{ csrf_token() }}';
+
+        function postJson(url, data) {
+            return fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': CSRF,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(data)
             });
+        }
 
-            // Update qty
-            $(document).on('click', '.cart-qty-plus, .cart-qty-minus', function() {
-                const id = $(this).data('id');
-                const $item = $(this).closest('.cart-item');
-                const $qtyEl = $item.find('.cart-qty-val');
-                let qty = parseInt($qtyEl.text());
+        // Remove item
+        document.addEventListener('click', function(e) {
+            var btn = e.target.closest('.cart-item-remove');
+            if (!btn) return;
+            var id = btn.dataset.id;
+            postJson('{{ route('cart.remove') }}', { product_id: id })
+                .then(function() { location.reload(); });
+        });
 
-                if ($(this).hasClass('cart-qty-plus')) qty++;
-                else qty--;
+        // Update qty (+/-)
+        document.addEventListener('click', function(e) {
+            var btn = e.target.closest('.cart-qty-plus, .cart-qty-minus');
+            if (!btn) return;
+            var id  = btn.dataset.id;
+            var row = btn.closest('.cart-item');
+            var qtyEl = row.querySelector('.cart-qty-val');
+            var qty = parseInt(qtyEl.textContent);
 
-                if (qty <= 0) qty = 1; // Minimum 1
+            if (btn.classList.contains('cart-qty-plus')) qty++;
+            else qty--;
+            if (qty < 1) qty = 1;
 
-                $.post('{{ route('cart.update') }}', {
-                    _token: '{{ csrf_token() }}',
-                    product_id: id,
-                    quantity: qty
-                }, function(res) {
-                    if (res.success) {
-                        location.reload();
-                    }
-                });
+            postJson('{{ route('cart.update') }}', { product_id: id, quantity: qty })
+                .then(function(r) { return r.json(); })
+                .then(function(res) { if (res.success) location.reload(); });
+        });
+
+        // Clear cart
+        var clearBtn = document.getElementById('clearCartBtn');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', function() {
+                if (!confirm('{{ __('app.cart_clear_confirm') }}')) return;
+                postJson('{{ route('cart.clear') }}', {})
+                    .then(function() { location.reload(); });
             });
+        }
 
-            // Clear cart
-            $('#clearCartBtn').on('click', function() {
-                if (confirm('{{ __('app.cart_clear_confirm') }}')) {
-                    $.post('{{ route('cart.clear') }}', {
-                        _token: '{{ csrf_token() }}'
-                    }, function() {
-                        location.reload();
-                    });
-                }
-            });
-
-            // Checkout button — save cart to cookie then redirect to login
-            @guest
-            $('#checkoutBtn').on('click', function() {
-                // Fetch current cart from server and save to cookie (10 days)
+        // Checkout button (guest only) — save cart to cookie then redirect to login
+        @guest
+        var checkoutBtn = document.getElementById('checkoutBtn');
+        if (checkoutBtn) {
+            checkoutBtn.addEventListener('click', function() {
                 fetch('{{ route('cart.items') }}')
-                    .then(r => r.json())
-                    .then(data => {
+                    .then(function(r) { return r.json(); })
+                    .then(function(data) {
                         if (data.items && data.items.length > 0) {
-                            const expires = new Date();
+                            var expires = new Date();
                             expires.setDate(expires.getDate() + 10);
                             document.cookie = 'milad_cart=' + encodeURIComponent(JSON.stringify(
-                                data.items.reduce((acc, item) => {
+                                data.items.reduce(function(acc, item) {
                                     acc[item.id] = {
                                         id: item.id,
                                         name: item.name,
@@ -267,11 +273,11 @@
                         }
                         window.location.href = '{{ route('login') }}';
                     })
-                    .catch(() => {
+                    .catch(function() {
                         window.location.href = '{{ route('login') }}';
                     });
             });
+        }
         @endguest
-        });
     </script>
 @endpush

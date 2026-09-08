@@ -1,15 +1,15 @@
 ﻿@extends('layouts.app')
-@section('title', 'Sign In — ميلاد سامي')
+@section('title', 'تسجيل الدخول — ميلاد سامي')
 
 @section('content')
 
 <div style="background:linear-gradient(135deg,#0f172a 0%,#030f1f 100%);padding:2.5rem 0;">
     <div class="container">
-        <h1 class="text-white fw-bold mb-1">Sign In</h1>
+        <h1 class="text-white fw-bold mb-1">تسجيل الدخول</h1>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-white-50 text-decoration-none">Home</a></li>
-                <li class="breadcrumb-item active text-white-50">Sign In</li>
+                <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-white-50 text-decoration-none">الرئيسية</a></li>
+                <li class="breadcrumb-item active text-white-50">تسجيل الدخول</li>
             </ol>
         </nav>
     </div>
@@ -24,7 +24,7 @@
                 @if(session()->has('cart') && count(session('cart')) > 0)
                 <div class="alert alert-info rounded-3 mb-4 d-flex align-items-center gap-2">
                     <i class="fas fa-shopping-bag text-primary"></i>
-                    <span>Sign in to complete your order — your cart is saved.</span>
+                    <span>سجّل دخولك لإتمام طلبك — سلتك محفوظة. 🛍️</span>
                 </div>
                 @endif
 
@@ -39,13 +39,13 @@
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
                         <div class="mb-3">
-                            <label class="form-label fw-semibold small">Email Address</label>
+                            <label class="form-label fw-semibold small">البريد الإلكتروني</label>
                             <input type="email" name="email" value="{{ old('email') }}"
                                    class="form-control rounded-3 @error('email') is-invalid @enderror"
                                    placeholder="you@example.com" required autofocus>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-semibold small">Password</label>
+                            <label class="form-label fw-semibold small">كلمة المرور</label>
                             <input type="password" name="password"
                                    class="form-control rounded-3 @error('password') is-invalid @enderror"
                                    placeholder="••••••••" required>
@@ -53,18 +53,18 @@
                         <div class="d-flex align-items-center justify-content-between mb-4">
                             <div class="form-check mb-0">
                                 <input class="form-check-input" type="checkbox" name="remember" id="remember">
-                                <label class="form-check-label small" for="remember">Remember me</label>
+                                <label class="form-check-label small" for="remember">تذكّرني</label>
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary w-100 btn-lg rounded-3 fw-bold">
-                            <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                            <i class="fas fa-sign-in-alt me-2"></i>تسجيل الدخول
                         </button>
                     </form>
 
                     <hr class="my-4">
                     <p class="text-center small text-secondary mb-0">
-                        Don't have an account?
-                        <a href="{{ route('register') }}" class="text-primary fw-semibold text-decoration-none">Create one</a>
+                        ليس لديك حساب؟
+                        <a href="{{ route('register') }}" class="text-primary fw-semibold text-decoration-none">أنشئ حساباً</a>
                     </p>
                 </div>
 

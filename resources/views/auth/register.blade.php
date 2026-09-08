@@ -5,11 +5,11 @@
 
 <div style="background:linear-gradient(135deg,#0f172a 0%,#030f1f 100%);padding:2.5rem 0;">
     <div class="container">
-        <h1 class="text-white fw-bold mb-1">Create Account</h1>
+        <h1 class="text-white fw-bold mb-1">إنشاء حساب</h1>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-white-50 text-decoration-none">Home</a></li>
-                <li class="breadcrumb-item active text-white-50">Register</li>
+                <li class="breadcrumb-item"><a href="{{ route('home') }}" class="text-white-50 text-decoration-none">الرئيسية</a></li>
+                <li class="breadcrumb-item active text-white-50">إنشاء حساب</li>
             </ol>
         </nav>
     </div>
@@ -23,7 +23,7 @@
                 @if(session()->has('cart') && count(session('cart')) > 0)
                 <div class="alert alert-info rounded-3 mb-4 d-flex align-items-center gap-2">
                     <i class="fas fa-shopping-bag text-primary"></i>
-                    <span>Create an account to complete your order — your cart is saved.</span>
+                    <span>أنشئ حسابك لإتمام طلبك — سلتك محفوظة. 🛍️</span>
                 </div>
                 @endif
 
@@ -44,56 +44,56 @@
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
                         <div class="mb-3">
-                            <label class="form-label fw-semibold small">Full Name</label>
+                            <label class="form-label fw-semibold small">الاسم الكامل</label>
                             <input type="text" name="name" value="{{ old('name') }}"
                                    class="form-control rounded-3 @error('name') is-invalid @enderror"
-                                   placeholder="John Doe" required autofocus>
+                                   placeholder="مثال: أحمد محمد" required autofocus>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-semibold small">Email Address</label>
+                            <label class="form-label fw-semibold small">البريد الإلكتروني</label>
                             <input type="email" name="email" value="{{ old('email') }}"
                                    class="form-control rounded-3 @error('email') is-invalid @enderror"
                                    placeholder="you@example.com" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-semibold small">Phone <span class="text-muted">(optional)</span></label>
+                            <label class="form-label fw-semibold small">الهاتف <span class="text-muted">(اختياري)</span></label>
                             <input type="tel" name="phone" value="{{ old('phone') }}"
                                    class="form-control rounded-3"
                                    placeholder="+20 1XX XXX XXXX">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-semibold small">Street Address <span class="text-muted">(optional)</span></label>
+                            <label class="form-label fw-semibold small">عنوان الشارع <span class="text-muted">(اختياري)</span></label>
                             <input type="text" name="address" value="{{ old('address') }}"
                                    class="form-control rounded-3"
-                                   placeholder="Street name, building, apartment...">
+                                   placeholder="اسم الشارع، المبنى، الشقة...">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-semibold small">City <span class="text-muted">(optional)</span></label>
+                            <label class="form-label fw-semibold small">المدينة <span class="text-muted">(اختياري)</span></label>
                             <input type="text" name="city" value="{{ old('city') }}"
                                    class="form-control rounded-3"
-                                   placeholder="e.g. Mansoura">
+                                   placeholder="مثال: المنصورة">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-semibold small">Password</label>
+                            <label class="form-label fw-semibold small">كلمة المرور</label>
                             <input type="password" name="password"
                                    class="form-control rounded-3 @error('password') is-invalid @enderror"
-                                   placeholder="Min. 8 characters" required>
+                                   placeholder="4 أحرف على الأقل" required>
                         </div>
                         <div class="mb-4">
-                            <label class="form-label fw-semibold small">Confirm Password</label>
+                            <label class="form-label fw-semibold small">تأكيد كلمة المرور</label>
                             <input type="password" name="password_confirmation"
                                    class="form-control rounded-3"
-                                   placeholder="Repeat password" required>
+                                   placeholder="أعد كتابة كلمة المرور" required>
                         </div>
                         <button type="submit" class="btn btn-primary w-100 btn-lg rounded-3 fw-bold">
-                            <i class="fas fa-user-plus me-2"></i>Create Account
+                            <i class="fas fa-user-plus me-2"></i>إنشاء حساب
                         </button>
                     </form>
 
                     <hr class="my-4">
                     <p class="text-center small text-secondary mb-0">
-                        Already have an account?
-                        <a href="{{ route('login') }}" class="text-primary fw-semibold text-decoration-none">Sign in</a>
+                        لديك حساب بالفعل؟
+                        <a href="{{ route('login') }}" class="text-primary fw-semibold text-decoration-none">سجّل دخولك</a>
                     </p>
                 </div>
 

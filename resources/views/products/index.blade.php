@@ -49,23 +49,63 @@
                                 <i class="fas fa-filter"></i> {{ __('app.prod_filter_title') }}
                             </h6>
 
-                            {{-- Category --}}
+                            {{-- Category tree filter --}}
                             <div class="mb-4">
                                 <p class="text-uppercase text-muted fw-semibold mb-2" style="font-size:.75rem;letter-spacing:.5px;">{{ __('app.prod_cat_label') }}</p>
+
+                                {{-- All --}}
                                 <a href="{{ route('products.index', ['category' => 'all', 'sort' => $sort]) }}"
                                    class="filter-option d-flex align-items-center gap-2 px-3 py-2 rounded-3 mb-1 text-decoration-none {{ $category === 'all' ? 'active' : '' }}">
                                     <i class="fas fa-th-large"></i> {{ __('app.cat_all') }}
                                 </a>
-                                @foreach($dbCategories as $cat)
-                                <a href="{{ route('products.index', ['category' => $cat->slug, 'sort' => $sort]) }}"
-                                   class="filter-option d-flex align-items-center gap-2 px-3 py-2 rounded-3 mb-1 text-decoration-none {{ $category === $cat->slug ? 'active' : '' }}">
-                                    @if($cat->image)
-                                        <img src="{{ asset('storage/' . $cat->image) }}" alt="" style="width:20px;height:20px;object-fit:cover;border-radius:4px;flex-shrink:0;">
-                                    @else
-                                        <i class="fas fa-{{ $cat->icon ?? 'list' }}"></i>
+
+                                @foreach($dbCategories as $root)
+                                {{-- Root --}}
+                                <div class="mb-1">
+                                    <a href="{{ route('products.index', ['category' => $root->slug, 'sort' => $sort]) }}"
+                                       class="filter-option d-flex align-items-center gap-2 px-3 py-2 rounded-3 text-decoration-none {{ $category === $root->slug ? 'active' : '' }}"
+                                       style="font-weight:600;">
+                                        @if($root->image)
+                                            <img src="{{ asset('storage/' . $root->image) }}" alt="" style="width:18px;height:18px;object-fit:cover;border-radius:3px;flex-shrink:0;">
+                                        @else
+                                            <i class="fas fa-{{ $root->icon ?? 'folder' }}" style="width:16px;text-align:center;"></i>
+                                        @endif
+                                        <span>{{ app()->getLocale() === 'ar' ? $root->name_ar : $root->name_en }}</span>
+                                        @if($root->children->isNotEmpty())
+                                            <i class="fas fa-chevron-down ms-auto" style="font-size:.65rem;color:#94a3b8;"></i>
+                                        @endif
+                                    </a>
+
+                                    {{-- Level 1 children --}}
+                                    @if($root->children->isNotEmpty())
+                                    <div class="ps-3 mt-1" style="border-inline-start:2px solid #e2e8f0;margin-inline-start:1.1rem;">
+                                        @foreach($root->children as $sub)
+                                        <div class="mb-1">
+                                            <a href="{{ route('products.index', ['category' => $sub->slug, 'sort' => $sort]) }}"
+                                               class="filter-option d-flex align-items-center gap-2 px-2 py-1 rounded-3 text-decoration-none {{ $category === $sub->slug ? 'active' : '' }}"
+                                               style="font-size:.85rem;">
+                                                <i class="fas fa-{{ $sub->icon ?? 'tag' }}" style="font-size:.7rem;width:12px;text-align:center;color:#94a3b8;"></i>
+                                                <span>{{ app()->getLocale() === 'ar' ? $sub->name_ar : $sub->name_en }}</span>
+                                            </a>
+
+                                            {{-- Level 2 grandchildren --}}
+                                            @if($sub->children->isNotEmpty())
+                                            <div class="ps-2 mt-1" style="border-inline-start:2px solid #f1f5f9;margin-inline-start:1rem;">
+                                                @foreach($sub->children as $subsub)
+                                                <a href="{{ route('products.index', ['category' => $subsub->slug, 'sort' => $sort]) }}"
+                                                   class="filter-option d-flex align-items-center gap-1 px-2 py-1 rounded-3 text-decoration-none mb-1 {{ $category === $subsub->slug ? 'active' : '' }}"
+                                                   style="font-size:.78rem;">
+                                                    <i class="fas fa-circle" style="font-size:.35rem;color:#cbd5e1;width:10px;text-align:center;"></i>
+                                                    <span>{{ app()->getLocale() === 'ar' ? $subsub->name_ar : $subsub->name_en }}</span>
+                                                </a>
+                                                @endforeach
+                                            </div>
+                                            @endif
+                                        </div>
+                                        @endforeach
+                                    </div>
                                     @endif
-                                    <span>{{ app()->getLocale() === 'ar' ? $cat->name_ar : $cat->name_en }}</span>
-                                </a>
+                                </div>
                                 @endforeach
                             </div>
 

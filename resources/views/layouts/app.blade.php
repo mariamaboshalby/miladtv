@@ -94,15 +94,51 @@
                             <div class="milad-mega-inner">
                                 @forelse($navCategories as $category)
                                 <div class="milad-mega-col">
+                                    {{-- Root heading --}}
                                     <p class="milad-mega-heading d-flex align-items-center gap-2">
                                         @if($category->image)
                                             <img src="{{ asset('storage/' . $category->image) }}" alt="" style="width:22px;height:22px;object-fit:cover;border-radius:4px;">
                                         @elseif($category->icon)
                                             <i class="{{ str_starts_with($category->icon, 'fa-') || str_starts_with($category->icon, 'fas') ? $category->icon : 'fas fa-' . $category->icon }}"></i>
                                         @endif
-                                        <span>{{ $isAr ? $category->name_ar : $category->name_en }}</span>
+                                        <a href="{{ route('products.index', ['category' => $category->slug]) }}" style="color:inherit;text-decoration:none;">
+                                            {{ $isAr ? $category->name_ar : $category->name_en }}
+                                        </a>
                                     </p>
-                                    <a href="{{ route('products.index', ['category' => $category->slug]) }}">{{ $isAr ? $category->name_ar : $category->name_en }}</a>
+
+                                    {{-- Sub-categories (level 1) --}}
+                                    @if($category->children->isNotEmpty())
+                                        @foreach($category->children as $sub)
+                                        <div style="margin-bottom:.15rem;">
+                                            <a href="{{ route('products.index', ['category' => $sub->slug]) }}"
+                                               style="display:flex;align-items:center;gap:.35rem;padding:.2rem 0;font-size:.82rem;color:#334155;text-decoration:none;transition:color .15s;"
+                                               onmouseover="this.style.color='#051836'" onmouseout="this.style.color='#334155'">
+                                                @if($sub->icon)
+                                                    <i class="fas fa-{{ $sub->icon }}" style="font-size:.7rem;color:#94a3b8;width:12px;"></i>
+                                                @else
+                                                    <i class="fas fa-chevron-left" style="font-size:.6rem;color:#cbd5e1;width:12px;"></i>
+                                                @endif
+                                                {{ $isAr ? $sub->name_ar : $sub->name_en }}
+                                            </a>
+                                            {{-- Level 2 (grandchildren) --}}
+                                            @if($sub->children->isNotEmpty())
+                                                @foreach($sub->children as $subsub)
+                                                <a href="{{ route('products.index', ['category' => $subsub->slug]) }}"
+                                                   style="display:block;padding:.15rem 0 .15rem 1.1rem;font-size:.77rem;color:#64748b;text-decoration:none;transition:color .15s;"
+                                                   onmouseover="this.style.color='#051836'" onmouseout="this.style.color='#64748b'">
+                                                    — {{ $isAr ? $subsub->name_ar : $subsub->name_en }}
+                                                </a>
+                                                @endforeach
+                                            @endif
+                                        </div>
+                                        @endforeach
+                                    @else
+                                        {{-- Root with no children: show as single link --}}
+                                        <a href="{{ route('products.index', ['category' => $category->slug]) }}"
+                                           style="font-size:.82rem;color:#334155;text-decoration:none;">
+                                            {{ $isAr ? __('app.prod_browse') : 'Browse' }}
+                                        </a>
+                                    @endif
                                 </div>
                                 @empty
                                 <div class="milad-mega-col">

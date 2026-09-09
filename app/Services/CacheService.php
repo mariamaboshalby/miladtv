@@ -52,8 +52,11 @@ class CacheService
     {
         Cache::forget('active_categories');
         Cache::forget('active_categories_list');
+        Cache::forget('active_categories_tree');
         Cache::forget('category_icon_map');
         Cache::forget('home_top_categories');
+        // Clear per-category subtree caches (bump version approach)
+        Cache::increment('cat_slugs_version');
     }
 
     /**

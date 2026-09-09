@@ -67,15 +67,34 @@ class ProductController extends Controller
                 ->through(fn($p) => $this->toArray($p, 'thumb'));
         }
 
-        // Categories cached in AppServiceProvider; also cache for sidebar
-        $dbCategories = Cache::remember('active_categories_list', 3600, function () {
-            return Category::active()
-                ->select(['id', 'slug', 'name_ar', 'name_en', 'icon', 'image'])
+        // Categories cached in AppServiceProvider; also cache for sidebar (flat roots only for filter sidebar)
+        $dbCategories = \Illuminate\Support\Facades\Cache::remember('active_categories_tree', 3600, function () {
+            return \App\Models\Category::with(['children' => function ($q) {
+                    $q->active()->orderBy('sort_order')->orderBy('name_ar')
+                      ->with(['children' => function ($q2) {
+                          $q2->active()->orderBy('sort_order')->orderBy('name_ar');
+                      }]);
+                }])
+                ->active()
+                ->whereNull('parent_id')
+                ->select(['id', 'slug', 'name_ar', 'name_en', 'icon', 'image', 'parent_id', 'sort_order'])
+                ->orderBy('sort_order')
+                ->orderBy('name_ar')
                 ->get();
         });
 
-        // Build icon map from already-fetched categories (no extra query)
-        $categoryIconMap = $dbCategories->pluck('icon', 'slug')->toArray();
+        // Build icon map from already-fetched categories (no extra query) — flatten all levels
+        $allCats = $dbCategories->flatMap(function ($root) {
+            $flat = collect([$root]);
+            foreach ($root->children as $child) {
+                $flat->push($child);
+                foreach ($child->children as $grandchild) {
+                    $flat->push($grandchild);
+                }
+            }
+            return $flat;
+        });
+        $categoryIconMap = $allCats->pluck('icon', 'slug')->toArray();
 
         return view('products.index', [
             'products'       => $mappedProducts,
@@ -107,7 +126,19 @@ class ProductController extends Controller
             ])->where('collection_name', 'product-images')->orderBy('order_column')]);
 
         if ($category !== 'all') {
-            $query->where('category', $category);
+            // Load the selected category with all descendants to filter by entire subtree
+            $catModel = \Illuminate\Support\Facades\Cache::remember("cat_slugs:{$category}", 3600, function () use ($category) {
+                return \App\Models\Category::with('allChildren')
+                    ->where('slug', $category)
+                    ->first();
+            });
+
+            if ($catModel) {
+                $slugs = $catModel->descendantSlugs();
+                $query->whereIn('category', $slugs);
+            } else {
+                $query->where('category', $category);
+            }
         }
 
         if ($search) {

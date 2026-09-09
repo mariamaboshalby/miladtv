@@ -27,13 +27,27 @@ class AppServiceProvider extends ServiceProvider
             App::setLocale(session('locale'));
         }
 
-        // Share active categories with views using a composer to avoid querying during application boot, and cache it.
-        // Only share with frontend views (not admin) to avoid unnecessary overhead.
+        // Share active category TREE with frontend views (roots → children → grandchildren).
+        // Cached for 1 hour; invalidated by CacheService::clearCategoryCaches().
         View::composer(['layouts.app', 'home', 'products.*', 'blog.*', 'about.*', 'news.*', 'contact.*', 'cart.*', 'checkout.*', 'auth.*', 'downloads.*', 'testimonials.*'], function ($view) {
             try {
                 $navCategories = \Illuminate\Support\Facades\Cache::remember('active_categories', 3600, function () {
-                    return Category::active()
-                        ->select(['id', 'slug', 'name_ar', 'name_en', 'icon', 'image', 'is_active'])
+                    // Load only root-level active categories with their active children (2 levels deep)
+                    return Category::with(['children' => function ($q) {
+                            $q->active()
+                              ->orderBy('sort_order')
+                              ->orderBy('name_ar')
+                              ->with(['children' => function ($q2) {
+                                  $q2->active()
+                                     ->orderBy('sort_order')
+                                     ->orderBy('name_ar');
+                              }]);
+                        }])
+                        ->active()
+                        ->whereNull('parent_id')
+                        ->select(['id', 'slug', 'name_ar', 'name_en', 'icon', 'image', 'is_active', 'parent_id', 'sort_order'])
+                        ->orderBy('sort_order')
+                        ->orderBy('name_ar')
                         ->get();
                 });
                 $view->with('navCategories', $navCategories);

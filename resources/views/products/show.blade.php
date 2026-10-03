@@ -65,6 +65,7 @@
                              alt="{{ $product['name'] }}"
                              width="600" height="600"
                              fetchpriority="high" decoding="async"
+                             onerror="this.outerHTML='<div class=&quot;pd-no-img&quot;><i class=&quot;fas fa-image&quot;></i></div>'"
                              onclick="openImgModal(this.src)">
                     @else
                         <div class="pd-no-img">

@@ -581,7 +581,11 @@
                                          style="object-fit:cover;"
                                          loading="lazy" decoding="async"
                                          width="200" height="150"
+                                         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
                                          alt="{{ $product['name'] }}">
+                                    <div class="product-placeholder w-100 h-100" style="display:none;align-items:center;justify-content:center;background:#f8fafc;position:absolute;inset:0;">
+                                        <i class="fas fa-image" style="font-size:3.5rem;color:#cbd5e1;"></i>
+                                    </div>
                                 @else
                                     <div class="product-placeholder w-100 h-100" style="display:flex;align-items:center;justify-content:center;background:#f8fafc;">
                                         <i class="fas fa-image" style="font-size:3.5rem;color:#cbd5e1;"></i>
@@ -645,7 +649,11 @@
                                          style="object-fit:cover;"
                                          loading="lazy" decoding="async"
                                          width="200" height="150"
+                                         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
                                          alt="{{ $product['name'] }}">
+                                    <div class="product-placeholder w-100 h-100" style="display:none;align-items:center;justify-content:center;background:#f8fafc;position:absolute;inset:0;">
+                                        <i class="fas fa-image" style="font-size:3.5rem;color:#cbd5e1;"></i>
+                                    </div>
                                 @else
                                     <div class="product-placeholder w-100 h-100" style="display:flex;align-items:center;justify-content:center;background:#f8fafc;">
                                         <i class="fas fa-image" style="font-size:3.5rem;color:#cbd5e1;"></i>
@@ -709,7 +717,11 @@
                                          style="object-fit:cover;"
                                          loading="lazy" decoding="async"
                                          width="200" height="150"
+                                         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
                                          alt="{{ $product['name'] }}">
+                                    <div class="product-placeholder w-100 h-100" style="display:none;align-items:center;justify-content:center;background:#f8fafc;position:absolute;inset:0;">
+                                        <i class="fas fa-image" style="font-size:3.5rem;color:#cbd5e1;"></i>
+                                    </div>
                                 @else
                                     <div class="product-placeholder w-100 h-100" style="display:flex;align-items:center;justify-content:center;background:#f8fafc;">
                                         <i class="fas fa-image" style="font-size:3.5rem;color:#cbd5e1;"></i>
@@ -865,7 +877,11 @@
                                          style="object-fit:cover;"
                                          loading="lazy" decoding="async"
                                          width="200" height="150"
+                                         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
                                          alt="{{ $product['name'] }}">
+                                    <div class="product-placeholder w-100 h-100" style="display:none;align-items:center;justify-content:center;background:#f8fafc;position:absolute;inset:0;">
+                                        <i class="fas fa-image" style="font-size:3.5rem;color:#cbd5e1;"></i>
+                                    </div>
                                 @else
                                     <div class="product-placeholder w-100 h-100" style="display:flex;align-items:center;justify-content:center;background:#f8fafc;">
                                         <i class="fas fa-image" style="font-size:3.5rem;color:#cbd5e1;"></i>
